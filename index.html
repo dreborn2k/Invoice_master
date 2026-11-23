@@ -241,7 +241,7 @@
                         </svg>
                         <span id="cloudStatusDot" title="Status Sinkronisasi" class="w-2 h-2 rounded-full bg-amber-400 shrink-0 ml-0.5"></span>
                     </button>
-                    <p id="headerCompanySub" class="text-[10px] sm:text-[11px] text-[#8E8E93] font-medium truncate">File: data.json &bull; Sistem Billing</p>
+                    <p id="headerCompanySub" class="text-[10px] sm:text-[11px] text-[#8E8E93] font-medium truncate">File: data_sjm.json &bull; Konsumen: data_cons.json</p>
                 </div>
 
                 <!-- Dropdown Switcher 2 CV -->
@@ -249,7 +249,7 @@
                     <button type="button" data-switch-cv="sjm" class="cv-switch-item w-full text-left px-3 py-2.5 rounded-xl hover:bg-[#F2F2F7] transition flex items-center justify-between gap-2">
                         <div class="min-w-0">
                             <p class="text-xs font-bold text-[#1C1C1E] truncate">CV. SRIKANDI JAYA MANDIRI</p>
-                            <p class="text-[10px] text-[#8E8E93] font-mono">JSON: data.json</p>
+                            <p class="text-[10px] text-[#8E8E93] font-mono">JSON: data_sjm.json</p>
                         </div>
                         <span data-cv-check="sjm" class="text-xs font-bold text-[#007AFF]">&#10003;</span>
                     </button>
@@ -528,8 +528,8 @@
         <!-- PAGE 2: DATABASE KONSUMEN -->
         <section id="page-clients" class="page-section hidden max-w-5xl mx-auto">
             <div class="mb-5">
-                <h2 class="text-xl font-bold text-[#1C1C1E]">Database Konsumen</h2>
-                <p class="text-xs text-[#8E8E93] mt-0.5">Simpan data pelanggan tetap untuk mempercepat pembuatan invoice</p>
+                <h2 class="text-xl font-bold text-[#1C1C1E]">Database Konsumen Bersama</h2>
+                <p class="text-xs text-[#8E8E93] mt-0.5">Tersimpan di <code class="font-mono text-[#007AFF]">data_cons.json</code> dan dapat digunakan oleh kedua CV</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
@@ -579,7 +579,7 @@
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
                 <div>
                     <h2 class="text-xl font-bold text-[#1C1C1E]">Riwayat Invoice</h2>
-                    <p class="text-xs text-[#8E8E93] mt-0.5">Daftar invoice yang tersimpan untuk dibuka kembali atau diduplikasi</p>
+                    <p class="text-xs text-[#8E8E93] mt-0.5">Daftar invoice tersimpan untuk CV aktif (<span id="historyActiveCvLabel" class="font-semibold text-[#007AFF]">CV. SRIKANDI JAYA MANDIRI</span>)</p>
                 </div>
                 <div class="relative w-full sm:w-72">
                     <input type="text" id="searchHistoryInput" class="mac-input w-full pl-9 pr-4 py-2 text-sm bg-white" placeholder="Cari nomor atau klien...">
@@ -749,7 +749,7 @@
                     <div class="flex items-center justify-between gap-2">
                         <div>
                             <h3 class="text-sm font-bold text-[#1C1C1E]">Database File GitHub</h3>
-                            <p class="text-[11px] text-[#8E8E93] mt-0.5">Simpan pengaturan, logo, konsumen &amp; riwayat langsung ke file JSON di repository GitHub Anda</p>
+                            <p class="text-[11px] text-[#8E8E93] mt-0.5">Setting &amp; riwayat terpisah per CV (<code class="font-mono">data_sjm.json</code> / <code class="font-mono">data_djm.json</code>), konsumen bersama (<code class="font-mono">data_cons.json</code>)</p>
                         </div>
                         <span id="cloudSyncBadge" class="px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 text-[10px] font-bold shrink-0">Lokal</span>
                     </div>
@@ -764,10 +764,14 @@
                             <input type="text" id="ghRepoInput" class="mac-input w-full px-3 py-2 text-xs font-mono" placeholder="contoh: Invoice_master">
                         </div>
                         <div>
-                            <label class="block text-[11px] font-bold text-[#3A3A3C] mb-1">Nama File Database di Repo</label>
-                            <input type="text" id="ghPathInput" class="mac-input w-full px-3 py-2 text-xs font-mono" value="data.json" placeholder="data.json">
+                            <label class="block text-[11px] font-bold text-[#3A3A3C] mb-1">File Setting &amp; Riwayat CV</label>
+                            <input type="text" id="ghPathInput" class="mac-input w-full px-3 py-2 text-xs font-mono" value="data_sjm.json" placeholder="data_sjm.json">
                         </div>
                         <div>
+                            <label class="block text-[11px] font-bold text-[#3A3A3C] mb-1">File Konsumen Bersama</label>
+                            <input type="text" id="ghConsPathInput" class="mac-input w-full px-3 py-2 text-xs font-mono" value="data_cons.json" placeholder="data_cons.json">
+                        </div>
+                        <div class="sm:col-span-2">
                             <label class="block text-[11px] font-bold text-[#3A3A3C] mb-1">Branch</label>
                             <input type="text" id="ghBranchInput" class="mac-input w-full px-3 py-2 text-xs font-mono" value="main" placeholder="main">
                         </div>
@@ -818,7 +822,7 @@
         </button>
         <button type="button" data-nav="settings" class="mob-nav-btn relative flex flex-col items-center gap-0.5 py-1 px-3 text-[#8E8E93]">
             <span id="mobUnsavedSettingsDot" class="hidden absolute top-1 right-3 w-2 h-2 rounded-full bg-rose-500"></span>
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
             <span class="text-[10px] font-semibold">Pengaturan</span>
         </button>
     </nav>
@@ -851,14 +855,15 @@
         (function () {
             'use strict';
 
-            const LOCAL_STORAGE_PREFIX = 'sjm_invoice_app_state_v7_';
-            const GH_CONFIG_KEY = 'sjm_github_repo_config_v3';
+            const LOCAL_STORAGE_PREFIX = 'sjm_invoice_app_state_v8_';
+            const SHARED_CLIENTS_STORAGE_KEY = 'sjm_shared_clients_db_v1';
+            const GH_CONFIG_KEY = 'sjm_github_repo_config_v4';
             const ACTIVE_CV_KEY = 'sjm_active_cv_profile_v1';
 
             const CV_PROFILES = {
                 sjm: {
                     id: 'sjm',
-                    defaultJsonFile: 'data.json',
+                    defaultJsonFile: 'data_sjm.json',
                     logoCandidates: ['sjm1.1.jpg', 'sjm1.1.jpeg', 'logo.jpg', 'logo.png'],
                     settings: {
                         compName: 'CV. SRIKANDI JAYA MANDIRI',
@@ -1075,14 +1080,16 @@
                 owner: '',
                 repo: '',
                 path: CV_PROFILES[activeCvId].defaultJsonFile,
+                consPath: 'data_cons.json',
                 branch: 'main',
                 token: '',
                 pathsByCv: {
-                    sjm: 'data.json',
+                    sjm: 'data_sjm.json',
                     djm: 'data_djm.json'
                 }
             };
             let lastKnownFileSha = '';
+            let lastKnownConsFileSha = '';
 
             try {
                 const host = window.location.hostname || '';
@@ -1099,8 +1106,9 @@
                     ghConfig = {
                         ...ghConfig,
                         ...savedGh,
+                        consPath: savedGh.consPath || 'data_cons.json',
                         pathsByCv: {
-                            sjm: (savedGh.pathsByCv && savedGh.pathsByCv.sjm) || 'data.json',
+                            sjm: (savedGh.pathsByCv && savedGh.pathsByCv.sjm) || 'data_sjm.json',
                             djm: (savedGh.pathsByCv && savedGh.pathsByCv.djm) || 'data_djm.json'
                         }
                     };
@@ -1284,15 +1292,16 @@
                 const dot = $('cloudStatusDot');
                 const badge = $('cloudSyncBadge');
                 const subEl = $('headerCompanySub');
-                const jsonName = ghConfig.path || (CV_PROFILES[activeCvId] ? CV_PROFILES[activeCvId].defaultJsonFile : 'data.json');
+                const jsonName = ghConfig.path || (CV_PROFILES[activeCvId] ? CV_PROFILES[activeCvId].defaultJsonFile : 'data_sjm.json');
+                const consName = ghConfig.consPath || 'data_cons.json';
                 if (subEl) {
-                    subEl.textContent = `File: ${jsonName} • Sistem Billing`;
+                    subEl.textContent = `File: ${jsonName} • Konsumen: ${consName}`;
                 }
                 if (status === 'synced') {
                     if (dot) dot.className = 'w-2 h-2 rounded-full bg-[#34C759] shrink-0 ml-0.5';
                     if (badge) {
                         badge.className = 'px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-bold shrink-0';
-                        badge.textContent = text || `Tersimpan di ${jsonName}`;
+                        badge.textContent = text || `Tersimpan (${jsonName} & ${consName})`;
                     }
                 } else if (status === 'syncing') {
                     if (dot) dot.className = 'w-2 h-2 rounded-full bg-[#007AFF] animate-pulse shrink-0 ml-0.5';
@@ -1311,14 +1320,17 @@
 
             function saveToLocalStorage() {
                 try {
-                    const payload = {
+                    const cvPayload = {
                         cvId: activeCvId,
                         settings,
-                        clientsDb,
                         invoiceHistory,
                         updatedAt: new Date().toISOString()
                     };
-                    localStorage.setItem(LOCAL_STORAGE_PREFIX + activeCvId, JSON.stringify(payload));
+                    localStorage.setItem(LOCAL_STORAGE_PREFIX + activeCvId, JSON.stringify(cvPayload));
+                    localStorage.setItem(SHARED_CLIENTS_STORAGE_KEY, JSON.stringify({
+                        clientsDb,
+                        updatedAt: new Date().toISOString()
+                    }));
                 } catch (e) { /* ignore */ }
             }
 
@@ -1327,18 +1339,27 @@
                     const raw = localStorage.getItem(LOCAL_STORAGE_PREFIX + activeCvId);
                     if (!raw) {
                         settings = { ...DEFAULT_SETTINGS };
-                        clientsDb = [];
                         invoiceHistory = [];
-                        return;
+                    } else {
+                        const data = JSON.parse(raw);
+                        settings = data.settings ? { ...DEFAULT_SETTINGS, ...data.settings } : { ...DEFAULT_SETTINGS };
+                        invoiceHistory = Array.isArray(data.invoiceHistory) ? data.invoiceHistory : [];
                     }
-                    const data = JSON.parse(raw);
-                    settings = data.settings ? { ...DEFAULT_SETTINGS, ...data.settings } : { ...DEFAULT_SETTINGS };
-                    clientsDb = Array.isArray(data.clientsDb) ? data.clientsDb : [];
-                    invoiceHistory = Array.isArray(data.invoiceHistory) ? data.invoiceHistory : [];
                 } catch (e) {
                     settings = { ...DEFAULT_SETTINGS };
-                    clientsDb = [];
                     invoiceHistory = [];
+                }
+
+                try {
+                    const sharedRaw = localStorage.getItem(SHARED_CLIENTS_STORAGE_KEY);
+                    if (sharedRaw) {
+                        const sharedData = JSON.parse(sharedRaw);
+                        clientsDb = Array.isArray(sharedData.clientsDb) ? sharedData.clientsDb : [];
+                    } else {
+                        clientsDb = [];
+                    }
+                } catch (e) {
+                    clientsDb = [];
                 }
             }
 
@@ -1348,6 +1369,7 @@
                 saveToLocalStorage();
                 try {
                     ghConfig.pathsByCv[activeCvId] = ($('ghPathInput') ? $('ghPathInput').value.trim() : '') || ghConfig.path || CV_PROFILES[activeCvId].defaultJsonFile;
+                    ghConfig.consPath = ($('ghConsPathInput') ? $('ghConsPathInput').value.trim() : '') || ghConfig.consPath || 'data_cons.json';
                     localStorage.setItem(GH_CONFIG_KEY, JSON.stringify(ghConfig));
                 } catch (e) { /* ignore */ }
 
@@ -1392,38 +1414,71 @@
 
             async function pullFromGithub(silent = false) {
                 if (!ghConfig.owner || !ghConfig.repo) return false;
-                const filePath = ghConfig.path || (CV_PROFILES[activeCvId] ? CV_PROFILES[activeCvId].defaultJsonFile : 'data.json');
+                const filePath = ghConfig.path || (CV_PROFILES[activeCvId] ? CV_PROFILES[activeCvId].defaultJsonFile : 'data_sjm.json');
+                const consPath = ghConfig.consPath || 'data_cons.json';
+                const branch = encodeURIComponent(ghConfig.branch || 'main');
                 updateSyncStatusUI('syncing', 'Memuat...');
-                const apiUrl = `https://api.github.com/repos/${encodeURIComponent(ghConfig.owner)}/${encodeURIComponent(ghConfig.repo)}/contents/${filePath}?ref=${encodeURIComponent(ghConfig.branch || 'main')}&t=${Date.now()}`;
                 const headers = { 'Accept': 'application/vnd.github+json' };
                 if (ghConfig.token) {
                     headers['Authorization'] = `Bearer ${ghConfig.token}`;
                 }
 
+                const cvApiUrl = `https://api.github.com/repos/${encodeURIComponent(ghConfig.owner)}/${encodeURIComponent(ghConfig.repo)}/contents/${filePath}?ref=${branch}&t=${Date.now()}`;
+                const consApiUrl = `https://api.github.com/repos/${encodeURIComponent(ghConfig.owner)}/${encodeURIComponent(ghConfig.repo)}/contents/${consPath}?ref=${branch}&t=${Date.now()}`;
+
                 try {
-                    const res = await fetch(apiUrl, { headers });
-                    if (res.status === 404) {
+                    const [cvRes, consRes] = await Promise.all([
+                        fetch(cvApiUrl, { headers }),
+                        fetch(consApiUrl, { headers })
+                    ]);
+
+                    let loadedAny = false;
+
+                    if (cvRes.ok) {
+                        const cvJson = await cvRes.json();
+                        lastKnownFileSha = cvJson.sha || '';
+                        if (cvJson.content) {
+                            const decodedCv = JSON.parse(decodeBase64Unicode(cvJson.content));
+                            if (decodedCv.settings) settings = { ...DEFAULT_SETTINGS, ...decodedCv.settings };
+                            if (Array.isArray(decodedCv.invoiceHistory)) invoiceHistory = decodedCv.invoiceHistory;
+                            if (!consRes.ok && Array.isArray(decodedCv.clientsDb) && decodedCv.clientsDb.length > 0 && clientsDb.length === 0) {
+                                clientsDb = decodedCv.clientsDb;
+                            }
+                            loadedAny = true;
+                        }
+                    } else if (cvRes.status !== 404) {
+                        throw new Error('HTTP ' + cvRes.status);
+                    }
+
+                    if (consRes.ok) {
+                        const consJson = await consRes.json();
+                        lastKnownConsFileSha = consJson.sha || '';
+                        if (consJson.content) {
+                            const decodedCons = JSON.parse(decodeBase64Unicode(consJson.content));
+                            if (Array.isArray(decodedCons.clientsDb)) {
+                                clientsDb = decodedCons.clientsDb;
+                            }
+                            loadedAny = true;
+                        }
+                    } else if (consRes.status !== 404) {
+                        throw new Error('HTTP ' + consRes.status);
+                    }
+
+                    saveToLocalStorage();
+                    setUnsavedSettings(false);
+                    applySettingsToUI();
+                    renderClientsList();
+                    renderHistoryList();
+                    updatePreview();
+
+                    if (!loadedAny) {
                         updateSyncStatusUI('local', `Belum ada ${filePath}`);
-                        if (!silent) showToast(`File ${filePath} belum ada di repo, siap dibuat saat simpan.`);
+                        if (!silent) showToast(`File ${filePath} & ${consPath} belum ada di repo, siap dibuat saat simpan.`);
                         return false;
                     }
-                    if (!res.ok) throw new Error('HTTP ' + res.status);
-                    const json = await res.json();
-                    lastKnownFileSha = json.sha || '';
-                    if (json.content) {
-                        const decoded = JSON.parse(decodeBase64Unicode(json.content));
-                        if (decoded.settings) settings = { ...DEFAULT_SETTINGS, ...decoded.settings };
-                        if (Array.isArray(decoded.clientsDb)) clientsDb = decoded.clientsDb;
-                        if (Array.isArray(decoded.invoiceHistory)) invoiceHistory = decoded.invoiceHistory;
-                        saveToLocalStorage();
-                        setUnsavedSettings(false);
-                        applySettingsToUI();
-                        renderClientsList();
-                        renderHistoryList();
-                        updatePreview();
-                    }
-                    updateSyncStatusUI('synced', `Tersimpan di ${filePath}`);
-                    if (!silent) showToast(`Data berhasil dimuat dari ${filePath}!`);
+
+                    updateSyncStatusUI('synced', `Tersimpan (${filePath} & ${consPath})`);
+                    if (!silent) showToast(`Data dimuat dari ${filePath} & ${consPath}!`);
                     return true;
                 } catch (err) {
                     updateSyncStatusUI('local', 'Offline / Token Salah');
@@ -1432,17 +1487,54 @@
                 }
             }
 
-            async function pushToGithub(silent = true) {
+            async function putGithubJsonFile(filePath, payloadObj, currentSha, headers, branch) {
+                const apiUrl = `https://api.github.com/repos/${encodeURIComponent(ghConfig.owner)}/${encodeURIComponent(ghConfig.repo)}/contents/${filePath}`;
+                let shaToUse = currentSha;
+
+                if (!shaToUse) {
+                    const getRes = await fetch(`${apiUrl}?ref=${encodeURIComponent(branch)}&t=${Date.now()}`, { headers });
+                    if (getRes.ok) {
+                        const existing = await getRes.json();
+                        shaToUse = existing.sha || '';
+                    }
+                }
+
+                const body = {
+                    message: `Update ${filePath} (${new Date().toLocaleString('id-ID')})`,
+                    content: encodeBase64Unicode(JSON.stringify(payloadObj, null, 2)),
+                    branch
+                };
+                if (shaToUse) {
+                    body.sha = shaToUse;
+                }
+
+                const putRes = await fetch(apiUrl, {
+                    method: 'PUT',
+                    headers,
+                    body: JSON.stringify(body)
+                });
+
+                if (!putRes.ok) {
+                    const errData = await putRes.json().catch(() => ({}));
+                    throw new Error(`${filePath}: ` + (errData.message || ('HTTP ' + putRes.status)));
+                }
+
+                const putJson = await putRes.json();
+                return (putJson.content && putJson.content.sha) || shaToUse;
+            }
+
+            async function pushToGithub(silent = true, scope = 'all') {
                 saveToLocalStorage();
-                const filePath = ghConfig.path || (CV_PROFILES[activeCvId] ? CV_PROFILES[activeCvId].defaultJsonFile : 'data.json');
+                const filePath = ghConfig.path || (CV_PROFILES[activeCvId] ? CV_PROFILES[activeCvId].defaultJsonFile : 'data_sjm.json');
+                const consPath = ghConfig.consPath || 'data_cons.json';
+
                 if (!ghConfig.owner || !ghConfig.repo || !ghConfig.token) {
                     updateSyncStatusUI('local', 'Lokal (Token belum diisi)');
                     return false;
                 }
 
-                updateSyncStatusUI('syncing', `Menyimpan ${filePath}...`);
+                updateSyncStatusUI('syncing', 'Menyimpan ke GitHub...');
                 const branch = ghConfig.branch || 'main';
-                const apiUrl = `https://api.github.com/repos/${encodeURIComponent(ghConfig.owner)}/${encodeURIComponent(ghConfig.repo)}/contents/${filePath}`;
                 const headers = {
                     'Accept': 'application/vnd.github+json',
                     'Authorization': `Bearer ${ghConfig.token}`,
@@ -1450,49 +1542,28 @@
                 };
 
                 try {
-                    if (!lastKnownFileSha) {
-                        const getRes = await fetch(`${apiUrl}?ref=${encodeURIComponent(branch)}&t=${Date.now()}`, { headers });
-                        if (getRes.ok) {
-                            const existing = await getRes.json();
-                            lastKnownFileSha = existing.sha || '';
-                        }
+                    if (scope === 'all' || scope === 'cv') {
+                        const cvPayloadObj = {
+                            app: `${settings.compName} Invoice System`,
+                            cvId: activeCvId,
+                            updatedAt: new Date().toISOString(),
+                            settings,
+                            invoiceHistory
+                        };
+                        lastKnownFileSha = await putGithubJsonFile(filePath, cvPayloadObj, lastKnownFileSha, headers, branch);
                     }
 
-                    const payloadObj = {
-                        app: `${settings.compName} Invoice System`,
-                        cvId: activeCvId,
-                        updatedAt: new Date().toISOString(),
-                        settings,
-                        clientsDb,
-                        invoiceHistory
-                    };
-
-                    const body = {
-                        message: `Update ${filePath} (${new Date().toLocaleString('id-ID')})`,
-                        content: encodeBase64Unicode(JSON.stringify(payloadObj, null, 2)),
-                        branch
-                    };
-                    if (lastKnownFileSha) {
-                        body.sha = lastKnownFileSha;
+                    if (scope === 'all' || scope === 'cons') {
+                        const consPayloadObj = {
+                            app: 'Shared Customer Database (Multi-CV)',
+                            updatedAt: new Date().toISOString(),
+                            clientsDb
+                        };
+                        lastKnownConsFileSha = await putGithubJsonFile(consPath, consPayloadObj, lastKnownConsFileSha, headers, branch);
                     }
 
-                    const putRes = await fetch(apiUrl, {
-                        method: 'PUT',
-                        headers,
-                        body: JSON.stringify(body)
-                    });
-
-                    if (!putRes.ok) {
-                        const errData = await putRes.json().catch(() => ({}));
-                        throw new Error(errData.message || ('HTTP ' + putRes.status));
-                    }
-
-                    const putJson = await putRes.json();
-                    if (putJson.content && putJson.content.sha) {
-                        lastKnownFileSha = putJson.content.sha;
-                    }
-                    updateSyncStatusUI('synced', `Tersimpan di ${filePath}`);
-                    if (!silent) showToast(`Berhasil sinkron ke GitHub (${filePath})!`);
+                    updateSyncStatusUI('synced', `Tersimpan (${filePath} & ${consPath})`);
+                    if (!silent) showToast(`Berhasil sinkron ke ${filePath} & ${consPath}!`);
                     return true;
                 } catch (err) {
                     updateSyncStatusUI('local', 'Gagal Sync GitHub');
@@ -1653,6 +1724,9 @@
                 if ($('settingsActiveCvBadge')) {
                     $('settingsActiveCvBadge').textContent = currentCompName;
                 }
+                if ($('historyActiveCvLabel')) {
+                    $('historyActiveCvLabel').textContent = currentCompName;
+                }
 
                 document.querySelectorAll('[data-cv-check]').forEach(el => {
                     const isActive = el.getAttribute('data-cv-check') === activeCvId;
@@ -1699,7 +1773,10 @@
 
                 $('ghOwnerInput').value = ghConfig.owner || '';
                 $('ghRepoInput').value = ghConfig.repo || '';
-                $('ghPathInput').value = ghConfig.path || (CV_PROFILES[activeCvId] ? CV_PROFILES[activeCvId].defaultJsonFile : 'data.json');
+                $('ghPathInput').value = ghConfig.path || (CV_PROFILES[activeCvId] ? CV_PROFILES[activeCvId].defaultJsonFile : 'data_sjm.json');
+                if ($('ghConsPathInput')) {
+                    $('ghConsPathInput').value = ghConfig.consPath || 'data_cons.json';
+                }
                 $('ghBranchInput').value = ghConfig.branch || 'main';
                 $('ghTokenInput').value = ghConfig.token || '';
 
@@ -1794,15 +1871,24 @@
                     const lineTotal = netUnit * qty;
 
                     const card = document.createElement('div');
-                    card.className = 'p-3.5 rounded-2xl bg-[#F2F2F7] space-y-2.5 border border-black/[0.04]';
+                    card.setAttribute('data-item-card', String(idx));
+                    card.className = 'p-3.5 rounded-2xl bg-[#F2F2F7] space-y-2.5 border border-black/[0.04] transition-all';
                     card.innerHTML = `
                         <div class="flex items-center justify-between gap-2">
                             <span class="text-[11px] font-bold text-[#8E8E93]">Item #${idx + 1}</span>
-                            ${items.length > 1 ? `
-                                <button type="button" data-remove-idx="${idx}" class="text-[11px] font-semibold text-rose-500 hover:text-rose-700">
-                                    Hapus
+                            <div class="flex items-center gap-1.5">
+                                <button type="button" data-edit-idx="${idx}" title="Edit Item #${idx + 1}" class="px-2 py-0.5 rounded-lg bg-white hover:bg-[#007AFF]/10 text-[#007AFF] text-[11px] font-semibold border border-black/5 transition flex items-center gap-1">
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                                    <span>Edit</span>
                                 </button>
-                            ` : ''}
+                                <button type="button" data-dup-idx="${idx}" title="Duplikat Item #${idx + 1}" class="px-2 py-0.5 rounded-lg bg-white hover:bg-black/5 text-[#3A3A3C] text-[11px] font-semibold border border-black/5 transition">
+                                    Duplikat
+                                </button>
+                                <button type="button" data-remove-idx="${idx}" title="${items.length > 1 ? 'Hapus Item' : 'Kosongkan Item'}" class="px-2 py-0.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-600 text-[11px] font-semibold transition flex items-center gap-1">
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                    <span>${items.length > 1 ? 'Delete' : 'Reset'}</span>
+                                </button>
+                            </div>
                         </div>
                         <input type="text" data-field="name" data-idx="${idx}" value="${escapeHtml(item.name)}" placeholder="Nama barang atau jasa..." class="w-full bg-white rounded-xl px-3 py-2 text-xs sm:text-sm font-medium border border-black/10 focus:outline-none focus:border-[#007AFF]">
                         <div class="grid grid-cols-12 gap-2">
@@ -1841,6 +1927,43 @@
                     });
                 });
 
+                container.querySelectorAll('button[data-edit-idx]').forEach((btn) => {
+                    btn.addEventListener('click', (e) => {
+                        const i = parseInt(e.currentTarget.getAttribute('data-edit-idx'), 10);
+                        const cardEl = container.querySelector(`[data-item-card="${i}"]`);
+                        const nameInput = container.querySelector(`input[data-field="name"][data-idx="${i}"]`);
+                        if (cardEl) {
+                            cardEl.classList.add('ring-2', 'ring-[#007AFF]', 'bg-blue-50/40');
+                            setTimeout(() => {
+                                cardEl.classList.remove('ring-2', 'ring-[#007AFF]', 'bg-blue-50/40');
+                            }, 1200);
+                        }
+                        if (nameInput) {
+                            nameInput.focus();
+                            nameInput.select();
+                        }
+                        showToast(`Mengedit Item #${i + 1}`);
+                    });
+                });
+
+                container.querySelectorAll('button[data-dup-idx]').forEach((btn) => {
+                    btn.addEventListener('click', (e) => {
+                        const i = parseInt(e.currentTarget.getAttribute('data-dup-idx'), 10);
+                        const srcItem = items[i];
+                        if (!srcItem) return;
+                        items.splice(i + 1, 0, {
+                            id: Date.now() + Math.floor(Math.random() * 1000),
+                            name: srcItem.name,
+                            qty: srcItem.qty,
+                            unit: srcItem.unit,
+                            price: srcItem.price
+                        });
+                        renderItemRows();
+                        updatePreview();
+                        showToast(`Item #${i + 1} diduplikasi`);
+                    });
+                });
+
                 container.querySelectorAll('button[data-remove-idx]').forEach((btn) => {
                     btn.addEventListener('click', (e) => {
                         const i = parseInt(e.currentTarget.getAttribute('data-remove-idx'), 10);
@@ -1848,17 +1971,22 @@
                             items.splice(i, 1);
                             renderItemRows();
                             updatePreview();
+                            showToast(`Item #${i + 1} dihapus`);
+                        } else {
+                            items[0] = { id: Date.now(), name: '', qty: 1, unit: 'Pcs', price: 0 };
+                            renderItemRows();
+                            updatePreview();
+                            showToast('Item #1 dikosongkan');
                         }
                     });
                 });
             }
 
-            // Paginate items into A4 sheets cleanly based on estimated line heights
             function paginateInvoiceItems(computedItems, isLastPageExtrasLarge) {
-                const FIRST_PAGE_SINGLE_CAPACITY = 11; // When header + client + table + totals + signature all fit on 1 page
-                const FIRST_PAGE_MULTI_CAPACITY = 19;  // When totals & signature move to a later page
-                const NEXT_PAGE_MID_CAPACITY = 26;     // Middle pages (compact continuation header + table + footer)
-                const NEXT_PAGE_FINAL_CAPACITY = 16;   // Final page (compact continuation header + table + totals + signature + footer)
+                const FIRST_PAGE_SINGLE_CAPACITY = 11;
+                const FIRST_PAGE_MULTI_CAPACITY = 19;
+                const NEXT_PAGE_MID_CAPACITY = 26;
+                const NEXT_PAGE_FINAL_CAPACITY = 16;
 
                 const enriched = computedItems.map((ci, idx) => {
                     const descLen = (ci.name || '').length;
@@ -1868,16 +1996,13 @@
 
                 const totalUnits = enriched.reduce((sum, r) => sum + r.rowUnits, 0);
 
-                // Case 1: Everything fits comfortably on 1 page
                 if (totalUnits <= FIRST_PAGE_SINGLE_CAPACITY) {
                     return [enriched];
                 }
 
-                // Case 2: Multi-page distribution
                 const pages = [];
                 let cursor = 0;
 
-                // Slice Page 1
                 const page1Rows = [];
                 let p1Used = 0;
                 while (cursor < enriched.length && p1Used + enriched[cursor].rowUnits <= FIRST_PAGE_MULTI_CAPACITY) {
@@ -1890,14 +2015,12 @@
                 }
                 pages.push(page1Rows);
 
-                // Slice remaining pages
                 while (cursor < enriched.length) {
                     let remainingUnits = 0;
                     for (let k = cursor; k < enriched.length; k++) {
                         remainingUnits += enriched[k].rowUnits;
                     }
 
-                    // Can all remaining items + summary + signature fit on this final page?
                     if (remainingUnits <= NEXT_PAGE_FINAL_CAPACITY) {
                         const finalRows = [];
                         while (cursor < enriched.length) {
@@ -1907,7 +2030,6 @@
                         break;
                     }
 
-                    // Otherwise fill a middle page
                     const midRows = [];
                     let midUsed = 0;
                     while (cursor < enriched.length && midUsed + enriched[cursor].rowUnits <= NEXT_PAGE_MID_CAPACITY) {
@@ -1921,7 +2043,6 @@
                     pages.push(midRows);
                 }
 
-                // Check if the last page still has too many items to accommodate totals + signature without overflow
                 const lastPage = pages[pages.length - 1];
                 const lastPageUnits = lastPage.reduce((s, r) => s + r.rowUnits, 0);
                 if (lastPageUnits > NEXT_PAGE_FINAL_CAPACITY) {
@@ -1963,7 +2084,6 @@
                 const isLastPage = pageIndex === totalPages - 1;
                 const pageNum = pageIndex + 1;
 
-                // Logo HTML
                 let logoHtml = '';
                 if (settings.logoBase64) {
                     if (logoAspectType === 'landscape') {
@@ -1976,7 +2096,6 @@
                     ? 'flex flex-col items-start flex-1'
                     : 'flex flex-row items-start gap-4 flex-1';
 
-                // Top Header: Full header on Page 1, Compact Continuation Header on Page 2+
                 const headerSectionHtml = isFirstPage ? `
                     <div class="flex justify-between items-start gap-5 pb-4" style="border-bottom: 2px solid transparent; border-image: ${theme.gradientCss} 1;">
                         <div class="${brandFlexClass}">
@@ -2035,7 +2154,6 @@
                     </div>
                 `;
 
-                // Items Table Rows
                 const rowsHtml = pageRows.map((ci, idx) => `
                     <tr class="${idx % 2 === 1 ? 'bg-slate-50/60' : 'bg-white'}">
                         <td class="py-1.5 px-2.5 text-center text-slate-500 font-medium">${ci.rowNo}</td>
@@ -2069,7 +2187,6 @@
                     </div>
                 `;
 
-                // Totals & Signature only on the Last Page; continuation note on intermediate pages
                 const bottomSectionHtml = isLastPage ? `
                     <div class="mt-4 grid grid-cols-12 gap-5 items-start">
                         <div class="col-span-7 space-y-2.5">
@@ -2316,7 +2433,7 @@
                         openConfirm('Hapus Konsumen', `Hapus "${found ? found.name : 'konsumen ini'}" dari database?`, () => {
                             clientsDb = clientsDb.filter(c => c.id !== id);
                             renderClientsList();
-                            pushToGithub(true);
+                            pushToGithub(true, 'cons');
                             showToast('Konsumen dihapus');
                         });
                     });
@@ -2419,7 +2536,7 @@
                         openConfirm('Hapus Riwayat Invoice', `Hapus invoice "${found ? found.invNumber : ''}" dari riwayat?`, () => {
                             invoiceHistory = invoiceHistory.filter(x => x.id !== id);
                             renderHistoryList();
-                            pushToGithub(true);
+                            pushToGithub(true, 'cv');
                             showToast('Riwayat invoice dihapus');
                         });
                     });
@@ -2503,7 +2620,6 @@
                 const invDueStr = formatDateIndo($('invDueDate').value);
                 const cName = $('clientName').value.trim() || '-';
 
-                // Draw compact continuation header on Page 2, 3, ...
                 function drawContinuationHeader() {
                     const topY = 14;
                     doc.setFont('helvetica', 'bold');
@@ -2529,7 +2645,6 @@
                     drawGradientBar(doc, marginX, topY + 12.5, rightX - marginX, 0.6, theme.primaryRgb, secRgb, 0);
                 }
 
-                // Draw Page 1 Full Header
                 let curY = 16;
                 const rasterLogo = await rasterizeImageToPng(settings.logoBase64);
                 let textStartX = marginX;
@@ -2825,7 +2940,6 @@
                 doc.setTextColor(100, 116, 139);
                 doc.text(settings.signerRole || 'Direktur', signCenterX, signY + 28.2, { align: 'center' });
 
-                // Render Footer on EVERY PDF page with "Halaman X dari Y"
                 const totalPdfPages = doc.getNumberOfPages();
                 for (let p = 1; p <= totalPdfPages; p++) {
                     doc.setPage(p);
@@ -3046,6 +3160,7 @@
                     const existingIdx = clientsDb.findIndex(c => (c.name || '').toLowerCase() === name.toLowerCase());
                     if (existingIdx >= 0) {
                         clientsDb[existingIdx] = { ...clientsDb[existingIdx], name, contact, npwp, address };
+                        renderClientsList();
                         $('selectClientDb').value = clientsDb[existingIdx].id;
                     } else {
                         const newClient = { id: 'cli_' + Date.now(), name, contact, npwp, address };
@@ -3053,9 +3168,8 @@
                         renderClientsList();
                         $('selectClientDb').value = newClient.id;
                     }
-                    renderClientsList();
-                    pushToGithub(true);
-                    showToast('Konsumen disimpan ke database!');
+                    pushToGithub(true, 'cons');
+                    showToast('Konsumen disimpan ke database bersama (data_cons.json)!');
                 });
 
                 $('btnSaveClientDb').addEventListener('click', () => {
@@ -3080,8 +3194,8 @@
                     }
                     resetClientForm();
                     renderClientsList();
-                    pushToGithub(true);
-                    showToast('Data konsumen berhasil disimpan!');
+                    pushToGithub(true, 'cons');
+                    showToast('Data konsumen berhasil disimpan ke data_cons.json!');
                 });
 
                 $('btnCancelClientEdit').addEventListener('click', resetClientForm);
@@ -3118,8 +3232,8 @@
                         invoiceHistory.unshift(record);
                     }
                     renderHistoryList();
-                    pushToGithub(true);
-                    showToast('Invoice tersimpan ke riwayat!');
+                    pushToGithub(true, 'cv');
+                    showToast(`Invoice tersimpan ke ${ghConfig.path}!`);
                 });
 
                 $('searchHistoryInput').addEventListener('input', renderHistoryList);
@@ -3156,7 +3270,7 @@
                             settings.logoBase64 = canvas.toDataURL('image/jpeg', 0.92);
                             applySettingsToUI();
                             updatePreview();
-                            pushToGithub(true);
+                            pushToGithub(true, 'cv');
                             showToast('Logo berhasil diunggah & disimpan');
                         };
                         img.src = ev.target.result;
@@ -3167,7 +3281,7 @@
                 $('btnResetDefaultLogo').addEventListener('click', async () => {
                     const loaded = await loadRepoLogoFile(false);
                     if (loaded) {
-                        pushToGithub(true);
+                        pushToGithub(true, 'cv');
                     }
                 });
 
@@ -3175,7 +3289,7 @@
                     settings.logoBase64 = '';
                     applySettingsToUI();
                     updatePreview();
-                    pushToGithub(true);
+                    pushToGithub(true, 'cv');
                     showToast('Logo dihapus');
                 });
 
@@ -3200,17 +3314,18 @@
                     setUnsavedSettings(false);
                     applySettingsToUI();
                     updatePreview();
-                    pushToGithub(true);
-                    showToast('Pengaturan perusahaan disimpan!');
+                    pushToGithub(true, 'cv');
+                    showToast(`Pengaturan disimpan ke ${ghConfig.path}!`);
                 });
 
                 function readGithubInputs() {
                     ghConfig.owner = $('ghOwnerInput').value.trim();
                     ghConfig.repo = $('ghRepoInput').value.trim();
-                    const chosenPath = $('ghPathInput').value.trim() || (CV_PROFILES[activeCvId] ? CV_PROFILES[activeCvId].defaultJsonFile : 'data.json');
+                    const chosenPath = $('ghPathInput').value.trim() || (CV_PROFILES[activeCvId] ? CV_PROFILES[activeCvId].defaultJsonFile : 'data_sjm.json');
                     ghConfig.path = chosenPath;
+                    ghConfig.consPath = ($('ghConsPathInput') ? $('ghConsPathInput').value.trim() : '') || 'data_cons.json';
                     ghConfig.pathsByCv = {
-                        ...(ghConfig.pathsByCv || { sjm: 'data.json', djm: 'data_djm.json' }),
+                        ...(ghConfig.pathsByCv || { sjm: 'data_sjm.json', djm: 'data_djm.json' }),
                         [activeCvId]: chosenPath
                     };
                     ghConfig.branch = $('ghBranchInput').value.trim() || 'main';
@@ -3223,12 +3338,13 @@
                 $('btnConnectGithub').addEventListener('click', async () => {
                     readGithubInputs();
                     lastKnownFileSha = '';
+                    lastKnownConsFileSha = '';
                     await pullFromGithub(false);
                 });
 
                 $('btnPushGithubNow').addEventListener('click', async () => {
                     readGithubInputs();
-                    await pushToGithub(false);
+                    await pushToGithub(false, 'all');
                 });
 
                 $('btnExportBackupJson').addEventListener('click', () => {
@@ -3237,7 +3353,7 @@
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement('a');
                     a.href = url;
-                    a.download = ghConfig.path || (CV_PROFILES[activeCvId] ? CV_PROFILES[activeCvId].defaultJsonFile : 'data.json');
+                    a.download = ghConfig.path || (CV_PROFILES[activeCvId] ? CV_PROFILES[activeCvId].defaultJsonFile : 'data_sjm.json');
                     a.click();
                     URL.revokeObjectURL(url);
                     showToast(`File ${a.download} berhasil diunduh`);
@@ -3258,7 +3374,7 @@
                             renderClientsList();
                             renderHistoryList();
                             updatePreview();
-                            pushToGithub(true);
+                            pushToGithub(true, 'all');
                             showToast('Cadangan JSON berhasil dipulihkan');
                         } catch (err) {
                             showToast('Format file JSON tidak valid');
