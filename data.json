@@ -1,6 +1,6 @@
 {
   "app": "CV. Srikandi Jaya Mandiri Invoice System",
-  "updatedAt": "2026-11-23T04:42:59.071Z",
+  "updatedAt": "2026-11-23T04:44:28.276Z",
   "settings": {
     "compName": "CV. SRIKANDI JAYA MANDIRI",
     "compTagline": "AMANAH DAN BAROKAH",
@@ -22,5 +22,35 @@
       "address": "Jl. Sungai Serang  RT 03/ 03 Mojo Pasarkliwon Surakarta 57117"
     }
   ],
-  "invoiceHistory": []
+  "invoiceHistory": [
+    {
+      "id": "inv_1795409068272",
+      "invNumber": "INV/2026/11/121",
+      "invDate": "2026-11-23",
+      "invDueDate": "2026-12-07",
+      "clientName": "SD Negeri Mojo Surakarta",
+      "clientContact": "Yona Yulistyaningrum ( 0271 ) 2932784",
+      "clientNpwp": "",
+      "clientAddress": "Jl. Sungai Serang  RT 03/ 03 Mojo Pasarkliwon Surakarta 57117",
+      "taxPriceMode": "exclude",
+      "enablePpn": true,
+      "ppnRate": 11,
+      "enablePph": false,
+      "pphRate": 2,
+      "pphLabel": "PPh Pasal 23",
+      "pphMode": "deduct",
+      "invNotes": "Pembayaran harap ditransfer ke salah satu rekening berikut:\n1. Bank BNI 46 — No. Rekening: 8164444442\n   Atas Nama: SRIKANDI JAYA MANDIRI\n2. BPD JATENG — No. Rekening: 2-059-08065-5\n   Atas Nama: Asih Ermataria\nMohon cantumkan Nomor Invoice pada berita transfer.",
+      "items": [
+        {
+          "id": 1,
+          "name": "Pengadaan Barang & Jasa Operasional",
+          "qty": 1,
+          "unit": "Paket",
+          "price": 1000000
+        }
+      ],
+      "grandTotal": 1110000,
+      "savedAt": "2026-11-23T04:44:28.272Z"
+    }
+  ]
 }
