@@ -1,7 +1,7 @@
 {
   "app": "CV. SRIKANDI JAYA MANDIRI Invoice System",
   "cvId": "sjm",
-  "updatedAt": "2026-11-23T15:52:56.432Z",
+  "updatedAt": "2026-11-23T15:54:17.622Z",
   "settings": {
     "compName": "CV. SRIKANDI JAYA MANDIRI",
     "compTagline": "AMANAH DAN BAROKAH",
@@ -75,7 +75,7 @@
         }
       ],
       "grandTotal": 2225000,
-      "savedAt": "2026-11-23T15:42:25.786Z"
+      "savedAt": "2026-11-23T15:54:17.619Z"
     }
   ]
 }
