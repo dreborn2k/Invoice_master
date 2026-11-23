@@ -399,10 +399,17 @@
                                 <h2 class="text-xs font-bold uppercase tracking-wider text-[#8E8E93]">3. Rincian Barang / Jasa</h2>
                                 <span id="itemsCountChip" class="px-2 py-0.5 rounded-full bg-black/5 text-[10px] font-bold text-[#636366]">1 item</span>
                             </div>
-                            <button type="button" id="btnAddItem" class="px-3 py-1.5 rounded-full bg-[#007AFF]/10 hover:bg-[#007AFF]/20 text-[#007AFF] text-xs font-bold transition flex items-center gap-1">
-                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
-                                <span>Tambah Item</span>
-                            </button>
+                            <div class="flex items-center gap-1.5">
+                                <label title="Import Daftar Item JSON ke Invoice ini" class="cursor-pointer px-2.5 py-1.5 rounded-full bg-[#F2F2F7] hover:bg-[#E5E5EA] text-[#1C1C1E] text-[11px] font-semibold transition flex items-center gap-1">
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+                                    <span>Import Item</span>
+                                    <input type="file" id="importEditorItemsInput" accept=".json,application/json" class="hidden">
+                                </label>
+                                <button type="button" id="btnAddItem" class="px-3 py-1.5 rounded-full bg-[#007AFF]/10 hover:bg-[#007AFF]/20 text-[#007AFF] text-xs font-bold transition flex items-center gap-1">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+                                    <span>Tambah Item</span>
+                                </button>
+                            </div>
                         </div>
 
                         <div class="bg-[#F2F2F7] p-3 rounded-2xl space-y-1.5">
@@ -584,9 +591,16 @@
                     <h2 class="text-xl font-bold text-[#1C1C1E]">Riwayat Invoice</h2>
                     <p class="text-xs text-[#8E8E93] mt-0.5">Daftar invoice tersimpan untuk CV aktif (<span id="historyActiveCvLabel" class="font-semibold text-[#007AFF]">CV. SRIKANDI JAYA MANDIRI</span>)</p>
                 </div>
-                <div class="relative w-full sm:w-72">
-                    <input type="text" id="searchHistoryInput" class="mac-input w-full pl-9 pr-4 py-2 text-sm bg-white" placeholder="Cari nomor atau klien...">
-                    <svg class="w-4 h-4 text-[#8E8E93] absolute left-3 top-2.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                <div class="flex flex-wrap items-center gap-2">
+                    <label class="cursor-pointer px-3.5 py-2 rounded-full bg-[#007AFF] hover:bg-[#0062CC] text-white text-xs font-semibold transition flex items-center gap-1.5 shadow-sm shrink-0">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+                        <span>Import Item / Transaksi</span>
+                        <input type="file" id="importHistoryJsonInput" accept=".json,application/json" class="hidden">
+                    </label>
+                    <div class="relative flex-1 sm:w-64">
+                        <input type="text" id="searchHistoryInput" class="mac-input w-full pl-9 pr-4 py-2 text-sm bg-white" placeholder="Cari nomor atau klien...">
+                        <svg class="w-4 h-4 text-[#8E8E93] absolute left-3 top-2.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                    </div>
                 </div>
             </div>
 
@@ -2506,25 +2520,38 @@
                 filtered.forEach((rec) => {
                     const card = document.createElement('div');
                     card.className = 'mac-card p-5 flex flex-col justify-between gap-4';
+                    const itemCount = Array.isArray(rec.items) ? rec.items.length : 0;
                     card.innerHTML = `
                         <div class="space-y-1">
                             <div class="flex items-center justify-between gap-2">
                                 <span class="px-2.5 py-0.5 rounded-full bg-[#007AFF]/10 text-[#007AFF] text-xs font-bold">${escapeHtml(rec.invNumber)}</span>
-                                <span class="text-[11px] text-[#8E8E93]">${formatDateIndo(rec.invDate)}</span>
+                                <span class="text-[11px] text-[#8E8E93]">${formatDateIndo(rec.invDate)} &bull; ${itemCount} item</span>
                             </div>
                             <h4 class="text-sm font-bold text-[#1C1C1E] pt-1 truncate">${escapeHtml(rec.clientName) || 'Tanpa Nama Klien'}</h4>
                             <p class="text-base font-extrabold text-[#1C1C1E]">${formatRupiah(rec.grandTotal)}</p>
                         </div>
-                        <div class="flex items-center gap-2 pt-2 border-t border-black/[0.06]">
-                            <button type="button" data-open-inv="${rec.id}" class="flex-1 py-2 rounded-xl bg-[#007AFF] hover:bg-[#0062CC] text-white text-xs font-semibold transition">
-                                Buka
-                            </button>
-                            <button type="button" data-dup-inv="${rec.id}" class="px-3 py-2 rounded-xl bg-[#F2F2F7] hover:bg-[#E5E5EA] text-[#1C1C1E] text-xs font-semibold transition">
-                                Duplikat
-                            </button>
-                            <button type="button" data-del-inv="${rec.id}" class="px-3 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs font-semibold transition">
-                                Hapus
-                            </button>
+                        <div class="space-y-2 pt-2 border-t border-black/[0.06]">
+                            <div class="flex items-center gap-2">
+                                <button type="button" data-open-inv="${rec.id}" class="flex-1 py-2 rounded-xl bg-[#007AFF] hover:bg-[#0062CC] text-white text-xs font-semibold transition">
+                                    Buka
+                                </button>
+                                <button type="button" data-dup-inv="${rec.id}" class="px-3 py-2 rounded-xl bg-[#F2F2F7] hover:bg-[#E5E5EA] text-[#1C1C1E] text-xs font-semibold transition">
+                                    Duplikat
+                                </button>
+                                <button type="button" data-del-inv="${rec.id}" class="px-3 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs font-semibold transition">
+                                    Hapus
+                                </button>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button type="button" data-exp-items="${rec.id}" class="py-1.5 px-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-[11px] font-semibold transition flex items-center justify-center gap-1">
+                                    <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                                    <span>Export Item Saja</span>
+                                </button>
+                                <button type="button" data-exp-tx="${rec.id}" class="py-1.5 px-2.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-[11px] font-semibold transition flex items-center justify-center gap-1">
+                                    <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                                    <span>Export 1 Transaksi</span>
+                                </button>
+                            </div>
                         </div>
                     `;
                     container.appendChild(card);
@@ -2544,6 +2571,45 @@
                     });
                 });
 
+                container.querySelectorAll('[data-exp-items]').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const found = invoiceHistory.find(x => x.id === btn.getAttribute('data-exp-items'));
+                        if (!found) return;
+                        const cleanItems = (Array.isArray(found.items) ? found.items : []).map((it, idx) => ({
+                            id: idx + 1,
+                            name: it.name || '',
+                            qty: Number(it.qty) || 0,
+                            unit: it.unit || 'Pcs',
+                            price: Number(it.price) || 0
+                        }));
+                        const payload = {
+                            exportType: 'invoice_items_only',
+                            sourceInvoice: found.invNumber || '',
+                            exportedAt: new Date().toISOString(),
+                            items: cleanItems
+                        };
+                        const safeNo = (found.invNumber || 'Invoice').replace(/[^a-zA-Z0-9_-]/g, '_');
+                        downloadJsonFile(payload, `Items_${safeNo}.json`);
+                        showToast(`Daftar item (${cleanItems.length} item) berhasil di-export!`);
+                    });
+                });
+
+                container.querySelectorAll('[data-exp-tx]').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const found = invoiceHistory.find(x => x.id === btn.getAttribute('data-exp-tx'));
+                        if (!found) return;
+                        const payload = {
+                            exportType: 'single_invoice_transaction',
+                            sourceCv: settings.compName || activeCvId,
+                            exportedAt: new Date().toISOString(),
+                            transaction: JSON.parse(JSON.stringify(found))
+                        };
+                        const safeNo = (found.invNumber || 'Invoice').replace(/[^a-zA-Z0-9_-]/g, '_');
+                        downloadJsonFile(payload, `Transaksi_${safeNo}.json`);
+                        showToast(`1 Transaksi (${found.invNumber}) berhasil di-export!`);
+                    });
+                });
+
                 container.querySelectorAll('[data-del-inv]').forEach(btn => {
                     btn.addEventListener('click', () => {
                         const id = btn.getAttribute('data-del-inv');
@@ -2556,6 +2622,101 @@
                         });
                     });
                 });
+            }
+
+            function downloadJsonFile(obj, filename) {
+                const dataStr = JSON.stringify(obj, null, 2);
+                const blob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                a.click();
+                URL.revokeObjectURL(url);
+            }
+
+            function normalizeImportedItems(rawList) {
+                return rawList.map((it, idx) => ({
+                    id: Date.now() + idx + Math.floor(Math.random() * 1000),
+                    name: String(it.name || it.deskripsi || ''),
+                    qty: Number(it.qty) || 1,
+                    unit: String(it.unit || it.satuan || 'Pcs'),
+                    price: Number(it.price || it.harga) || 0
+                }));
+            }
+
+            function handleImportItemsOrTransactionFile(file, itemsOnlyMode = false) {
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = function (ev) {
+                    try {
+                        const parsed = JSON.parse(ev.target.result);
+
+                        // Case 1: File berisi daftar item saja (exportType === 'invoice_items_only' atau array langsung)
+                        if (Array.isArray(parsed) || parsed.exportType === 'invoice_items_only' || (Array.isArray(parsed.items) && !parsed.transaction && !parsed.invNumber)) {
+                            const rawItems = Array.isArray(parsed) ? parsed : (parsed.items || []);
+                            if (rawItems.length === 0) {
+                                showToast('File tidak memiliki item barang/jasa');
+                                return;
+                            }
+                            const importedItems = normalizeImportedItems(rawItems);
+                            const isCurrentEmpty = items.length === 1 && !items[0].name.trim() && (Number(items[0].price) || 0) === 0;
+
+                            if (isCurrentEmpty) {
+                                items = importedItems;
+                                renderItemRows();
+                                updatePreview();
+                                switchPage('invoice');
+                                showToast(`${importedItems.length} item berhasil dimuat ke invoice!`);
+                            } else {
+                                openConfirm(
+                                    'Import Daftar Item',
+                                    `Ditemukan ${importedItems.length} item barang/jasa. Klik "Ya, Lanjutkan" untuk mengganti item saat ini, atau klik "Batal" untuk membatalkan.`,
+                                    () => {
+                                        items = importedItems;
+                                        renderItemRows();
+                                        updatePreview();
+                                        switchPage('invoice');
+                                        showToast(`${importedItems.length} item berhasil di-import!`);
+                                    }
+                                );
+                            }
+                            return;
+                        }
+
+                        // Case 2: File berisi 1 transaksi penuh (exportType === 'single_invoice_transaction' atau objek invoice)
+                        const tx = parsed.transaction || (parsed.invNumber || parsed.clientName || Array.isArray(parsed.items) ? parsed : null);
+                        if (!tx) {
+                            showToast('Format file JSON tidak dikenali');
+                            return;
+                        }
+
+                        if (itemsOnlyMode && Array.isArray(tx.items) && tx.items.length > 0) {
+                            items = normalizeImportedItems(tx.items);
+                            renderItemRows();
+                            updatePreview();
+                            showToast(`${items.length} item dari transaksi berhasil dimuat!`);
+                            return;
+                        }
+
+                        const newRecord = {
+                            ...tx,
+                            id: 'inv_' + Date.now(),
+                            invNumber: tx.invNumber || generateAutoInvoiceNumber(),
+                            items: Array.isArray(tx.items) ? normalizeImportedItems(tx.items) : [],
+                            savedAt: new Date().toISOString()
+                        };
+
+                        invoiceHistory.unshift(newRecord);
+                        renderHistoryList();
+                        pushToGithub(true, 'cv');
+                        loadInvoiceRecord(newRecord, false);
+                        showToast(`Transaksi ${newRecord.invNumber} berhasil di-import ke Riwayat & Editor!`);
+                    } catch (err) {
+                        showToast('Gagal membaca file JSON: format tidak valid');
+                    }
+                };
+                reader.readAsText(file);
             }
 
             function rasterizeImageToPng(src) {
@@ -3118,10 +3279,33 @@
                 });
 
                 $('btnAddItem').addEventListener('click', () => {
-                    items.push({ id: Date.now(), name: '', qty: 1, unit: 'Pcs', price: 0 });
+                    items.unshift({ id: Date.now(), name: '', qty: 1, unit: 'Pcs', price: 0 });
                     renderItemRows();
                     updatePreview();
+                    const firstNameInput = $('itemsContainer').querySelector('input[data-field="name"][data-idx="0"]');
+                    if (firstNameInput) {
+                        firstNameInput.focus();
+                    }
+                    showToast('Item baru ditambahkan di posisi paling atas');
                 });
+
+                const importEditorItemsEl = $('importEditorItemsInput');
+                if (importEditorItemsEl) {
+                    importEditorItemsEl.addEventListener('change', (e) => {
+                        const file = e.target.files && e.target.files[0];
+                        handleImportItemsOrTransactionFile(file, true);
+                        e.target.value = '';
+                    });
+                }
+
+                const importHistoryJsonEl = $('importHistoryJsonInput');
+                if (importHistoryJsonEl) {
+                    importHistoryJsonEl.addEventListener('change', (e) => {
+                        const file = e.target.files && e.target.files[0];
+                        handleImportItemsOrTransactionFile(file, false);
+                        e.target.value = '';
+                    });
+                }
 
                 $('btnNewInvoice').addEventListener('click', () => {
                     openConfirm('Buat Invoice Baru', 'Kosongkan form saat ini untuk membuat invoice baru?', () => {
