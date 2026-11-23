@@ -481,10 +481,13 @@
                         </div>
                     </div>
 
-                    <!-- Card 5: Catatan & Instruksi Pembayaran -->
-                    <div class="mac-card p-5 space-y-3">
-                        <h2 class="text-xs font-bold uppercase tracking-wider text-[#8E8E93]">5. Catatan &amp; Instruksi Pembayaran</h2>
-                        <textarea id="invNotes" rows="5" class="mac-input w-full px-3.5 py-2.5 text-xs leading-relaxed resize-none"></textarea>
+                    <!-- Card 5: Notes (Pesan Singkat) -->
+                    <div class="mac-card p-5 space-y-2.5">
+                        <div class="flex items-center justify-between gap-2">
+                            <h2 class="text-xs font-bold uppercase tracking-wider text-[#8E8E93]">5. Notes (Pesan Singkat)</h2>
+                            <span class="text-[10.5px] text-[#8E8E93]">Info rekening otomatis dari Pengaturan</span>
+                        </div>
+                        <textarea id="invNotes" rows="2" class="mac-input w-full px-3.5 py-2 text-xs leading-relaxed resize-none" placeholder="Tulis pesan singkat atau catatan tambahan untuk invoice ini (opsional)..."></textarea>
                     </div>
                 </div>
 
@@ -733,8 +736,9 @@
                     </div>
 
                     <div>
-                        <label class="block text-xs font-semibold text-[#3A3A3C] mb-1.5">Catatan &amp; Rekening Pembayaran Default</label>
-                        <textarea id="setDefaultNotes" rows="5" class="mac-input settings-track w-full px-3.5 py-2 text-xs leading-relaxed resize-none"></textarea>
+                        <label class="block text-xs font-semibold text-[#3A3A3C] mb-1.5">Instruksi Pembayaran &amp; Rekening Bank</label>
+                        <textarea id="setDefaultNotes" rows="5" class="mac-input settings-track w-full px-3.5 py-2 text-xs leading-relaxed resize-none" placeholder="Masukkan nomor rekening bank & instruksi transfer pembayaran..."></textarea>
+                        <p class="text-[10.5px] text-[#8E8E93] mt-1">Otomatis dicantumkan pada bagian Keterangan &amp; Pembayaran di setiap invoice CV ini.</p>
                     </div>
 
                     <div class="pt-3 flex justify-end">
@@ -1131,6 +1135,15 @@
 
             const $ = (id) => document.getElementById(id);
 
+            function getCombinedFooterNotes() {
+                const paymentInfo = (settings.defaultNotes || '').trim();
+                const shortNote = ($('invNotes') ? $('invNotes').value : '').trim();
+                if (paymentInfo && shortNote) {
+                    return `${paymentInfo}\n\nCatatan: ${shortNote}`;
+                }
+                return paymentInfo || shortNote || '-';
+            }
+
             function setUnsavedSettings(flag) {
                 hasUnsavedSettings = Boolean(flag);
                 const badge = $('settingsDirtyBadge');
@@ -1388,7 +1401,7 @@
                 renderHistoryList();
 
                 $('invNumber').value = generateAutoInvoiceNumber();
-                $('invNotes').value = settings.defaultNotes || '';
+                $('invNotes').value = '';
                 items = [{ id: Date.now(), name: '', qty: 1, unit: 'Pcs', price: 0 }];
                 renderItemRows();
                 updatePreview();
@@ -2308,7 +2321,7 @@
                     clientAddress: $('clientAddress').value.trim() || '-',
                     cContact: $('clientContact').value.trim(),
                     cNpwp: $('clientNpwp').value.trim(),
-                    notesText: $('invNotes').value.trim() || '-',
+                    notesText: getCombinedFooterNotes(),
                     issueCity: settings.issueCity || 'Sukoharjo',
                     signerName: settings.signerName || 'Asih Ermataria',
                     signerRole: settings.signerRole || 'Direktur'
@@ -2455,7 +2468,9 @@
                 $('pphRate').value = record.pphRate != null ? record.pphRate : 2;
                 $('pphLabel').value = record.pphLabel || 'PPh Pasal 23';
                 $('pphMode').value = record.pphMode || 'deduct';
-                $('invNotes').value = record.invNotes || settings.defaultNotes || '';
+                const savedNote = (record.invNotes || '').trim();
+                const defaultBankNote = (settings.defaultNotes || '').trim();
+                $('invNotes').value = (savedNote && savedNote !== defaultBankNote) ? savedNote : '';
                 items = Array.isArray(record.items) && record.items.length > 0
                     ? JSON.parse(JSON.stringify(record.items))
                     : [{ id: Date.now(), name: '', qty: 1, unit: 'Pcs', price: 0 }];
@@ -2880,7 +2895,7 @@
                 doc.setFont('helvetica', 'normal');
                 doc.setFontSize(7.5);
                 doc.setTextColor(71, 85, 105);
-                const noteLines = doc.splitTextToSize($('invNotes').value.trim() || '-', 100);
+                const noteLines = doc.splitTextToSize(getCombinedFooterNotes(), 100);
                 doc.text(noteLines, marginX, notesY);
 
                 const sumX = marginX + 105;
@@ -2994,7 +3009,7 @@
                 $('invDate').value = getTodayStr();
                 $('invDueDate').value = getFutureDateStr(14);
                 $('invNumber').value = generateAutoInvoiceNumber();
-                $('invNotes').value = settings.defaultNotes || '';
+                $('invNotes').value = '';
 
                 applySettingsToUI();
                 renderClientsList();
@@ -3126,7 +3141,7 @@
                         $('pphLabel').value = 'PPh Pasal 23';
                         $('pphMode').value = 'deduct';
                         $('showCompNpwp').checked = settings.showNpwpDefault !== false;
-                        $('invNotes').value = settings.defaultNotes || '';
+                        $('invNotes').value = '';
                         items = [{ id: Date.now(), name: '', qty: 1, unit: 'Pcs', price: 0 }];
                         renderItemRows();
                         updatePreview();
@@ -3221,7 +3236,7 @@
                         pphRate: parseFloat($('pphRate').value) || 0,
                         pphLabel: $('pphLabel').value.trim(),
                         pphMode: $('pphMode').value,
-                        invNotes: $('invNotes').value,
+                        invNotes: $('invNotes').value.trim(),
                         items: JSON.parse(JSON.stringify(items)),
                         grandTotal: calc.grandTotal,
                         savedAt: new Date().toISOString()
@@ -3310,7 +3325,6 @@
                     settings.signerRole = $('setSignerRole').value.trim();
                     settings.defaultNotes = $('setDefaultNotes').value;
 
-                    $('invNotes').value = settings.defaultNotes;
                     setUnsavedSettings(false);
                     applySettingsToUI();
                     updatePreview();
