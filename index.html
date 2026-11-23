@@ -2747,29 +2747,66 @@
             }
 
             function drawGradientBar(doc, x, y, w, h, rgbStart, rgbEnd, radius = 0) {
-                const steps = 28;
-                const sliceW = w / steps;
-                for (let i = 0; i < steps; i++) {
-                    const t = i / (steps - 1);
-                    const r = Math.round(rgbStart[0] + (rgbEnd[0] - rgbStart[0]) * t);
-                    const g = Math.round(rgbStart[1] + (rgbEnd[1] - rgbStart[1]) * t);
-                    const b = Math.round(rgbStart[2] + (rgbEnd[2] - rgbStart[2]) * t);
-                    doc.setFillColor(r, g, b);
-                    const sx = x + i * sliceW;
-                    const sw = i === steps - 1 ? (x + w - sx) : (sliceW + 0.15);
-                    if (radius > 0 && (i === 0 || i === steps - 1)) {
-                        doc.roundedRect(sx, y, sw, h, radius, radius, 'F');
+                try {
+                    const scale = 6;
+                    const cw = Math.max(20, Math.round(w * scale));
+                    const ch = Math.max(6, Math.round(h * scale));
+                    const canvas = document.createElement('canvas');
+                    canvas.width = cw;
+                    canvas.height = ch;
+                    const ctx = canvas.getContext('2d');
+
+                    if (radius > 0) {
+                        const r = Math.min(radius * scale, cw / 2, ch / 2);
+                        ctx.beginPath();
+                        ctx.moveTo(r, 0);
+                        ctx.lineTo(cw - r, 0);
+                        ctx.quadraticCurveTo(cw, 0, cw, r);
+                        ctx.lineTo(cw, ch - r);
+                        ctx.quadraticCurveTo(cw, ch, cw - r, ch);
+                        ctx.lineTo(r, ch);
+                        ctx.quadraticCurveTo(0, ch, 0, ch - r);
+                        ctx.lineTo(0, r);
+                        ctx.quadraticCurveTo(0, 0, r, 0);
+                        ctx.closePath();
+                        ctx.clip();
+                    }
+
+                    const grad = ctx.createLinearGradient(0, 0, cw, ch * 0.35);
+                    grad.addColorStop(0, `rgb(${rgbStart[0]}, ${rgbStart[1]}, ${rgbStart[2]})`);
+                    grad.addColorStop(1, `rgb(${rgbEnd[0]}, ${rgbEnd[1]}, ${rgbEnd[2]})`);
+                    ctx.fillStyle = grad;
+                    ctx.fillRect(0, 0, cw, ch);
+
+                    const dataUrl = canvas.toDataURL('image/png');
+                    doc.addImage(dataUrl, 'PNG', x, y, w, h, undefined, 'FAST');
+                } catch (e) {
+                    doc.setFillColor(rgbStart[0], rgbStart[1], rgbStart[2]);
+                    if (radius > 0) {
+                        doc.roundedRect(x, y, w, h, radius, radius, 'F');
                     } else {
-                        doc.rect(sx, y, sw, h, 'F');
+                        doc.rect(x, y, w, h, 'F');
                     }
                 }
             }
 
-            function drawOutlinedWhiteText(doc, text, x, y, options = {}, strokeWidth = 0.35) {
-                doc.setDrawColor(15, 23, 42);
-                doc.setLineWidth(strokeWidth);
+            function drawOutlinedWhiteText(doc, text, x, y, options = {}, strokeOffset = 0.24) {
+                const str = String(text || '');
+                const cleanOpts = { ...options };
+                delete cleanOpts.renderingMode;
+
+                // Draw clean dark outline behind the text without eating into the white glyph fill
+                doc.setTextColor(15, 23, 42);
+                const d = strokeOffset;
+                doc.text(str, x - d, y, cleanOpts);
+                doc.text(str, x + d, y, cleanOpts);
+                doc.text(str, x, y - d, cleanOpts);
+                doc.text(str, x, y + d, cleanOpts);
+                doc.text(str, x, y + d * 1.35, cleanOpts);
+
+                // Draw crisp solid white text on top
                 doc.setTextColor(255, 255, 255);
-                doc.text(text, x, y, { ...options, renderingMode: 'fillThenStroke' });
+                doc.text(str, x, y, cleanOpts);
             }
 
             async function exportVectorPdf() {
