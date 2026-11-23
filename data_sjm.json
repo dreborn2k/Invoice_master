@@ -1,7 +1,7 @@
 {
   "app": "CV. SRIKANDI JAYA MANDIRI Invoice System",
   "cvId": "sjm",
-  "updatedAt": "2026-11-23T15:38:07.930Z",
+  "updatedAt": "2026-11-23T15:39:53.419Z",
   "settings": {
     "compName": "CV. SRIKANDI JAYA MANDIRI",
     "compTagline": "AMANAH DAN BAROKAH",
@@ -10,7 +10,7 @@
     "compNpwp": "NPWP: 96.733.327.9-532.000",
     "showNpwpDefault": true,
     "uiSkin": "iphone",
-    "invoiceTheme": "iphone",
+    "invoiceTheme": "linux",
     "customPrimaryHex": "#be123c",
     "customAccentHex": "#f472b6",
     "issueCity": "Sukoharjo",
