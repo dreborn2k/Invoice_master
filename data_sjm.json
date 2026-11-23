@@ -1,7 +1,7 @@
 {
   "app": "CV. SRIKANDI JAYA MANDIRI Invoice System",
   "cvId": "sjm",
-  "updatedAt": "2026-11-23T15:59:24.620Z",
+  "updatedAt": "2026-11-23T15:59:30.214Z",
   "settings": {
     "compName": "CV. SRIKANDI JAYA MANDIRI",
     "compTagline": "AMANAH DAN BAROKAH",
@@ -76,63 +76,6 @@
       ],
       "grandTotal": 1900000,
       "savedAt": "2026-11-23T15:59:24.615Z"
-    },
-    {
-      "id": "inv_1795449545127",
-      "invNumber": "INV/2026/11/002",
-      "invDate": "2026-11-23",
-      "invDueDate": "2026-12-07",
-      "clientName": "SD MOJO SURAKARTA",
-      "clientContact": "Yona Yulistyaningrum (0271)2932784",
-      "clientNpwp": "",
-      "clientAddress": "Jl. Sungai Serang  RT 03/ 03 Mojo Pasarkliwon Surakarta 57117",
-      "taxPriceMode": "include",
-      "enablePpn": false,
-      "ppnRate": 11,
-      "enablePph": false,
-      "pphRate": 2,
-      "pphLabel": "PPh Pasal 23",
-      "pphMode": "deduct",
-      "invNotes": "",
-      "items": [
-        {
-          "id": 1795449503604,
-          "name": "Sulak bulu",
-          "qty": 10,
-          "unit": "Pcs",
-          "price": 15000
-        },
-        {
-          "id": 1795449459673,
-          "name": "HCL pembersih kerak",
-          "qty": 10,
-          "unit": "Botol",
-          "price": 30000
-        },
-        {
-          "id": 1795449438255,
-          "name": "Keset Mie",
-          "qty": 10,
-          "unit": "Pcs",
-          "price": 60000
-        },
-        {
-          "id": 1795449410684,
-          "name": "Sapu Rayung",
-          "qty": 20,
-          "unit": "Pcs",
-          "price": 25000
-        },
-        {
-          "id": 1,
-          "name": "Pel Sumbu",
-          "qty": 5,
-          "unit": "Pcs",
-          "price": 70000
-        }
-      ],
-      "grandTotal": 1900000,
-      "savedAt": "2026-11-23T15:59:05.127Z"
     },
     {
       "id": "inv_1795448545786",
