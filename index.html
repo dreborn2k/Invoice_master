@@ -68,15 +68,29 @@
             transform: translateX(18px);
         }
 
+        #invoicePagesStack {
+            width: 210mm;
+            transform-origin: top left;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
         .a4-paper {
             width: 210mm;
+            height: 297mm;
             min-height: 297mm;
+            max-height: 297mm;
             background: #FFFFFF;
             box-shadow: 0 12px 36px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0,0,0,0.05);
-            padding: 15mm 16mm;
+            padding: 14mm 16mm 13mm 16mm;
             box-sizing: border-box;
             color: #0F172A;
-            transform-origin: top left;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+            position: relative;
         }
 
         .gradient-text-outline {
@@ -185,12 +199,24 @@
                 width: 210mm !important;
                 height: auto !important;
             }
-            #invoicePaper {
+            #invoicePagesStack {
                 transform: none !important;
                 width: 210mm !important;
+                gap: 0 !important;
+            }
+            .a4-paper {
+                width: 210mm !important;
+                height: 297mm !important;
                 min-height: 297mm !important;
+                max-height: 297mm !important;
                 box-shadow: none !important;
                 margin: 0 !important;
+                page-break-after: always;
+                break-after: page;
+            }
+            .a4-paper:last-child {
+                page-break-after: auto;
+                break-after: auto;
             }
         }
     </style>
@@ -287,7 +313,7 @@
                     Form Input Invoice
                 </button>
                 <button type="button" id="mobTabPreview" class="flex-1 py-2 rounded-xl text-xs font-bold text-[#636366] transition">
-                    Pratinjau Dokumen A4
+                    Pratinjau Dokumen A4 (<span id="mobPageCountBadge">1 Hal</span>)
                 </button>
             </div>
 
@@ -369,7 +395,10 @@
                     <!-- Card 3: Item Barang / Jasa -->
                     <div class="mac-card p-5 space-y-4">
                         <div class="flex flex-wrap items-center justify-between gap-2">
-                            <h2 class="text-xs font-bold uppercase tracking-wider text-[#8E8E93]">3. Rincian Barang / Jasa</h2>
+                            <div class="flex items-center gap-2">
+                                <h2 class="text-xs font-bold uppercase tracking-wider text-[#8E8E93]">3. Rincian Barang / Jasa</h2>
+                                <span id="itemsCountChip" class="px-2 py-0.5 rounded-full bg-black/5 text-[10px] font-bold text-[#636366]">1 item</span>
+                            </div>
                             <button type="button" id="btnAddItem" class="px-3 py-1.5 rounded-full bg-[#007AFF]/10 hover:bg-[#007AFF]/20 text-[#007AFF] text-xs font-bold transition flex items-center gap-1">
                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
                                 <span>Tambah Item</span>
@@ -459,7 +488,7 @@
                     </div>
                 </div>
 
-                <!-- RIGHT COLUMN: LIVE A4 DOCUMENT PREVIEW -->
+                <!-- RIGHT COLUMN: LIVE MULTI-PAGE A4 DOCUMENT PREVIEW -->
                 <div id="previewColumn" class="hidden lg:block lg:col-span-7 xl:col-span-7 lg:sticky lg:top-20">
                     <div class="mac-card overflow-hidden">
                         <div class="no-print px-4 py-2.5 bg-[#F9F9FB] border-b border-black/[0.06] flex flex-wrap items-center justify-between gap-2">
@@ -468,6 +497,7 @@
                                 <span class="w-2.5 h-2.5 rounded-full bg-[#FFBD2E]"></span>
                                 <span class="w-2.5 h-2.5 rounded-full bg-[#27C93F]"></span>
                                 <span class="ml-1 text-xs font-semibold text-[#636366]">Pratinjau A4</span>
+                                <span id="previewTotalPagesBadge" class="px-2 py-0.5 rounded-full bg-[#007AFF]/10 text-[#007AFF] text-[10px] font-bold">1 Halaman</span>
                             </div>
 
                             <div class="flex items-center gap-1 bg-white border border-black/10 rounded-full px-1.5 py-0.5">
@@ -487,121 +517,7 @@
 
                         <div id="previewScrollWrapper" class="p-3 sm:p-5 bg-[#E5E5EA]/60 overflow-auto max-h-[calc(100vh-145px)] flex justify-center">
                             <div id="a4ScaleBox" class="relative">
-                                <div id="invoicePaper" class="a4-paper flex flex-col justify-between">
-                                    <div>
-                                        <!-- Company Header -->
-                                        <div id="docHeaderWrapper" class="flex justify-between items-start gap-5 pb-5 border-b-2 border-slate-900">
-                                            <div id="docCompanyBrand" class="flex items-start gap-4 flex-1">
-                                                <div id="docLogoWrapper" class="hidden shrink-0">
-                                                    <img id="docLogoImg" src="" alt="Logo Perusahaan" class="object-contain">
-                                                </div>
-                                                <div>
-                                                    <h1 id="docCompName" class="text-xl font-extrabold tracking-tight text-slate-900 uppercase">CV. SRIKANDI JAYA MANDIRI</h1>
-                                                    <p id="docCompTagline" class="text-xs font-semibold text-blue-700 mt-0.5">AMANAH DAN BAROKAH</p>
-                                                    <p id="docCompAddress" class="text-[11px] text-slate-600 mt-1.5 leading-relaxed">Widyapura RT 004 RW 003, Kel. Singopuran, Kec. Kartasura, Kab. Sukoharjo, Jawa Tengah 57164</p>
-                                                    <p id="docCompContact" class="text-[11px] text-slate-600 mt-0.5">Telp: 081393897867 | Email: srikandijayamandiricv@gmail.com</p>
-                                                    <p id="docCompNpwp" class="text-[11px] font-semibold text-slate-700 mt-0.5">NPWP: 96.733.327.9-532.000</p>
-                                                </div>
-                                            </div>
-
-                                            <div class="text-right shrink-0">
-                                                <div id="docTitleBadge" class="gradient-text-outline inline-block bg-slate-900 text-white px-3.5 py-1 rounded-md text-lg font-extrabold tracking-widest uppercase">
-                                                    INVOICE
-                                                </div>
-                                                <table class="mt-2.5 ml-auto text-xs">
-                                                    <tr>
-                                                        <td class="text-slate-500 pr-2.5 py-0.5">No. Invoice</td>
-                                                        <td id="docInvNumber" class="font-bold text-slate-900 py-0.5">INV/2026/11/001</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="text-slate-500 pr-2.5 py-0.5">Tanggal</td>
-                                                        <td id="docInvDate" class="font-semibold text-slate-800 py-0.5">-</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="text-slate-500 pr-2.5 py-0.5">Jatuh Tempo</td>
-                                                        <td id="docInvDueDate" class="font-semibold text-slate-800 py-0.5">-</td>
-                                                    </tr>
-                                                </table>
-                                            </div>
-                                        </div>
-
-                                        <!-- Client Info -->
-                                        <div class="mt-5 mb-5 flex justify-between gap-6">
-                                            <div id="docClientBox" class="bg-slate-50 border border-slate-200/80 rounded-xl p-3.5 w-full max-w-md">
-                                                <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Kepada Yth / Ditagihkan Kepada:</p>
-                                                <p id="docClientName" class="text-sm font-bold text-slate-900 mt-1">-</p>
-                                                <p id="docClientAddress" class="text-xs text-slate-600 mt-1 leading-relaxed whitespace-pre-line">-</p>
-                                                <p id="docClientContact" class="text-xs text-slate-600 mt-1"></p>
-                                                <p id="docClientNpwp" class="text-xs font-semibold text-slate-700 mt-0.5"></p>
-                                            </div>
-                                        </div>
-
-                                        <!-- Items Table -->
-                                        <div id="docTableWrapper" class="overflow-hidden rounded-lg border border-slate-200">
-                                            <table class="w-full text-left border-collapse">
-                                                <thead>
-                                                    <tr id="docTableHeadRow" class="gradient-text-outline bg-slate-900 text-white text-[10.5px] uppercase tracking-wider">
-                                                        <th class="py-2.5 px-2.5 text-center w-9">No</th>
-                                                        <th class="py-2.5 px-2.5">Deskripsi Barang / Jasa</th>
-                                                        <th class="py-2.5 px-2 text-center w-14">Qty</th>
-                                                        <th class="py-2.5 px-2 text-center w-14">Sat</th>
-                                                        <th id="docColUnitPrice" class="py-2.5 px-2.5 text-right w-28">Harga Satuan</th>
-                                                        <th id="docColNetUnit" class="hidden py-2.5 px-2.5 text-right w-28">Harga Netto</th>
-                                                        <th class="py-2.5 px-2.5 text-right w-32">Jumlah</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody id="docItemsBody" class="divide-y divide-slate-200 text-xs"></tbody>
-                                            </table>
-                                        </div>
-
-                                        <!-- Totals & Notes Grid -->
-                                        <div class="mt-5 grid grid-cols-12 gap-5 items-start">
-                                            <div class="col-span-7 space-y-3">
-                                                <div id="docTerbilangBox" class="bg-slate-50 border border-slate-200/80 rounded-lg p-3">
-                                                    <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Terbilang:</p>
-                                                    <p id="docTerbilang" class="text-xs font-bold italic text-slate-800 mt-0.5">Nol Rupiah</p>
-                                                </div>
-                                                <div>
-                                                    <p class="text-[11px] font-bold text-slate-700 mb-1">Keterangan &amp; Pembayaran:</p>
-                                                    <p id="docNotes" class="text-[10.5px] text-slate-600 leading-relaxed whitespace-pre-line">-</p>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-span-5 space-y-1.5 text-xs">
-                                                <div class="flex justify-between py-1 px-2">
-                                                    <span id="docSubtotalLabel" class="text-slate-600">Subtotal</span>
-                                                    <span id="docSubtotal" class="font-bold text-slate-900">Rp 0</span>
-                                                </div>
-                                                <div id="docPpnRow" class="flex justify-between py-1 px-2">
-                                                    <span id="docPpnLabel" class="text-slate-600">PPN (11%)</span>
-                                                    <span id="docPpnAmount" class="font-bold text-slate-900">Rp 0</span>
-                                                </div>
-                                                <div id="docPphRow" class="hidden flex justify-between py-1 px-2">
-                                                    <span id="docPphLabel" class="text-slate-600">PPh (2%)</span>
-                                                    <span id="docPphAmount" class="font-bold text-rose-600">- Rp 0</span>
-                                                </div>
-                                                <div id="docGrandTotalRow" class="gradient-text-outline flex justify-between items-center py-2.5 px-3 rounded-lg bg-slate-900 text-white mt-1.5">
-                                                    <span class="text-xs font-bold uppercase tracking-wide">Total Tagihan</span>
-                                                    <span id="docGrandTotal" class="text-sm font-extrabold">Rp 0</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Signature Footer -->
-                                    <div class="mt-10 pt-4 border-t border-slate-200 flex justify-between items-end">
-                                        <div class="text-[10px] text-slate-400">
-                                            <p>Dokumen ini sah dan diterbitkan oleh <span id="docFooterCompName" class="font-semibold text-slate-600">CV. SRIKANDI JAYA MANDIRI</span></p>
-                                        </div>
-                                        <div class="text-center w-52">
-                                            <p id="docSignCityDate" class="text-xs text-slate-700">Sukoharjo, -</p>
-                                            <p id="docSignCompany" class="text-xs font-bold text-slate-900 mt-0.5">CV. SRIKANDI JAYA MANDIRI</p>
-                                            <div class="h-16"></div>
-                                            <p id="docSignerName" class="text-xs font-bold text-slate-900 underline underline-offset-4">Asih Ermataria</p>
-                                            <p id="docSignerRole" class="text-[11px] text-slate-500 mt-0.5">Direktur</p>
-                                        </div>
-                                    </div>
-                                </div>
+                                <div id="invoicePagesStack"></div>
                             </div>
                         </div>
                     </div>
@@ -1640,17 +1556,18 @@
             function applyA4Zoom() {
                 const wrapper = $('previewScrollWrapper');
                 const scaleBox = $('a4ScaleBox');
-                const paper = $('invoicePaper');
+                const stack = $('invoicePagesStack');
                 const label = $('zoomLevelLabel');
-                if (!wrapper || !scaleBox || !paper) return;
+                if (!wrapper || !scaleBox || !stack) return;
 
-                const paperWidthPx = paper.offsetWidth || 794;
-                const paperHeightPx = paper.offsetHeight || 1123;
+                const firstPaper = stack.querySelector('.a4-paper');
+                const stackWidthPx = (firstPaper && firstPaper.offsetWidth) || stack.offsetWidth || 794;
+                const stackHeightPx = stack.offsetHeight || 1123;
                 const availableWidth = Math.max(260, wrapper.clientWidth - 32);
 
                 let scale = 1;
                 if (currentZoomMode === 'auto') {
-                    scale = Math.min(1, availableWidth / paperWidthPx);
+                    scale = Math.min(1, availableWidth / stackWidthPx);
                     manualZoomScale = scale;
                     if (label) label.textContent = 'Auto';
                 } else {
@@ -1658,51 +1575,24 @@
                     if (label) label.textContent = Math.round(scale * 100) + '%';
                 }
 
-                paper.style.transform = `scale(${scale})`;
-                scaleBox.style.width = `${paperWidthPx * scale}px`;
-                scaleBox.style.height = `${paperHeightPx * scale}px`;
+                stack.style.transform = `scale(${scale})`;
+                scaleBox.style.width = `${stackWidthPx * scale}px`;
+                scaleBox.style.height = `${stackHeightPx * scale}px`;
             }
 
             function detectLogoOrientation(src) {
                 if (!src) {
                     logoAspectType = 'square';
-                    updateHeaderLogoLayout();
+                    updatePreview();
                     return;
                 }
                 const img = new Image();
                 img.onload = function () {
                     const ratio = (img.naturalWidth || 1) / (img.naturalHeight || 1);
                     logoAspectType = ratio > 1.35 ? 'landscape' : 'square';
-                    updateHeaderLogoLayout();
+                    updatePreview();
                 };
                 img.src = src;
-            }
-
-            function updateHeaderLogoLayout() {
-                const brandBox = $('docCompanyBrand');
-                const logoWrap = $('docLogoWrapper');
-                const logoImg = $('docLogoImg');
-                if (!brandBox || !logoWrap || !logoImg) return;
-
-                if (!settings.logoBase64) {
-                    logoWrap.classList.add('hidden');
-                    brandBox.classList.remove('flex-col');
-                    brandBox.classList.add('flex-row');
-                    return;
-                }
-
-                logoImg.src = settings.logoBase64;
-                logoWrap.classList.remove('hidden');
-
-                if (logoAspectType === 'landscape') {
-                    brandBox.classList.remove('flex-row', 'items-start');
-                    brandBox.classList.add('flex-col', 'items-start');
-                    logoImg.className = 'h-14 max-w-[230px] object-contain mb-1';
-                } else {
-                    brandBox.classList.remove('flex-col');
-                    brandBox.classList.add('flex-row', 'items-start');
-                    logoImg.className = 'w-16 h-16 object-contain';
-                }
             }
 
             function applyUiSkin(skinKey) {
@@ -1882,8 +1772,13 @@
             function renderItemRows() {
                 const container = $('itemsContainer');
                 const hintEl = $('taxPriceModeHint');
+                const countChip = $('itemsCountChip');
                 const rates = getTaxRates();
                 const isInclusive = rates.taxPriceMode === 'include';
+
+                if (countChip) {
+                    countChip.textContent = `${items.length} item`;
+                }
 
                 if (hintEl) {
                     hintEl.textContent = isInclusive
@@ -1958,6 +1853,297 @@
                 });
             }
 
+            // Paginate items into A4 sheets cleanly based on estimated line heights
+            function paginateInvoiceItems(computedItems, isLastPageExtrasLarge) {
+                const FIRST_PAGE_SINGLE_CAPACITY = 11; // When header + client + table + totals + signature all fit on 1 page
+                const FIRST_PAGE_MULTI_CAPACITY = 19;  // When totals & signature move to a later page
+                const NEXT_PAGE_MID_CAPACITY = 26;     // Middle pages (compact continuation header + table + footer)
+                const NEXT_PAGE_FINAL_CAPACITY = 16;   // Final page (compact continuation header + table + totals + signature + footer)
+
+                const enriched = computedItems.map((ci, idx) => {
+                    const descLen = (ci.name || '').length;
+                    const rowUnits = Math.max(1, Math.ceil(descLen / (isLastPageExtrasLarge ? 38 : 48)));
+                    return { ...ci, rowNo: idx + 1, rowUnits };
+                });
+
+                const totalUnits = enriched.reduce((sum, r) => sum + r.rowUnits, 0);
+
+                // Case 1: Everything fits comfortably on 1 page
+                if (totalUnits <= FIRST_PAGE_SINGLE_CAPACITY) {
+                    return [enriched];
+                }
+
+                // Case 2: Multi-page distribution
+                const pages = [];
+                let cursor = 0;
+
+                // Slice Page 1
+                const page1Rows = [];
+                let p1Used = 0;
+                while (cursor < enriched.length && p1Used + enriched[cursor].rowUnits <= FIRST_PAGE_MULTI_CAPACITY) {
+                    p1Used += enriched[cursor].rowUnits;
+                    page1Rows.push(enriched[cursor]);
+                    cursor++;
+                }
+                if (page1Rows.length === 0 && cursor < enriched.length) {
+                    page1Rows.push(enriched[cursor++]);
+                }
+                pages.push(page1Rows);
+
+                // Slice remaining pages
+                while (cursor < enriched.length) {
+                    let remainingUnits = 0;
+                    for (let k = cursor; k < enriched.length; k++) {
+                        remainingUnits += enriched[k].rowUnits;
+                    }
+
+                    // Can all remaining items + summary + signature fit on this final page?
+                    if (remainingUnits <= NEXT_PAGE_FINAL_CAPACITY) {
+                        const finalRows = [];
+                        while (cursor < enriched.length) {
+                            finalRows.push(enriched[cursor++]);
+                        }
+                        pages.push(finalRows);
+                        break;
+                    }
+
+                    // Otherwise fill a middle page
+                    const midRows = [];
+                    let midUsed = 0;
+                    while (cursor < enriched.length && midUsed + enriched[cursor].rowUnits <= NEXT_PAGE_MID_CAPACITY) {
+                        midUsed += enriched[cursor].rowUnits;
+                        midRows.push(enriched[cursor]);
+                        cursor++;
+                    }
+                    if (midRows.length === 0 && cursor < enriched.length) {
+                        midRows.push(enriched[cursor++]);
+                    }
+                    pages.push(midRows);
+                }
+
+                // Check if the last page still has too many items to accommodate totals + signature without overflow
+                const lastPage = pages[pages.length - 1];
+                const lastPageUnits = lastPage.reduce((s, r) => s + r.rowUnits, 0);
+                if (lastPageUnits > NEXT_PAGE_FINAL_CAPACITY) {
+                    const overflowRows = [];
+                    while (lastPage.length > 1 && lastPage.reduce((s, r) => s + r.rowUnits, 0) > NEXT_PAGE_FINAL_CAPACITY) {
+                        overflowRows.unshift(lastPage.pop());
+                    }
+                    pages.push(overflowRows);
+                }
+
+                return pages;
+            }
+
+            function buildA4PageHtml(pageIndex, totalPages, pageRows, ctxData) {
+                const {
+                    calc,
+                    theme,
+                    isInclusive,
+                    compName,
+                    compTagline,
+                    compAddress,
+                    compContact,
+                    compNpwp,
+                    showNpwp,
+                    invNo,
+                    invDateStr,
+                    invDueStr,
+                    clientName,
+                    clientAddress,
+                    cContact,
+                    cNpwp,
+                    notesText,
+                    issueCity,
+                    signerName,
+                    signerRole
+                } = ctxData;
+
+                const isFirstPage = pageIndex === 0;
+                const isLastPage = pageIndex === totalPages - 1;
+                const pageNum = pageIndex + 1;
+
+                // Logo HTML
+                let logoHtml = '';
+                if (settings.logoBase64) {
+                    if (logoAspectType === 'landscape') {
+                        logoHtml = `<div class="shrink-0"><img src="${settings.logoBase64}" alt="Logo" class="h-13 max-w-[220px] object-contain mb-1"></div>`;
+                    } else {
+                        logoHtml = `<div class="shrink-0"><img src="${settings.logoBase64}" alt="Logo" class="w-16 h-16 object-contain"></div>`;
+                    }
+                }
+                const brandFlexClass = (settings.logoBase64 && logoAspectType === 'landscape')
+                    ? 'flex flex-col items-start flex-1'
+                    : 'flex flex-row items-start gap-4 flex-1';
+
+                // Top Header: Full header on Page 1, Compact Continuation Header on Page 2+
+                const headerSectionHtml = isFirstPage ? `
+                    <div class="flex justify-between items-start gap-5 pb-4" style="border-bottom: 2px solid transparent; border-image: ${theme.gradientCss} 1;">
+                        <div class="${brandFlexClass}">
+                            ${logoHtml}
+                            <div>
+                                <h1 class="text-xl font-extrabold tracking-tight uppercase" style="color: ${theme.primaryHex};">${escapeHtml(compName)}</h1>
+                                ${compTagline ? `<p class="text-xs font-semibold mt-0.5" style="color: ${theme.accentHex};">${escapeHtml(compTagline)}</p>` : ''}
+                                <p class="text-[11px] text-slate-600 mt-1.5 leading-relaxed">${escapeHtml(compAddress)}</p>
+                                <p class="text-[11px] text-slate-600 mt-0.5">${escapeHtml(compContact)}</p>
+                                ${showNpwp ? `<p class="text-[11px] font-semibold text-slate-700 mt-0.5">${escapeHtml(compNpwp)}</p>` : ''}
+                            </div>
+                        </div>
+
+                        <div class="text-right shrink-0">
+                            <div class="gradient-text-outline inline-block text-white px-3.5 py-1 rounded-md text-lg font-extrabold tracking-widest uppercase" style="background: ${theme.gradientCss};">
+                                INVOICE
+                            </div>
+                            <table class="mt-2 ml-auto text-xs">
+                                <tr>
+                                    <td class="text-slate-500 pr-2.5 py-0.5">No. Invoice</td>
+                                    <td class="font-bold text-slate-900 py-0.5">${escapeHtml(invNo)}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-slate-500 pr-2.5 py-0.5">Tanggal</td>
+                                    <td class="font-semibold text-slate-800 py-0.5">${escapeHtml(invDateStr)}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-slate-500 pr-2.5 py-0.5">Jatuh Tempo</td>
+                                    <td class="font-semibold text-slate-800 py-0.5">${escapeHtml(invDueStr)}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 mb-4 flex justify-between gap-6">
+                        <div class="rounded-xl p-3.5 w-full max-w-md border" style="background: ${theme.softGradientCss || theme.softBgHex}; border-color: ${theme.borderHex};">
+                            <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Kepada Yth / Ditagihkan Kepada:</p>
+                            <p class="text-sm font-bold text-slate-900 mt-1">${escapeHtml(clientName)}</p>
+                            <p class="text-xs text-slate-600 mt-1 leading-relaxed whitespace-pre-line">${escapeHtml(clientAddress)}</p>
+                            ${cContact ? `<p class="text-xs text-slate-600 mt-1">UP / Telp: ${escapeHtml(cContact)}</p>` : ''}
+                            ${cNpwp ? `<p class="text-xs font-semibold text-slate-700 mt-0.5">NPWP: ${escapeHtml(cNpwp)}</p>` : ''}
+                        </div>
+                    </div>
+                ` : `
+                    <div class="flex justify-between items-center gap-4 pb-3 mb-4" style="border-bottom: 2px solid transparent; border-image: ${theme.gradientCss} 1;">
+                        <div>
+                            <p class="text-sm font-extrabold uppercase tracking-tight" style="color: ${theme.primaryHex};">${escapeHtml(compName)}</p>
+                            <p class="text-[10.5px] text-slate-500">Kepada: <strong class="text-slate-800">${escapeHtml(clientName)}</strong></p>
+                        </div>
+                        <div class="text-right">
+                            <span class="gradient-text-outline inline-block px-2.5 py-0.5 rounded text-[11px] font-extrabold tracking-wider uppercase" style="background: ${theme.gradientCss};">
+                                LAMPIRAN INVOICE
+                            </span>
+                            <p class="text-[11px] font-bold text-slate-800 mt-1">No: ${escapeHtml(invNo)} &bull; Tgl: ${escapeHtml(invDateStr)}</p>
+                        </div>
+                    </div>
+                `;
+
+                // Items Table Rows
+                const rowsHtml = pageRows.map((ci, idx) => `
+                    <tr class="${idx % 2 === 1 ? 'bg-slate-50/60' : 'bg-white'}">
+                        <td class="py-1.5 px-2.5 text-center text-slate-500 font-medium">${ci.rowNo}</td>
+                        <td class="py-1.5 px-2.5 text-slate-900 font-medium">${escapeHtml(ci.name) || '<span class="text-slate-400 italic">Item belum diisi</span>'}</td>
+                        <td class="py-1.5 px-2 text-center text-slate-800">${ci.qty}</td>
+                        <td class="py-1.5 px-2 text-center text-slate-600">${escapeHtml(ci.unit) || '-'}</td>
+                        <td class="py-1.5 px-2.5 text-right text-slate-800">${formatNumber(ci.inputPrice)}</td>
+                        ${isInclusive ? `<td class="py-1.5 px-2.5 text-right font-semibold" style="color:${theme.accentHex}">${formatNumber(ci.netUnitPrice)}</td>` : ''}
+                        <td class="py-1.5 px-2.5 text-right font-bold text-slate-900">${formatNumber(ci.netLineTotal)}</td>
+                    </tr>
+                `).join('');
+
+                const tableSectionHtml = `
+                    <div class="overflow-hidden rounded-lg border" style="border-color: ${theme.borderHex};">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="gradient-text-outline text-white text-[10.5px] uppercase tracking-wider" style="background: ${theme.gradientCss};">
+                                    <th class="py-2 px-2.5 text-center w-9">No</th>
+                                    <th class="py-2 px-2.5">Deskripsi Barang / Jasa</th>
+                                    <th class="py-2 px-2 text-center w-14">Qty</th>
+                                    <th class="py-2 px-2 text-center w-14">Sat</th>
+                                    <th class="py-2 px-2.5 text-right w-28">${isInclusive ? 'Harga Bruto' : 'Harga Satuan'}</th>
+                                    ${isInclusive ? `<th class="py-2 px-2.5 text-right w-28">Harga Netto</th>` : ''}
+                                    <th class="py-2 px-2.5 text-right w-32">Jumlah</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-200 text-xs">
+                                ${rowsHtml}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+
+                // Totals & Signature only on the Last Page; continuation note on intermediate pages
+                const bottomSectionHtml = isLastPage ? `
+                    <div class="mt-4 grid grid-cols-12 gap-5 items-start">
+                        <div class="col-span-7 space-y-2.5">
+                            <div class="rounded-lg p-2.5 border" style="background: ${theme.softGradientCss || theme.softBgHex}; border-color: ${theme.borderHex};">
+                                <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Terbilang:</p>
+                                <p class="text-xs font-bold italic text-slate-800 mt-0.5">${escapeHtml(terbilang(calc.grandTotal))}</p>
+                            </div>
+                            <div>
+                                <p class="text-[11px] font-bold text-slate-700 mb-0.5">Keterangan &amp; Pembayaran:</p>
+                                <p class="text-[10px] text-slate-600 leading-relaxed whitespace-pre-line">${escapeHtml(notesText)}</p>
+                            </div>
+                        </div>
+
+                        <div class="col-span-5 space-y-1 text-xs">
+                            <div class="flex justify-between py-1 px-2">
+                                <span class="text-slate-600">${isInclusive ? 'Subtotal Netto (DPP)' : 'Subtotal'}</span>
+                                <span class="font-bold text-slate-900">${formatRupiah(calc.subtotalNet)}</span>
+                            </div>
+                            ${calc.enablePpn ? `
+                                <div class="flex justify-between py-1 px-2">
+                                    <span class="text-slate-600">PPN (${calc.ppnRate}%)</span>
+                                    <span class="font-bold text-slate-900">${formatRupiah(calc.ppnAmount)}</span>
+                                </div>
+                            ` : ''}
+                            ${calc.enablePph ? `
+                                <div class="flex justify-between py-1 px-2">
+                                    <span class="text-slate-600">${escapeHtml(calc.pphLabel)} (${calc.pphRate}%)</span>
+                                    <span class="font-bold text-rose-600">${(calc.pphMode === 'deduct' ? '- ' : '+ ') + formatRupiah(calc.pphAmount)}</span>
+                                </div>
+                            ` : ''}
+                            <div class="gradient-text-outline flex justify-between items-center py-2 px-3 rounded-lg text-white mt-1" style="background: ${theme.gradientCss};">
+                                <span class="text-xs font-bold uppercase tracking-wide">Total Tagihan</span>
+                                <span class="text-sm font-extrabold">${formatRupiah(calc.grandTotal)}</span>
+                            </div>
+                        </div>
+                    </div>
+                ` : `
+                    <div class="mt-3 flex justify-end">
+                        <p class="text-[11px] italic text-slate-500">Bersambung ke Halaman ${pageNum + 1} dari ${totalPages} &rarr;</p>
+                    </div>
+                `;
+
+                const footerHtml = `
+                    <div>
+                        ${isLastPage ? `
+                            <div class="flex justify-end mb-3">
+                                <div class="text-center w-52">
+                                    <p class="text-xs text-slate-700">${escapeHtml(issueCity)}, ${escapeHtml(invDateStr)}</p>
+                                    <p class="text-xs font-bold text-slate-900 mt-0.5">${escapeHtml(compName)}</p>
+                                    <div class="h-14"></div>
+                                    <p class="text-xs font-bold text-slate-900 underline underline-offset-4">${escapeHtml(signerName)}</p>
+                                    <p class="text-[11px] text-slate-500 mt-0.5">${escapeHtml(signerRole)}</p>
+                                </div>
+                            </div>
+                        ` : ''}
+                        <div class="pt-2.5 border-t border-slate-200 flex justify-between items-center text-[10px] text-slate-500">
+                            <p>Dokumen sah diterbitkan oleh <span class="font-semibold text-slate-700">${escapeHtml(compName)}</span> &bull; No: <span class="font-semibold">${escapeHtml(invNo)}</span></p>
+                            <p class="font-bold text-slate-700">Halaman ${pageNum} dari ${totalPages}</p>
+                        </div>
+                    </div>
+                `;
+
+                return `
+                    <div class="a4-paper">
+                        <div>
+                            ${headerSectionHtml}
+                            ${tableSectionHtml}
+                            ${bottomSectionHtml}
+                        </div>
+                        ${footerHtml}
+                    </div>
+                `;
+            }
+
             function updatePreview() {
                 const calc = calculateInvoiceTotals();
                 const theme = getActiveTheme();
@@ -1980,102 +2166,43 @@
                 $('formPphDisplay').textContent = (calc.pphMode === 'deduct' ? '- ' : '+ ') + formatRupiah(calc.pphAmount);
                 $('formGrandTotalDisplay').textContent = formatRupiah(calc.grandTotal);
 
-                const headerWrap = $('docHeaderWrapper');
-                const compNameEl = $('docCompName');
-                const taglineEl = $('docCompTagline');
-                const titleBadge = $('docTitleBadge');
-                const clientBox = $('docClientBox');
-                const tableWrap = $('docTableWrapper');
-                const tableHeadRow = $('docTableHeadRow');
-                const terbilangBox = $('docTerbilangBox');
-                const grandTotalRow = $('docGrandTotalRow');
+                const pages = paginateInvoiceItems(calc.computedItems, isInclusive);
+                const totalPages = pages.length;
 
-                if (headerWrap) {
-                    headerWrap.style.borderBottomColor = 'transparent';
-                    headerWrap.style.borderImage = `${theme.gradientCss} 1`;
+                const pageBadge = $('previewTotalPagesBadge');
+                if (pageBadge) pageBadge.textContent = `${totalPages} Halaman`;
+                const mobBadge = $('mobPageCountBadge');
+                if (mobBadge) mobBadge.textContent = `${totalPages} Hal`;
+
+                const ctxData = {
+                    calc,
+                    theme,
+                    isInclusive,
+                    compName: settings.compName || 'CV. SRIKANDI JAYA MANDIRI',
+                    compTagline: settings.compTagline || '',
+                    compAddress: settings.compAddress || '',
+                    compContact: settings.compContact || '',
+                    compNpwp: settings.compNpwp || '',
+                    showNpwp: $('showCompNpwp').checked && Boolean(settings.compNpwp),
+                    invNo: $('invNumber').value.trim() || '-',
+                    invDateStr: formatDateIndo($('invDate').value),
+                    invDueStr: formatDateIndo($('invDueDate').value),
+                    clientName: $('clientName').value.trim() || 'Nama Klien / Perusahaan',
+                    clientAddress: $('clientAddress').value.trim() || '-',
+                    cContact: $('clientContact').value.trim(),
+                    cNpwp: $('clientNpwp').value.trim(),
+                    notesText: $('invNotes').value.trim() || '-',
+                    issueCity: settings.issueCity || 'Sukoharjo',
+                    signerName: settings.signerName || 'Asih Ermataria',
+                    signerRole: settings.signerRole || 'Direktur'
+                };
+
+                const stack = $('invoicePagesStack');
+                if (stack) {
+                    stack.innerHTML = pages.map((pageRows, idx) => buildA4PageHtml(idx, totalPages, pageRows, ctxData)).join('');
                 }
-                if (compNameEl) compNameEl.style.color = theme.primaryHex;
-                if (taglineEl) taglineEl.style.color = theme.accentHex;
-                if (titleBadge) titleBadge.style.background = theme.gradientCss;
-                if (clientBox) {
-                    clientBox.style.background = theme.softGradientCss || theme.softBgHex;
-                    clientBox.style.borderColor = theme.borderHex;
-                }
-                if (tableWrap) tableWrap.style.borderColor = theme.borderHex;
-                if (tableHeadRow) tableHeadRow.style.background = theme.gradientCss;
-                if (terbilangBox) {
-                    terbilangBox.style.background = theme.softGradientCss || theme.softBgHex;
-                    terbilangBox.style.borderColor = theme.borderHex;
-                }
-                if (grandTotalRow) grandTotalRow.style.background = theme.gradientCss;
 
-                $('docCompName').textContent = settings.compName || 'CV. SRIKANDI JAYA MANDIRI';
-                $('docCompTagline').textContent = settings.compTagline || '';
-                $('docCompTagline').classList.toggle('hidden', !settings.compTagline);
-                $('docCompAddress').textContent = settings.compAddress || '';
-                $('docCompContact').textContent = settings.compContact || '';
-
-                const showNpwp = $('showCompNpwp').checked && Boolean(settings.compNpwp);
-                $('docCompNpwp').textContent = settings.compNpwp || '';
-                $('docCompNpwp').classList.toggle('hidden', !showNpwp);
-
-                $('docInvNumber').textContent = $('invNumber').value.trim() || '-';
-                $('docInvDate').textContent = formatDateIndo($('invDate').value);
-                $('docInvDueDate').textContent = formatDateIndo($('invDueDate').value);
-
-                $('docClientName').textContent = $('clientName').value.trim() || 'Nama Klien / Perusahaan';
-                $('docClientAddress').textContent = $('clientAddress').value.trim() || '-';
-                const cContact = $('clientContact').value.trim();
-                $('docClientContact').textContent = cContact ? `UP / Telp: ${cContact}` : '';
-                $('docClientContact').classList.toggle('hidden', !cContact);
-                const cNpwp = $('clientNpwp').value.trim();
-                $('docClientNpwp').textContent = cNpwp ? `NPWP: ${cNpwp}` : '';
-                $('docClientNpwp').classList.toggle('hidden', !cNpwp);
-
-                $('docColUnitPrice').textContent = isInclusive ? 'Harga Bruto' : 'Harga Satuan';
-                $('docColNetUnit').classList.toggle('hidden', !isInclusive);
-
-                const tbody = $('docItemsBody');
-                tbody.innerHTML = '';
-                calc.computedItems.forEach((ci, idx) => {
-                    const tr = document.createElement('tr');
-                    tr.className = idx % 2 === 1 ? 'bg-slate-50/60' : 'bg-white';
-                    tr.innerHTML = `
-                        <td class="py-2 px-2.5 text-center text-slate-500 font-medium">${idx + 1}</td>
-                        <td class="py-2 px-2.5 text-slate-900 font-medium">${escapeHtml(ci.name) || '<span class="text-slate-400 italic">Item belum diisi</span>'}</td>
-                        <td class="py-2 px-2 text-center text-slate-800">${ci.qty}</td>
-                        <td class="py-2 px-2 text-center text-slate-600">${escapeHtml(ci.unit) || '-'}</td>
-                        <td class="py-2 px-2.5 text-right text-slate-800">${formatNumber(ci.inputPrice)}</td>
-                        ${isInclusive ? `<td class="py-2 px-2.5 text-right font-semibold" style="color:${theme.accentHex}">${formatNumber(ci.netUnitPrice)}</td>` : ''}
-                        <td class="py-2 px-2.5 text-right font-bold text-slate-900">${formatNumber(ci.netLineTotal)}</td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-
-                $('docSubtotalLabel').textContent = isInclusive ? 'Subtotal Netto (DPP)' : 'Subtotal';
-                $('docSubtotal').textContent = formatRupiah(calc.subtotalNet);
-
-                $('docPpnRow').classList.toggle('hidden', !calc.enablePpn);
-                $('docPpnLabel').textContent = `PPN (${calc.ppnRate}%)`;
-                $('docPpnAmount').textContent = formatRupiah(calc.ppnAmount);
-
-                $('docPphRow').classList.toggle('hidden', !calc.enablePph);
-                $('docPphLabel').textContent = `${calc.pphLabel} (${calc.pphRate}%)`;
-                $('docPphAmount').textContent = (calc.pphMode === 'deduct' ? '- ' : '+ ') + formatRupiah(calc.pphAmount);
-
-                $('docGrandTotal').textContent = formatRupiah(calc.grandTotal);
-                $('docTerbilang').textContent = terbilang(calc.grandTotal);
-                $('docNotes').textContent = $('invNotes').value.trim() || '-';
-
-                $('docFooterCompName').textContent = settings.compName || 'CV. SRIKANDI JAYA MANDIRI';
-                $('docSignCityDate').textContent = `${settings.issueCity || 'Sukoharjo'}, ${formatDateIndo($('invDate').value)}`;
-                $('docSignCompany').textContent = settings.compName || 'CV. SRIKANDI JAYA MANDIRI';
-                $('docSignerName').textContent = settings.signerName || 'Asih Ermataria';
-                $('docSignerRole').textContent = settings.signerRole || 'Direktur';
-
-                if (currentZoomMode === 'auto') {
-                    applyA4Zoom();
-                }
+                applyA4Zoom();
             }
 
             function resetClientForm() {
@@ -2365,12 +2492,45 @@
                 const calc = calculateInvoiceTotals();
                 const theme = getActiveTheme();
                 const isInclusive = calc.taxPriceMode === 'include';
+                const secRgb = theme.secondaryRgb || theme.accentRgb;
 
                 const marginX = 16;
                 const pageW = 210;
                 const rightX = pageW - marginX;
-                let curY = 16;
+                const compNameUpper = (settings.compName || 'CV. SRIKANDI JAYA MANDIRI').toUpperCase();
+                const invNo = $('invNumber').value.trim() || '-';
+                const invDateStr = formatDateIndo($('invDate').value);
+                const invDueStr = formatDateIndo($('invDueDate').value);
+                const cName = $('clientName').value.trim() || '-';
 
+                // Draw compact continuation header on Page 2, 3, ...
+                function drawContinuationHeader() {
+                    const topY = 14;
+                    doc.setFont('helvetica', 'bold');
+                    doc.setFontSize(10.5);
+                    doc.setTextColor(...theme.primaryRgb);
+                    doc.text(compNameUpper, marginX, topY + 3.5);
+
+                    doc.setFont('helvetica', 'normal');
+                    doc.setFontSize(8);
+                    doc.setTextColor(100, 116, 139);
+                    doc.text(`Kepada: ${cName}`, marginX, topY + 8);
+
+                    drawGradientBar(doc, rightX - 42, topY, 42, 6, theme.primaryRgb, secRgb, 1);
+                    doc.setFont('helvetica', 'bold');
+                    doc.setFontSize(7.5);
+                    drawOutlinedWhiteText(doc, 'LAMPIRAN INVOICE', rightX - 21, topY + 4.1, { align: 'center' }, 0.3);
+
+                    doc.setFont('helvetica', 'bold');
+                    doc.setFontSize(8);
+                    doc.setTextColor(15, 23, 42);
+                    doc.text(`No: ${invNo} | Tgl: ${invDateStr}`, rightX, topY + 10.2, { align: 'right' });
+
+                    drawGradientBar(doc, marginX, topY + 12.5, rightX - marginX, 0.6, theme.primaryRgb, secRgb, 0);
+                }
+
+                // Draw Page 1 Full Header
+                let curY = 16;
                 const rasterLogo = await rasterizeImageToPng(settings.logoBase64);
                 let textStartX = marginX;
 
@@ -2392,7 +2552,7 @@
                 doc.setFont('helvetica', 'bold');
                 doc.setFontSize(13.5);
                 doc.setTextColor(...theme.primaryRgb);
-                doc.text((settings.compName || 'CV. SRIKANDI JAYA MANDIRI').toUpperCase(), textStartX, curY + 4.5);
+                doc.text(compNameUpper, textStartX, curY + 4.5);
 
                 let leftY = curY + 9;
                 if (settings.compTagline) {
@@ -2423,15 +2583,10 @@
                 }
 
                 const metaTopY = 16;
-                const secRgb = theme.secondaryRgb || theme.accentRgb;
                 drawGradientBar(doc, rightX - 36, metaTopY, 36, 8.5, theme.primaryRgb, secRgb, 1.5);
                 doc.setFont('helvetica', 'bold');
                 doc.setFontSize(11);
                 drawOutlinedWhiteText(doc, 'INVOICE', rightX - 18, metaTopY + 5.8, { align: 'center' }, 0.42);
-
-                const invNo = $('invNumber').value.trim() || '-';
-                const invDateStr = formatDateIndo($('invDate').value);
-                const invDueStr = formatDateIndo($('invDueDate').value);
 
                 doc.setFontSize(8);
                 let metaY = metaTopY + 13.5;
@@ -2454,7 +2609,6 @@
                 drawGradientBar(doc, marginX, headerBottomY, rightX - marginX, 0.7, theme.primaryRgb, secRgb, 0);
 
                 let boxY = headerBottomY + 5;
-                const cName = $('clientName').value.trim() || '-';
                 const cAddr = $('clientAddress').value.trim() || '-';
                 const cContact = $('clientContact').value.trim();
                 const cNpwp = $('clientNpwp').value.trim();
@@ -2522,9 +2676,10 @@
 
                 doc.autoTable({
                     startY: boxY + boxH + 5,
-                    margin: { left: marginX, right: marginX },
+                    margin: { top: 31, bottom: 20, left: marginX, right: marginX },
                     head: headCols,
                     body: bodyRows,
+                    showHead: 'everyPage',
                     theme: 'grid',
                     headStyles: {
                         fillColor: theme.primaryRgb,
@@ -2541,6 +2696,11 @@
                     },
                     alternateRowStyles: {
                         fillColor: theme.softBgRgb
+                    },
+                    willDrawPage: function (data) {
+                        if (data.pageNumber > 1) {
+                            drawContinuationHeader();
+                        }
                     },
                     didDrawCell: function (data) {
                         if (data.section === 'head' && data.column.index === 0) {
@@ -2574,9 +2734,10 @@
                 });
 
                 let afterTableY = (doc.lastAutoTable ? doc.lastAutoTable.finalY : (boxY + boxH + 30)) + 5;
-                if (afterTableY > 235) {
+                if (afterTableY > 220) {
                     doc.addPage();
-                    afterTableY = 20;
+                    drawContinuationHeader();
+                    afterTableY = 33;
                 }
 
                 const terbText = terbilang(calc.grandTotal);
@@ -2664,10 +2825,29 @@
                 doc.setTextColor(100, 116, 139);
                 doc.text(settings.signerRole || 'Direktur', signCenterX, signY + 28.2, { align: 'center' });
 
+                // Render Footer on EVERY PDF page with "Halaman X dari Y"
+                const totalPdfPages = doc.getNumberOfPages();
+                for (let p = 1; p <= totalPdfPages; p++) {
+                    doc.setPage(p);
+                    const footY = 287;
+                    doc.setDrawColor(226, 232, 240);
+                    doc.setLineWidth(0.25);
+                    doc.line(marginX, footY - 4, rightX, footY - 4);
+
+                    doc.setFont('helvetica', 'normal');
+                    doc.setFontSize(7.5);
+                    doc.setTextColor(100, 116, 139);
+                    doc.text(`Dokumen sah diterbitkan oleh ${settings.compName || 'CV. SRIKANDI JAYA MANDIRI'} • No: ${invNo}`, marginX, footY);
+
+                    doc.setFont('helvetica', 'bold');
+                    doc.setTextColor(51, 65, 85);
+                    doc.text(`Halaman ${p} dari ${totalPdfPages}`, rightX, footY, { align: 'right' });
+                }
+
                 const safeFilename = (invNo || 'Invoice').replace(/[^a-zA-Z0-9_-]/g, '_') + '.pdf';
                 try {
                     doc.save(safeFilename);
-                    showToast(`File ${safeFilename} berhasil diunduh!`);
+                    showToast(`File ${safeFilename} (${totalPdfPages} halaman) berhasil diunduh!`);
                 } catch (e) {
                     const blobUrl = doc.output('bloburl');
                     window.open(blobUrl, '_blank');
