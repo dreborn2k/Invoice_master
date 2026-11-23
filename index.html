@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Invoice App — CV. Srikandi Jaya Mandiri</title>
+    <title>Invoice App — Multi-CV Billing</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
@@ -79,6 +79,18 @@
             transform-origin: top left;
         }
 
+        .gradient-text-outline {
+            color: #FFFFFF;
+            -webkit-text-stroke: 0.45px rgba(15, 23, 42, 0.85);
+            paint-order: stroke fill;
+            text-shadow:
+                -0.75px -0.75px 0 rgba(15, 23, 42, 0.72),
+                 0.75px -0.75px 0 rgba(15, 23, 42, 0.72),
+                -0.75px  0.75px 0 rgba(15, 23, 42, 0.72),
+                 0.75px  0.75px 0 rgba(15, 23, 42, 0.72),
+                 0px     1px    2px rgba(0, 0, 0, 0.35);
+        }
+
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
@@ -91,9 +103,7 @@
             border-radius: 99px;
         }
 
-        /* =================================================================
-           UI INTERFACE SKINS (iPhone, Samsung One UI, macOS, Linux)
-        ================================================================== */
+        /* UI INTERFACE SKINS */
         body.ui-oneui {
             background-color: #F6F6F8;
             font-family: 'Segoe UI', Roboto, -apple-system, sans-serif;
@@ -175,36 +185,55 @@
                 width: 210mm !important;
                 height: auto !important;
             }
-            .a4-paper {
+            #invoicePaper {
+                transform: none !important;
                 width: 210mm !important;
                 min-height: 297mm !important;
                 box-shadow: none !important;
                 margin: 0 !important;
-                transform: none !important;
             }
         }
     </style>
 </head>
-<body class="pb-24 md:pb-10">
+<body class="min-h-screen pb-24 md:pb-10">
 
-    <!-- =================================================================
-         TOP NAVIGATION BAR
-    ================================================================== -->
-    <header class="no-print sticky top-0 z-40 bg-white/85 backdrop-blur-xl border-b border-black/[0.06]">
+    <!-- TOP NAVIGATION BAR -->
+    <header class="no-print sticky top-0 z-30 bg-white/85 backdrop-blur-xl border-b border-black/[0.06]">
         <div class="max-w-[1440px] mx-auto px-3 sm:px-6 h-16 flex items-center justify-between gap-2">
-            <!-- Brand Identity -->
-            <div class="flex items-center gap-2.5 min-w-0">
+            <!-- Brand Identity & Multi-CV Switcher -->
+            <div class="flex items-center gap-2.5 min-w-0 relative">
                 <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-[#007AFF] to-[#5856D6] flex items-center justify-center text-white font-bold shadow-sm shrink-0">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                     </svg>
                 </div>
                 <div class="min-w-0">
-                    <div class="flex items-center gap-1.5">
-                        <h1 id="headerCompanyName" class="text-xs sm:text-sm font-bold text-[#1C1C1E] truncate max-w-[140px] sm:max-w-[230px]">CV. SRIKANDI JAYA MANDIRI</h1>
-                        <span id="cloudStatusDot" title="Status Sinkronisasi" class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span>
-                    </div>
-                    <p class="text-[10px] sm:text-[11px] text-[#8E8E93] font-medium">Sistem Billing &amp; Faktur</p>
+                    <button type="button" id="btnCompanySwitcher" class="flex items-center gap-1 text-left group focus:outline-none">
+                        <h1 id="headerCompanyName" class="text-xs sm:text-sm font-bold text-[#1C1C1E] group-hover:text-[#007AFF] transition truncate max-w-[135px] sm:max-w-[220px]">CV. SRIKANDI JAYA MANDIRI</h1>
+                        <svg class="w-3.5 h-3.5 text-[#8E8E93] group-hover:text-[#007AFF] transition shrink-0" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                        <span id="cloudStatusDot" title="Status Sinkronisasi" class="w-2 h-2 rounded-full bg-amber-400 shrink-0 ml-0.5"></span>
+                    </button>
+                    <p id="headerCompanySub" class="text-[10px] sm:text-[11px] text-[#8E8E93] font-medium truncate">File: data.json &bull; Sistem Billing</p>
+                </div>
+
+                <!-- Dropdown Switcher 2 CV -->
+                <div id="companyDropdownMenu" class="hidden absolute top-12 left-0 w-72 bg-white rounded-2xl shadow-xl border border-black/10 p-1.5 z-50 space-y-1">
+                    <button type="button" data-switch-cv="sjm" class="cv-switch-item w-full text-left px-3 py-2.5 rounded-xl hover:bg-[#F2F2F7] transition flex items-center justify-between gap-2">
+                        <div class="min-w-0">
+                            <p class="text-xs font-bold text-[#1C1C1E] truncate">CV. SRIKANDI JAYA MANDIRI</p>
+                            <p class="text-[10px] text-[#8E8E93] font-mono">JSON: data.json</p>
+                        </div>
+                        <span data-cv-check="sjm" class="text-xs font-bold text-[#007AFF]">&#10003;</span>
+                    </button>
+                    <button type="button" data-switch-cv="djm" class="cv-switch-item w-full text-left px-3 py-2.5 rounded-xl hover:bg-[#F2F2F7] transition flex items-center justify-between gap-2">
+                        <div class="min-w-0">
+                            <p class="text-xs font-bold text-[#1C1C1E] truncate">Digital Jaya Mandiri</p>
+                            <p class="text-[10px] text-[#8E8E93] font-mono">JSON: data_djm.json</p>
+                        </div>
+                        <span data-cv-check="djm" class="hidden text-xs font-bold text-[#007AFF]">&#10003;</span>
+                    </button>
                 </div>
             </div>
 
@@ -221,8 +250,9 @@
                     <span>Riwayat</span>
                     <span id="badgeHistoryCount" class="px-1.5 py-0.2 bg-black/10 rounded-full text-[10px]">0</span>
                 </button>
-                <button type="button" data-nav="settings" class="nav-tab px-4 py-1.5 rounded-full text-xs font-semibold transition-all text-[#636366] hover:text-[#1C1C1E]">
-                    Pengaturan
+                <button type="button" data-nav="settings" class="nav-tab px-4 py-1.5 rounded-full text-xs font-semibold transition-all text-[#636366] hover:text-[#1C1C1E] flex items-center gap-1.5">
+                    <span>Pengaturan</span>
+                    <span id="unsavedSettingsDot" title="Ada perubahan pengaturan belum disimpan" class="hidden w-2 h-2 rounded-full bg-rose-500"></span>
                 </button>
             </nav>
 
@@ -247,16 +277,11 @@
         </div>
     </header>
 
-    <!-- =================================================================
-         MAIN CONTENT AREA
-    ================================================================== -->
+    <!-- MAIN CONTENT AREA -->
     <main id="mainContainer" class="max-w-[1440px] mx-auto px-3 sm:px-6 pt-4 sm:pt-6">
 
-        <!-- =============================================================
-             PAGE 1: INVOICE EDITOR & LIVE A4 PREVIEW
-        ============================================================== -->
+        <!-- PAGE 1: INVOICE EDITOR & LIVE A4 PREVIEW -->
         <section id="page-invoice" class="page-section">
-            <!-- Mobile Switcher: Form Input vs Pratinjau A4 -->
             <div class="no-print lg:hidden mb-4 bg-[#E5E5EA]/80 p-1 rounded-2xl flex">
                 <button type="button" id="mobTabForm" class="flex-1 py-2 rounded-xl text-xs font-bold bg-white text-[#1C1C1E] shadow-sm transition">
                     Form Input Invoice
@@ -351,7 +376,6 @@
                             </button>
                         </div>
 
-                        <!-- Opsi Mode Harga Barang -->
                         <div class="bg-[#F2F2F7] p-3 rounded-2xl space-y-1.5">
                             <label class="block text-[11px] font-bold uppercase tracking-wider text-[#636366]">Mode Harga Satuan Item</label>
                             <select id="taxPriceMode" class="w-full bg-white border border-black/10 rounded-xl px-3 py-2 text-xs font-semibold text-[#1C1C1E] focus:outline-none focus:border-[#007AFF]">
@@ -363,16 +387,13 @@
                             </p>
                         </div>
 
-                        <div id="itemsContainer" class="space-y-3">
-                            <!-- Item rows rendered dynamically via JS -->
-                        </div>
+                        <div id="itemsContainer" class="space-y-3"></div>
                     </div>
 
                     <!-- Card 4: Pajak PPN & PPh -->
                     <div class="mac-card p-5 space-y-4">
                         <h2 class="text-xs font-bold uppercase tracking-wider text-[#8E8E93]">4. Pengaturan Pajak</h2>
 
-                        <!-- PPN Row -->
                         <div class="flex items-center justify-between p-3 rounded-2xl bg-[#F2F2F7]">
                             <div class="flex items-center gap-3">
                                 <input type="checkbox" id="enablePpn" class="ios-switch" checked>
@@ -387,7 +408,6 @@
                             </div>
                         </div>
 
-                        <!-- PPh Row -->
                         <div class="p-3 rounded-2xl bg-[#F2F2F7] space-y-3">
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center gap-3">
@@ -412,7 +432,6 @@
                             </div>
                         </div>
 
-                        <!-- Summary Box -->
                         <div class="pt-2 border-t border-black/[0.06] space-y-1.5 text-xs">
                             <div class="flex justify-between text-[#636366]">
                                 <span>Subtotal (DPP / Netto)</span>
@@ -443,7 +462,6 @@
                 <!-- RIGHT COLUMN: LIVE A4 DOCUMENT PREVIEW -->
                 <div id="previewColumn" class="hidden lg:block lg:col-span-7 xl:col-span-7 lg:sticky lg:top-20">
                     <div class="mac-card overflow-hidden">
-                        <!-- Preview Toolbar -->
                         <div class="no-print px-4 py-2.5 bg-[#F9F9FB] border-b border-black/[0.06] flex flex-wrap items-center justify-between gap-2">
                             <div class="flex items-center gap-2">
                                 <span class="w-2.5 h-2.5 rounded-full bg-[#FF5F56]"></span>
@@ -452,7 +470,6 @@
                                 <span class="ml-1 text-xs font-semibold text-[#636366]">Pratinjau A4</span>
                             </div>
 
-                            <!-- Zoom Controls -->
                             <div class="flex items-center gap-1 bg-white border border-black/10 rounded-full px-1.5 py-0.5">
                                 <button type="button" id="btnZoomOut" title="Perkecil (Zoom Out)" class="w-6 h-6 rounded-full hover:bg-[#F2F2F7] text-[#1C1C1E] flex items-center justify-center text-sm font-bold transition">
                                     &minus;
@@ -468,14 +485,12 @@
                             </div>
                         </div>
 
-                        <!-- A4 Paper Container -->
                         <div id="previewScrollWrapper" class="p-3 sm:p-5 bg-[#E5E5EA]/60 overflow-auto max-h-[calc(100vh-145px)] flex justify-center">
                             <div id="a4ScaleBox" class="relative">
                                 <div id="invoicePaper" class="a4-paper flex flex-col justify-between">
                                     <div>
                                         <!-- Company Header -->
                                         <div id="docHeaderWrapper" class="flex justify-between items-start gap-5 pb-5 border-b-2 border-slate-900">
-                                            <!-- Company Brand Block -->
                                             <div id="docCompanyBrand" class="flex items-start gap-4 flex-1">
                                                 <div id="docLogoWrapper" class="hidden shrink-0">
                                                     <img id="docLogoImg" src="" alt="Logo Perusahaan" class="object-contain">
@@ -489,9 +504,8 @@
                                                 </div>
                                             </div>
 
-                                            <!-- Invoice Title & Meta -->
                                             <div class="text-right shrink-0">
-                                                <div id="docTitleBadge" class="inline-block bg-slate-900 text-white px-3.5 py-1 rounded-md text-lg font-extrabold tracking-widest uppercase">
+                                                <div id="docTitleBadge" class="gradient-text-outline inline-block bg-slate-900 text-white px-3.5 py-1 rounded-md text-lg font-extrabold tracking-widest uppercase">
                                                     INVOICE
                                                 </div>
                                                 <table class="mt-2.5 ml-auto text-xs">
@@ -526,7 +540,7 @@
                                         <div id="docTableWrapper" class="overflow-hidden rounded-lg border border-slate-200">
                                             <table class="w-full text-left border-collapse">
                                                 <thead>
-                                                    <tr id="docTableHeadRow" class="bg-slate-900 text-white text-[10.5px] uppercase tracking-wider">
+                                                    <tr id="docTableHeadRow" class="gradient-text-outline bg-slate-900 text-white text-[10.5px] uppercase tracking-wider">
                                                         <th class="py-2.5 px-2.5 text-center w-9">No</th>
                                                         <th class="py-2.5 px-2.5">Deskripsi Barang / Jasa</th>
                                                         <th class="py-2.5 px-2 text-center w-14">Qty</th>
@@ -536,54 +550,50 @@
                                                         <th class="py-2.5 px-2.5 text-right w-32">Jumlah</th>
                                                     </tr>
                                                 </thead>
-                                                <tbody id="docItemsBody" class="divide-y divide-slate-200 text-xs">
-                                                    <!-- Populated via JS -->
-                                                </tbody>
+                                                <tbody id="docItemsBody" class="divide-y divide-slate-200 text-xs"></tbody>
                                             </table>
                                         </div>
 
-                                        <!-- Totals & Terbilang -->
-                                        <div class="mt-4 grid grid-cols-12 gap-4 items-start">
-                                            <div class="col-span-7 space-y-2.5">
+                                        <!-- Totals & Notes Grid -->
+                                        <div class="mt-5 grid grid-cols-12 gap-5 items-start">
+                                            <div class="col-span-7 space-y-3">
                                                 <div id="docTerbilangBox" class="bg-slate-50 border border-slate-200/80 rounded-lg p-3">
                                                     <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Terbilang:</p>
                                                     <p id="docTerbilang" class="text-xs font-bold italic text-slate-800 mt-0.5">Nol Rupiah</p>
                                                 </div>
-                                                <div class="text-[11px] text-slate-600 leading-relaxed whitespace-pre-line">
-                                                    <p class="font-bold text-slate-800 text-[11px] mb-0.5">Keterangan &amp; Pembayaran:</p>
-                                                    <span id="docNotes">-</span>
+                                                <div>
+                                                    <p class="text-[11px] font-bold text-slate-700 mb-1">Keterangan &amp; Pembayaran:</p>
+                                                    <p id="docNotes" class="text-[10.5px] text-slate-600 leading-relaxed whitespace-pre-line">-</p>
                                                 </div>
                                             </div>
 
-                                            <div class="col-span-5">
-                                                <table class="w-full text-xs">
-                                                    <tr class="border-b border-slate-200">
-                                                        <td id="docSubtotalLabel" class="py-1.5 text-slate-600">Subtotal</td>
-                                                        <td id="docSubtotal" class="py-1.5 text-right font-semibold text-slate-900">Rp 0</td>
-                                                    </tr>
-                                                    <tr id="docPpnRow" class="border-b border-slate-200">
-                                                        <td id="docPpnLabel" class="py-1.5 text-slate-600">PPN (11%)</td>
-                                                        <td id="docPpnAmount" class="py-1.5 text-right font-semibold text-slate-900">Rp 0</td>
-                                                    </tr>
-                                                    <tr id="docPphRow" class="hidden border-b border-slate-200">
-                                                        <td id="docPphLabel" class="py-1.5 text-slate-600">PPh 23 (2%)</td>
-                                                        <td id="docPphAmount" class="py-1.5 text-right font-semibold text-rose-700">- Rp 0</td>
-                                                    </tr>
-                                                    <tr id="docGrandTotalRow" class="bg-slate-900 text-white">
-                                                        <td class="py-2.5 px-3 font-bold rounded-l-lg">TOTAL TAGIHAN</td>
-                                                        <td id="docGrandTotal" class="py-2.5 px-3 text-right font-extrabold text-sm rounded-r-lg">Rp 0</td>
-                                                    </tr>
-                                                </table>
+                                            <div class="col-span-5 space-y-1.5 text-xs">
+                                                <div class="flex justify-between py-1 px-2">
+                                                    <span id="docSubtotalLabel" class="text-slate-600">Subtotal</span>
+                                                    <span id="docSubtotal" class="font-bold text-slate-900">Rp 0</span>
+                                                </div>
+                                                <div id="docPpnRow" class="flex justify-between py-1 px-2">
+                                                    <span id="docPpnLabel" class="text-slate-600">PPN (11%)</span>
+                                                    <span id="docPpnAmount" class="font-bold text-slate-900">Rp 0</span>
+                                                </div>
+                                                <div id="docPphRow" class="hidden flex justify-between py-1 px-2">
+                                                    <span id="docPphLabel" class="text-slate-600">PPh (2%)</span>
+                                                    <span id="docPphAmount" class="font-bold text-rose-600">- Rp 0</span>
+                                                </div>
+                                                <div id="docGrandTotalRow" class="gradient-text-outline flex justify-between items-center py-2.5 px-3 rounded-lg bg-slate-900 text-white mt-1.5">
+                                                    <span class="text-xs font-bold uppercase tracking-wide">Total Tagihan</span>
+                                                    <span id="docGrandTotal" class="text-sm font-extrabold">Rp 0</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
 
                                     <!-- Signature Footer -->
-                                    <div class="mt-8 pt-4 flex justify-between items-end">
+                                    <div class="mt-10 pt-4 border-t border-slate-200 flex justify-between items-end">
                                         <div class="text-[10px] text-slate-400">
-                                            Dokumen sah diterbitkan oleh <span id="docFooterCompName">CV. SRIKANDI JAYA MANDIRI</span>.
+                                            <p>Dokumen ini sah dan diterbitkan oleh <span id="docFooterCompName" class="font-semibold text-slate-600">CV. SRIKANDI JAYA MANDIRI</span></p>
                                         </div>
-                                        <div class="text-center w-56">
+                                        <div class="text-center w-52">
                                             <p id="docSignCityDate" class="text-xs text-slate-700">Sukoharjo, -</p>
                                             <p id="docSignCompany" class="text-xs font-bold text-slate-900 mt-0.5">CV. SRIKANDI JAYA MANDIRI</p>
                                             <div class="h-16"></div>
@@ -599,9 +609,7 @@
             </div>
         </section>
 
-        <!-- =============================================================
-             PAGE 2: DATABASE KONSUMEN
-        ============================================================== -->
+        <!-- PAGE 2: DATABASE KONSUMEN -->
         <section id="page-clients" class="page-section hidden max-w-5xl mx-auto">
             <div class="mb-5">
                 <h2 class="text-xl font-bold text-[#1C1C1E]">Database Konsumen</h2>
@@ -609,7 +617,6 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
-                <!-- Form Add / Edit Client -->
                 <div class="md:col-span-5 mac-card p-5 space-y-4">
                     <div class="flex items-center justify-between">
                         <h3 id="clientFormHeading" class="text-sm font-bold text-[#1C1C1E]">Tambah Konsumen</h3>
@@ -640,23 +647,18 @@
                     </button>
                 </div>
 
-                <!-- Client Directory List -->
                 <div class="md:col-span-7 mac-card p-5 space-y-4">
                     <div class="relative">
                         <input type="text" id="searchClientsInput" class="mac-input w-full pl-9 pr-4 py-2.5 text-sm" placeholder="Cari nama, kontak, atau alamat konsumen...">
                         <svg class="w-4 h-4 text-[#8E8E93] absolute left-3 top-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                     </div>
 
-                    <div id="clientsListContainer" class="space-y-2.5 max-h-[540px] overflow-y-auto pr-1">
-                        <!-- Rendered via JS -->
-                    </div>
+                    <div id="clientsListContainer" class="space-y-2.5 max-h-[540px] overflow-y-auto pr-1"></div>
                 </div>
             </div>
         </section>
 
-        <!-- =============================================================
-             PAGE 3: RIWAYAT INVOICE
-        ============================================================== -->
+        <!-- PAGE 3: RIWAYAT INVOICE -->
         <section id="page-history" class="page-section hidden max-w-5xl mx-auto">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
                 <div>
@@ -669,18 +671,19 @@
                 </div>
             </div>
 
-            <div id="historyListContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <!-- Rendered via JS -->
-            </div>
+            <div id="historyListContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
         </section>
 
-        <!-- =============================================================
-             PAGE 4: PENGATURAN PERUSAHAAN & LOGO
-        ============================================================== -->
+        <!-- PAGE 4: PENGATURAN PERUSAHAAN & LOGO -->
         <section id="page-settings" class="page-section hidden max-w-3xl mx-auto">
-            <div class="mb-5">
-                <h2 class="text-xl font-bold text-[#1C1C1E]">Pengaturan Perusahaan</h2>
-                <p class="text-xs text-[#8E8E93] mt-0.5">Konfigurasi identitas CV. Srikandi Jaya Mandiri, logo, tema, rekening default, dan database GitHub</p>
+            <div class="flex items-center justify-between gap-3 mb-5">
+                <div>
+                    <h2 class="text-xl font-bold text-[#1C1C1E]">Pengaturan Perusahaan</h2>
+                    <p class="text-xs text-[#8E8E93] mt-0.5">Konfigurasi identitas CV aktif (<span id="settingsActiveCvBadge" class="font-bold text-[#007AFF]">CV. SRIKANDI JAYA MANDIRI</span>)</p>
+                </div>
+                <span id="settingsDirtyBadge" class="hidden px-3 py-1 rounded-full bg-rose-50 text-rose-600 text-[11px] font-bold border border-rose-200">
+                    Belum Disimpan
+                </span>
             </div>
 
             <div class="space-y-5">
@@ -694,7 +697,7 @@
                         </div>
                         <div class="space-y-2 text-center sm:text-left">
                             <p class="text-xs text-[#636366] leading-relaxed">
-                                Mendukung logo persegi (1:1) maupun memanjang (landscape). Unggah file logo asli Anda (<code class="font-mono text-[#1C1C1E]">sjm1.1.jpg</code>) atau simpan file tersebut di repository GitHub bersama <code class="font-mono text-[#1C1C1E]">index.html</code> agar otomatis dimuat.
+                                Mendukung logo persegi (1:1) maupun memanjang (landscape). Unggah file logo asli Anda atau simpan file logo di repository GitHub (<code id="settingsRepoLogoHint" class="font-mono text-[#1C1C1E]">sjm1.1.jpg</code>).
                             </p>
                             <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-1">
                                 <label class="cursor-pointer px-4 py-2 rounded-full bg-[#007AFF] hover:bg-[#0062CC] text-white text-xs font-semibold transition shadow-sm">
@@ -702,7 +705,7 @@
                                     <input type="file" id="logoFileInput" accept="image/*" class="hidden">
                                 </label>
                                 <button type="button" id="btnResetDefaultLogo" class="px-4 py-2 rounded-full bg-[#F2F2F7] hover:bg-[#E5E5EA] text-[#1C1C1E] text-xs font-semibold transition">
-                                    Muat File Repo (sjm1.1.jpg)
+                                    Muat File Repo
                                 </button>
                                 <button type="button" id="btnRemoveLogo" class="hidden px-4 py-2 rounded-full bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs font-semibold transition">
                                     Hapus Logo
@@ -714,147 +717,108 @@
 
                 <!-- Company Identity Card -->
                 <div class="mac-card p-6 space-y-4">
-                    <h3 class="text-sm font-bold text-[#1C1C1E]">Identitas, Tampilan &amp; Tema Dokumen</h3>
+                    <h3 class="text-sm font-bold text-[#1C1C1E]">Identitas, Tampilan &amp; Tema Gradasi Dokumen</h3>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-semibold text-[#3A3A3C] mb-1.5">Nama Perusahaan</label>
-                            <input type="text" id="setCompName" class="mac-input w-full px-3.5 py-2.5 text-sm font-semibold">
+                            <input type="text" id="setCompName" class="mac-input settings-track w-full px-3.5 py-2.5 text-sm font-semibold">
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-[#3A3A3C] mb-1.5">Bidang Usaha / Tagline</label>
-                            <input type="text" id="setCompTagline" class="mac-input w-full px-3.5 py-2.5 text-sm">
+                            <input type="text" id="setCompTagline" class="mac-input settings-track w-full px-3.5 py-2.5 text-sm">
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-semibold text-[#3A3A3C] mb-1.5">Kontak (Telepon &amp; Email)</label>
-                            <input type="text" id="setCompContact" class="mac-input w-full px-3.5 py-2.5 text-sm">
+                            <input type="text" id="setCompContact" class="mac-input settings-track w-full px-3.5 py-2.5 text-sm">
                         </div>
                         <div>
                             <div class="flex items-center justify-between mb-1.5">
                                 <label class="text-xs font-semibold text-[#3A3A3C]">NPWP Perusahaan</label>
                                 <label class="inline-flex items-center gap-1.5 cursor-pointer text-[11px] font-semibold text-[#007AFF]">
-                                    <input type="checkbox" id="setShowNpwpDefault" class="rounded accent-[#007AFF]" checked>
+                                    <input type="checkbox" id="setShowNpwpDefault" class="settings-track rounded accent-[#007AFF]" checked>
                                     <span>Tampilkan Default</span>
                                 </label>
                             </div>
-                            <input type="text" id="setCompNpwp" class="mac-input w-full px-3.5 py-2.5 text-sm">
+                            <input type="text" id="setCompNpwp" class="mac-input settings-track w-full px-3.5 py-2.5 text-sm">
                         </div>
                     </div>
 
-                    <!-- App UI Interface Mode Selector -->
-                    <div class="pt-3 border-t border-black/[0.06]">
-                        <label class="block text-xs font-semibold text-[#3A3A3C] mb-2">Mode Tampilan Aplikasi (UI Style)</label>
-                        <div id="uiSkinSelectorGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-                            <button type="button" data-uiskin="iphone" class="uiskin-opt-btn flex items-center gap-2 p-2.5 rounded-xl border-2 border-[#007AFF] bg-[#F2F2F7] text-left transition">
-                                <span class="w-3.5 h-3.5 rounded-full bg-[#007AFF] shrink-0"></span>
-                                <span class="text-xs font-bold text-[#1C1C1E]">iPhone (iOS)</span>
-                            </button>
-                            <button type="button" data-uiskin="oneui" class="uiskin-opt-btn flex items-center gap-2 p-2.5 rounded-xl border-2 border-transparent bg-[#F2F2F7] text-left transition">
-                                <span class="w-3.5 h-3.5 rounded-full bg-[#1259C3] shrink-0"></span>
-                                <span class="text-xs font-bold text-[#1C1C1E]">One UI Samsung</span>
-                            </button>
-                            <button type="button" data-uiskin="macos" class="uiskin-opt-btn flex items-center gap-2 p-2.5 rounded-xl border-2 border-transparent bg-[#F2F2F7] text-left transition">
-                                <span class="w-3.5 h-3.5 rounded-full bg-[#5856D6] shrink-0"></span>
-                                <span class="text-xs font-bold text-[#1C1C1E]">macOS Desktop</span>
-                            </button>
-                            <button type="button" data-uiskin="linux" class="uiskin-opt-btn flex items-center gap-2 p-2.5 rounded-xl border-2 border-transparent bg-[#F2F2F7] text-left transition">
-                                <span class="w-3.5 h-3.5 rounded-full bg-[#E95420] shrink-0"></span>
-                                <span class="text-xs font-bold text-[#1C1C1E]">Linux GNOME</span>
-                            </button>
+                    <!-- Compact Dropdown Selectors for UI Style & Gradient Theme -->
+                    <div class="pt-3 border-t border-black/[0.06] grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-[#3A3A3C] mb-1.5">Mode Tampilan Aplikasi (UI Style)</label>
+                            <select id="setUiSkinSelect" class="mac-input settings-track w-full px-3.5 py-2.5 text-xs sm:text-sm font-semibold cursor-pointer">
+                                <option value="iphone">iPhone (iOS)</option>
+                                <option value="oneui">One UI Samsung</option>
+                                <option value="macos">macOS Desktop</option>
+                                <option value="linux">Linux GNOME</option>
+                            </select>
                         </div>
-                    </div>
-
-                    <!-- Invoice Theme Selector (10 Options + Custom) -->
-                    <div class="pt-3 border-t border-black/[0.06] space-y-2.5">
-                        <label class="block text-xs font-semibold text-[#3A3A3C]">Tema Warna Dokumen Invoice (10 Pilihan)</label>
-                        <div id="themeSelectorGrid" class="grid grid-cols-2 sm:grid-cols-5 gap-2">
-                            <button type="button" data-theme="slate" class="theme-opt-btn flex items-center gap-2 p-2.5 rounded-xl border-2 border-[#007AFF] bg-[#F2F2F7] text-left transition">
-                                <span class="w-4 h-4 rounded-full bg-[#0F172A] shrink-0"></span>
-                                <span class="text-[11px] font-bold text-[#1C1C1E] truncate">Classic Navy</span>
-                            </button>
-                            <button type="button" data-theme="oneui" class="theme-opt-btn flex items-center gap-2 p-2.5 rounded-xl border-2 border-transparent bg-[#F2F2F7] text-left transition">
-                                <span class="w-4 h-4 rounded-full bg-[#1259C3] shrink-0"></span>
-                                <span class="text-[11px] font-bold text-[#1C1C1E] truncate">Samsung One UI</span>
-                            </button>
-                            <button type="button" data-theme="iphone" class="theme-opt-btn flex items-center gap-2 p-2.5 rounded-xl border-2 border-transparent bg-[#F2F2F7] text-left transition">
-                                <span class="w-4 h-4 rounded-full bg-[#007AFF] shrink-0"></span>
-                                <span class="text-[11px] font-bold text-[#1C1C1E] truncate">iPhone Blue</span>
-                            </button>
-                            <button type="button" data-theme="macos" class="theme-opt-btn flex items-center gap-2 p-2.5 rounded-xl border-2 border-transparent bg-[#F2F2F7] text-left transition">
-                                <span class="w-4 h-4 rounded-full bg-[#4338CA] shrink-0"></span>
-                                <span class="text-[11px] font-bold text-[#1C1C1E] truncate">macOS Sonoma</span>
-                            </button>
-                            <button type="button" data-theme="linux" class="theme-opt-btn flex items-center gap-2 p-2.5 rounded-xl border-2 border-transparent bg-[#F2F2F7] text-left transition">
-                                <span class="w-4 h-4 rounded-full bg-[#77216F] shrink-0"></span>
-                                <span class="text-[11px] font-bold text-[#1C1C1E] truncate">Ubuntu Linux</span>
-                            </button>
-                            <button type="button" data-theme="emerald" class="theme-opt-btn flex items-center gap-2 p-2.5 rounded-xl border-2 border-transparent bg-[#F2F2F7] text-left transition">
-                                <span class="w-4 h-4 rounded-full bg-[#065F46] shrink-0"></span>
-                                <span class="text-[11px] font-bold text-[#1C1C1E] truncate">Spotify Emerald</span>
-                            </button>
-                            <button type="button" data-theme="maroon" class="theme-opt-btn flex items-center gap-2 p-2.5 rounded-xl border-2 border-transparent bg-[#F2F2F7] text-left transition">
-                                <span class="w-4 h-4 rounded-full bg-[#881337] shrink-0"></span>
-                                <span class="text-[11px] font-bold text-[#1C1C1E] truncate">Crimson Maroon</span>
-                            </button>
-                            <button type="button" data-theme="gold" class="theme-opt-btn flex items-center gap-2 p-2.5 rounded-xl border-2 border-transparent bg-[#F2F2F7] text-left transition">
-                                <span class="w-4 h-4 rounded-full bg-[#92400E] shrink-0"></span>
-                                <span class="text-[11px] font-bold text-[#1C1C1E] truncate">Royal Amber</span>
-                            </button>
-                            <button type="button" data-theme="charcoal" class="theme-opt-btn flex items-center gap-2 p-2.5 rounded-xl border-2 border-transparent bg-[#F2F2F7] text-left transition">
-                                <span class="w-4 h-4 rounded-full bg-[#18181B] shrink-0"></span>
-                                <span class="text-[11px] font-bold text-[#1C1C1E] truncate">Obsidian Dark</span>
-                            </button>
-                            <button type="button" data-theme="custom" class="theme-opt-btn flex items-center gap-2 p-2.5 rounded-xl border-2 border-transparent bg-[#F2F2F7] text-left transition">
-                                <span id="customThemeSwatch" class="w-4 h-4 rounded-full bg-gradient-to-tr from-pink-500 via-amber-400 to-cyan-500 shrink-0"></span>
-                                <span class="text-[11px] font-bold text-[#1C1C1E] truncate">Custom Warna</span>
-                            </button>
-                        </div>
-
-                        <!-- Custom Color Picker Row -->
-                        <div id="customThemePickerRow" class="hidden p-3 rounded-2xl bg-[#F2F2F7] flex flex-wrap items-center justify-between gap-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-[#3A3A3C] mb-1.5">Tema Gradasi Dokumen Invoice</label>
                             <div class="flex items-center gap-2.5">
-                                <input type="color" id="customPrimaryColor" value="#0F172A" class="w-9 h-9 rounded-lg border border-black/10 cursor-pointer bg-transparent">
-                                <div>
-                                    <p class="text-xs font-bold text-[#1C1C1E]">Warna Utama Dokumen</p>
-                                    <p class="text-[10.5px] text-[#8E8E93]">Kop, Header Tabel, &amp; Total Tagihan</p>
-                                </div>
+                                <span id="themePreviewSwatch" class="w-9 h-9 rounded-xl shrink-0 border border-black/10 shadow-xs" style="background: linear-gradient(135deg, #0F172A, #64748B);"></span>
+                                <select id="setInvoiceThemeSelect" class="mac-input settings-track w-full px-3.5 py-2.5 text-xs sm:text-sm font-semibold cursor-pointer">
+                                    <option value="slate">1. Navy Slate</option>
+                                    <option value="maroon">2. Merah Pink Abu</option>
+                                    <option value="oneui">3. One UI Sky</option>
+                                    <option value="iphone">4. iPhone Ocean</option>
+                                    <option value="macos">5. macOS Sonoma</option>
+                                    <option value="linux">6. Ubuntu Sunset</option>
+                                    <option value="emerald">7. Emerald Mint</option>
+                                    <option value="gold">8. Amber Silver</option>
+                                    <option value="charcoal">9. Obsidian Silver</option>
+                                    <option value="custom">10. Custom Gradasi</option>
+                                </select>
                             </div>
-                            <div class="flex items-center gap-2.5">
-                                <input type="color" id="customAccentColor" value="#007AFF" class="w-9 h-9 rounded-lg border border-black/10 cursor-pointer bg-transparent">
-                                <div>
-                                    <p class="text-xs font-bold text-[#1C1C1E]">Warna Aksen</p>
-                                    <p class="text-[10.5px] text-[#8E8E93]">Tagline &amp; Sorotan Netto</p>
-                                </div>
+                        </div>
+                    </div>
+
+                    <!-- Custom Color Picker Row -->
+                    <div id="customThemePickerRow" class="hidden p-3 rounded-2xl bg-[#F2F2F7] flex flex-wrap items-center justify-between gap-3">
+                        <div class="flex items-center gap-2.5">
+                            <input type="color" id="customPrimaryColor" value="#BE123C" class="settings-track w-9 h-9 rounded-lg border border-black/10 cursor-pointer bg-transparent">
+                            <div>
+                                <p class="text-xs font-bold text-[#1C1C1E]">Warna Awal Gradasi</p>
+                                <p class="text-[10.5px] text-[#8E8E93]">Sisi Kiri Header, Tabel &amp; Total</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2.5">
+                            <input type="color" id="customAccentColor" value="#F472B6" class="settings-track w-9 h-9 rounded-lg border border-black/10 cursor-pointer bg-transparent">
+                            <div>
+                                <p class="text-xs font-bold text-[#1C1C1E]">Warna Akhir Gradasi</p>
+                                <p class="text-[10.5px] text-[#8E8E93]">Sisi Kanan Gradasi &amp; Sorotan</p>
                             </div>
                         </div>
                     </div>
 
                     <div>
                         <label class="block text-xs font-semibold text-[#3A3A3C] mb-1.5">Alamat Kantor</label>
-                        <textarea id="setCompAddress" rows="2" class="mac-input w-full px-3.5 py-2 text-sm resize-none"></textarea>
+                        <textarea id="setCompAddress" rows="2" class="mac-input settings-track w-full px-3.5 py-2 text-sm resize-none"></textarea>
                     </div>
 
                     <div class="pt-3 border-t border-black/[0.06] grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div>
                             <label class="block text-xs font-semibold text-[#3A3A3C] mb-1.5">Kota Terbit</label>
-                            <input type="text" id="setIssueCity" class="mac-input w-full px-3.5 py-2 text-sm">
+                            <input type="text" id="setIssueCity" class="mac-input settings-track w-full px-3.5 py-2 text-sm">
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-[#3A3A3C] mb-1.5">Nama Penandatangan</label>
-                            <input type="text" id="setSignerName" class="mac-input w-full px-3.5 py-2 text-sm">
+                            <input type="text" id="setSignerName" class="mac-input settings-track w-full px-3.5 py-2 text-sm">
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-[#3A3A3C] mb-1.5">Jabatan</label>
-                            <input type="text" id="setSignerRole" class="mac-input w-full px-3.5 py-2 text-sm">
+                            <input type="text" id="setSignerRole" class="mac-input settings-track w-full px-3.5 py-2 text-sm">
                         </div>
                     </div>
 
                     <div>
                         <label class="block text-xs font-semibold text-[#3A3A3C] mb-1.5">Catatan &amp; Rekening Pembayaran Default</label>
-                        <textarea id="setDefaultNotes" rows="5" class="mac-input w-full px-3.5 py-2 text-xs leading-relaxed resize-none"></textarea>
+                        <textarea id="setDefaultNotes" rows="5" class="mac-input settings-track w-full px-3.5 py-2 text-xs leading-relaxed resize-none"></textarea>
                     </div>
 
                     <div class="pt-3 flex justify-end">
@@ -868,7 +832,7 @@
                 <div class="mac-card p-6 space-y-4">
                     <div class="flex items-center justify-between gap-2">
                         <div>
-                            <h3 class="text-sm font-bold text-[#1C1C1E]">Database File GitHub (data.json)</h3>
+                            <h3 class="text-sm font-bold text-[#1C1C1E]">Database File GitHub</h3>
                             <p class="text-[11px] text-[#8E8E93] mt-0.5">Simpan pengaturan, logo, konsumen &amp; riwayat langsung ke file JSON di repository GitHub Anda</p>
                         </div>
                         <span id="cloudSyncBadge" class="px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 text-[10px] font-bold shrink-0">Lokal</span>
@@ -897,7 +861,7 @@
                         <label class="block text-[11px] font-bold text-[#3A3A3C] mb-1">GitHub Personal Access Token (Fine-grained / Classic)</label>
                         <input type="password" id="ghTokenInput" class="mac-input w-full px-3 py-2 text-xs font-mono" placeholder="github_pat_... atau ghp_...">
                         <p class="text-[10.5px] text-[#8E8E93] mt-1 leading-relaxed">
-                            Token disimpan di browser ini agar aplikasi dapat menulis otomatis ke file <code class="font-mono text-[#1C1C1E]">data.json</code> di GitHub setiap kali Anda klik Simpan atau Upload Logo.
+                            Token disimpan di browser ini agar aplikasi dapat menulis otomatis ke file JSON di GitHub setiap kali Anda klik Simpan atau Upload Logo.
                         </p>
                     </div>
 
@@ -909,10 +873,10 @@
                             Paksa Sinkron ke GitHub
                         </button>
                         <button type="button" id="btnExportBackupJson" class="px-4 py-2 rounded-xl bg-[#F2F2F7] hover:bg-[#E5E5EA] text-[#1C1C1E] text-xs font-semibold transition">
-                            Export data.json
+                            Export JSON
                         </button>
                         <label class="cursor-pointer px-4 py-2 rounded-xl bg-[#F2F2F7] hover:bg-[#E5E5EA] text-[#1C1C1E] text-xs font-semibold transition">
-                            <span>Import data.json</span>
+                            <span>Import JSON</span>
                             <input type="file" id="importBackupInput" accept=".json,application/json" class="hidden">
                         </label>
                     </div>
@@ -922,9 +886,7 @@
 
     </main>
 
-    <!-- =================================================================
-         MOBILE BOTTOM NAVIGATION BAR
-    ================================================================== -->
+    <!-- MOBILE BOTTOM NAVIGATION BAR -->
     <nav class="no-print md:hidden fixed bottom-0 inset-x-0 z-40 bg-white/90 backdrop-blur-xl border-t border-black/[0.08] px-2 py-1.5 flex items-center justify-around">
         <button type="button" data-nav="invoice" class="mob-nav-btn flex flex-col items-center gap-0.5 py-1 px-3 text-[#007AFF]">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
@@ -938,15 +900,14 @@
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             <span class="text-[10px] font-semibold">Riwayat</span>
         </button>
-        <button type="button" data-nav="settings" class="mob-nav-btn flex flex-col items-center gap-0.5 py-1 px-3 text-[#8E8E93]">
+        <button type="button" data-nav="settings" class="mob-nav-btn relative flex flex-col items-center gap-0.5 py-1 px-3 text-[#8E8E93]">
+            <span id="mobUnsavedSettingsDot" class="hidden absolute top-1 right-3 w-2 h-2 rounded-full bg-rose-500"></span>
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
             <span class="text-[10px] font-semibold">Pengaturan</span>
         </button>
     </nav>
 
-    <!-- =================================================================
-         TOAST NOTIFICATION & CUSTOM CONFIRMATION MODAL
-    ================================================================== -->
+    <!-- TOAST NOTIFICATION & CUSTOM CONFIRMATION MODAL -->
     <div id="toastBanner" class="no-print fixed bottom-20 md:bottom-6 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 translate-y-3 transition-all duration-300">
         <div class="bg-[#1C1C1E]/95 backdrop-blur-md text-white px-4 py-2.5 rounded-full text-xs font-semibold shadow-lg flex items-center gap-2">
             <span class="w-2 h-2 rounded-full bg-[#34C759]"></span>
@@ -969,46 +930,118 @@
         </div>
     </div>
 
-    <!-- =================================================================
-         APPLICATION SCRIPT (SELF-CONTAINED & COMPLETE)
-    ================================================================== -->
+    <!-- APPLICATION SCRIPT -->
     <script>
         (function () {
             'use strict';
 
-            const LOCAL_STORAGE_KEY = 'sjm_invoice_app_state_v5';
-            const GH_CONFIG_KEY = 'sjm_github_repo_config_v1';
-            const REPO_LOGO_CANDIDATES = ['sjm1.1.jpg', 'sjm1.1.jpeg', 'logo.jpg', 'logo.png'];
+            const LOCAL_STORAGE_PREFIX = 'sjm_invoice_app_state_v7_';
+            const GH_CONFIG_KEY = 'sjm_github_repo_config_v3';
+            const ACTIVE_CV_KEY = 'sjm_active_cv_profile_v1';
+
+            const CV_PROFILES = {
+                sjm: {
+                    id: 'sjm',
+                    defaultJsonFile: 'data.json',
+                    logoCandidates: ['sjm1.1.jpg', 'sjm1.1.jpeg', 'logo.jpg', 'logo.png'],
+                    settings: {
+                        compName: 'CV. SRIKANDI JAYA MANDIRI',
+                        compTagline: 'AMANAH DAN BAROKAH',
+                        compAddress: 'Widyapura RT 004 RW 003, Kel. Singopuran, Kec. Kartasura, Kab. Sukoharjo, Jawa Tengah 57164',
+                        compContact: 'Telp: 081393897867 | Email: srikandijayamandiricv@gmail.com',
+                        compNpwp: 'NPWP: 96.733.327.9-532.000',
+                        showNpwpDefault: true,
+                        uiSkin: 'iphone',
+                        invoiceTheme: 'slate',
+                        customPrimaryHex: '#BE123C',
+                        customAccentHex: '#F472B6',
+                        issueCity: 'Sukoharjo',
+                        signerName: 'Asih Ermataria',
+                        signerRole: 'Direktur',
+                        defaultNotes: 'Pembayaran harap ditransfer ke salah satu rekening berikut:\n1. Bank BNI 46 — No. Rekening: 8164444442\n   Atas Nama: SRIKANDI JAYA MANDIRI\n2. BPD JATENG — No. Rekening: 2-059-08065-5\n   Atas Nama: Asih Ermataria\nMohon cantumkan Nomor Invoice pada berita transfer.',
+                        logoBase64: ''
+                    }
+                },
+                djm: {
+                    id: 'djm',
+                    defaultJsonFile: 'data_djm.json',
+                    logoCandidates: ['1789605894732.png', 'djm.png', 'djm.jpg', 'logo-djm.png', 'logo-djm.jpg'],
+                    settings: {
+                        compName: 'Digital Jaya Mandiri',
+                        compTagline: 'Solusi belanja digital',
+                        compAddress: 'Perum puri permata A1, Desa Gajah, Kec. Colomadu, Kab. Karanganyar, Jawa Tengah 57176',
+                        compContact: 'Telp: 08551291055 | Email: digital.jm2k@gmail.com',
+                        compNpwp: '',
+                        showNpwpDefault: false,
+                        uiSkin: 'oneui',
+                        invoiceTheme: 'oneui',
+                        customPrimaryHex: '#1259C3',
+                        customAccentHex: '#38BDF8',
+                        issueCity: 'Karanganyar',
+                        signerName: 'Pramudityo kuntoro',
+                        signerRole: 'Direktur',
+                        defaultNotes: 'DATA REKENING TOKO:\nBank         : BCA\nAtas Nama    : Pramudityo kuntoro\nNo. Rekening : 2410025038\nMohon cantumkan Nomor Invoice pada berita transfer.',
+                        logoBase64: ''
+                    }
+                }
+            };
 
             const INVOICE_THEMES = {
                 slate: {
-                    name: 'Classic Navy',
+                    name: 'Navy Slate',
                     primaryHex: '#0F172A',
                     primaryRgb: [15, 23, 42],
-                    accentHex: '#1D4ED8',
-                    accentRgb: [29, 78, 216],
+                    secondaryHex: '#64748B',
+                    secondaryRgb: [100, 116, 139],
+                    accentHex: '#2563EB',
+                    accentRgb: [37, 99, 235],
+                    gradientCss: 'linear-gradient(135deg, #0F172A 0%, #334155 55%, #64748B 100%)',
+                    softGradientCss: 'linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 100%)',
                     softBgHex: '#F8FAFC',
                     softBgRgb: [248, 250, 252],
                     borderHex: '#CBD5E1',
                     borderRgb: [203, 213, 225]
                 },
+                maroon: {
+                    name: 'Merah Pink Abu',
+                    primaryHex: '#BE123C',
+                    primaryRgb: [190, 18, 60],
+                    secondaryHex: '#94A3B8',
+                    secondaryRgb: [148, 163, 184],
+                    accentHex: '#E11D48',
+                    accentRgb: [225, 29, 72],
+                    gradientCss: 'linear-gradient(135deg, #9F1239 0%, #E11D48 45%, #F472B6 78%, #94A3B8 100%)',
+                    softGradientCss: 'linear-gradient(135deg, #FFF1F2 0%, #FCE7F3 55%, #F1F5F9 100%)',
+                    softBgHex: '#FFF1F2',
+                    softBgRgb: [255, 241, 242],
+                    borderHex: '#FBCFE8',
+                    borderRgb: [251, 207, 232]
+                },
                 oneui: {
-                    name: 'Samsung One UI',
+                    name: 'One UI Sky',
                     primaryHex: '#1259C3',
                     primaryRgb: [18, 89, 195],
-                    accentHex: '#0381FE',
-                    accentRgb: [3, 129, 254],
+                    secondaryHex: '#38BDF8',
+                    secondaryRgb: [56, 189, 248],
+                    accentHex: '#0284C7',
+                    accentRgb: [2, 132, 199],
+                    gradientCss: 'linear-gradient(135deg, #1E3A8A 0%, #1259C3 50%, #38BDF8 100%)',
+                    softGradientCss: 'linear-gradient(135deg, #EFF6FF 0%, #E0F2FE 65%, #F8FAFC 100%)',
                     softBgHex: '#F0F6FF',
                     softBgRgb: [240, 246, 255],
-                    borderHex: '#BFDBFE',
-                    borderRgb: [191, 219, 254]
+                    borderHex: '#BAE6FD',
+                    borderRgb: [186, 230, 253]
                 },
                 iphone: {
-                    name: 'iPhone Blue',
+                    name: 'iPhone Ocean',
                     primaryHex: '#007AFF',
                     primaryRgb: [0, 122, 255],
+                    secondaryHex: '#5AC8FA',
+                    secondaryRgb: [90, 200, 250],
                     accentHex: '#5856D6',
                     accentRgb: [88, 86, 214],
+                    gradientCss: 'linear-gradient(135deg, #0051D5 0%, #007AFF 50%, #5AC8FA 100%)',
+                    softGradientCss: 'linear-gradient(135deg, #F0F7FF 0%, #E0F2FE 60%, #F5F5F7 100%)',
                     softBgHex: '#F2F7FF',
                     softBgRgb: [242, 247, 255],
                     borderHex: '#C7DFFF',
@@ -1018,115 +1051,123 @@
                     name: 'macOS Sonoma',
                     primaryHex: '#312E81',
                     primaryRgb: [49, 46, 129],
+                    secondaryHex: '#C084FC',
+                    secondaryRgb: [192, 132, 252],
                     accentHex: '#6366F1',
                     accentRgb: [99, 102, 241],
+                    gradientCss: 'linear-gradient(135deg, #312E81 0%, #6366F1 52%, #C084FC 100%)',
+                    softGradientCss: 'linear-gradient(135deg, #EEF2FF 0%, #F3E8FF 65%, #F8FAFC 100%)',
                     softBgHex: '#EEF2FF',
                     softBgRgb: [238, 242, 255],
-                    borderHex: '#C7D2FE',
-                    borderRgb: [199, 210, 254]
+                    borderHex: '#DDD6FE',
+                    borderRgb: [221, 214, 254]
                 },
                 linux: {
-                    name: 'Ubuntu Linux',
+                    name: 'Ubuntu Sunset',
                     primaryHex: '#77216F',
                     primaryRgb: [119, 33, 111],
+                    secondaryHex: '#E95420',
+                    secondaryRgb: [233, 84, 32],
                     accentHex: '#E95420',
                     accentRgb: [233, 84, 32],
+                    gradientCss: 'linear-gradient(135deg, #5E2750 0%, #9E2A5B 48%, #E95420 100%)',
+                    softGradientCss: 'linear-gradient(135deg, #FDF2F8 0%, #FFF7ED 65%, #F8FAFC 100%)',
                     softBgHex: '#FDF4F5',
                     softBgRgb: [253, 244, 245],
-                    borderHex: '#F5D0FE',
-                    borderRgb: [245, 208, 254]
+                    borderHex: '#FBCFE8',
+                    borderRgb: [251, 207, 232]
                 },
                 emerald: {
-                    name: 'Spotify Emerald',
-                    primaryHex: '#064E3B',
-                    primaryRgb: [6, 78, 59],
-                    accentHex: '#10B981',
-                    accentRgb: [16, 185, 129],
+                    name: 'Emerald Mint',
+                    primaryHex: '#065F46',
+                    primaryRgb: [6, 95, 70],
+                    secondaryHex: '#34D399',
+                    secondaryRgb: [52, 211, 153],
+                    accentHex: '#059669',
+                    accentRgb: [5, 150, 105],
+                    gradientCss: 'linear-gradient(135deg, #064E3B 0%, #059669 55%, #34D399 100%)',
+                    softGradientCss: 'linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 65%, #F8FAFC 100%)',
                     softBgHex: '#ECFDF5',
                     softBgRgb: [236, 253, 245],
                     borderHex: '#A7F3D0',
                     borderRgb: [167, 243, 208]
                 },
-                maroon: {
-                    name: 'Crimson Maroon',
-                    primaryHex: '#881337',
-                    primaryRgb: [136, 19, 55],
-                    accentHex: '#E11D48',
-                    accentRgb: [225, 29, 72],
-                    softBgHex: '#FFF1F2',
-                    softBgRgb: [255, 241, 242],
-                    borderHex: '#FECDD3',
-                    borderRgb: [254, 205, 211]
-                },
                 gold: {
-                    name: 'Royal Amber',
-                    primaryHex: '#78350F',
-                    primaryRgb: [120, 53, 15],
+                    name: 'Amber Silver',
+                    primaryHex: '#92400E',
+                    primaryRgb: [146, 64, 14],
+                    secondaryHex: '#9CA3AF',
+                    secondaryRgb: [156, 163, 175],
                     accentHex: '#D97706',
                     accentRgb: [217, 119, 6],
+                    gradientCss: 'linear-gradient(135deg, #78350F 0%, #D97706 50%, #FBBF24 80%, #9CA3AF 100%)',
+                    softGradientCss: 'linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 60%, #F3F4F6 100%)',
                     softBgHex: '#FFFBEB',
                     softBgRgb: [255, 251, 235],
                     borderHex: '#FDE68A',
                     borderRgb: [253, 230, 138]
                 },
                 charcoal: {
-                    name: 'Obsidian Dark',
+                    name: 'Obsidian Silver',
                     primaryHex: '#18181B',
                     primaryRgb: [24, 24, 27],
-                    accentHex: '#52525B',
-                    accentRgb: [82, 82, 91],
-                    softBgHex: '#F4F4F5',
-                    softBgRgb: [244, 244, 245],
+                    secondaryHex: '#A1A1AA',
+                    secondaryRgb: [161, 161, 170],
+                    accentHex: '#3F3F46',
+                    accentRgb: [63, 63, 70],
+                    gradientCss: 'linear-gradient(135deg, #18181B 0%, #52525B 55%, #A1A1AA 100%)',
+                    softGradientCss: 'linear-gradient(135deg, #FAFAFA 0%, #F4F4F5 65%, #E4E4E7 100%)',
+                    softBgHex: '#FAFAFA',
+                    softBgRgb: [250, 250, 250],
                     borderHex: '#D4D4D8',
                     borderRgb: [212, 212, 216]
                 }
             };
 
             function hexToRgb(hex) {
-                const clean = (hex || '#0F172A').replace('#', '');
-                const num = parseInt(clean.length === 3 ? clean.split('').map(c => c + c).join('') : clean, 16);
+                const clean = (hex || '#007AFF').replace('#', '');
+                const full = clean.length === 3
+                    ? clean.split('').map(c => c + c).join('')
+                    : clean.padEnd(6, '0').slice(0, 6);
+                const num = parseInt(full, 16);
                 return [(num >> 16) & 255, (num >> 8) & 255, num & 255];
             }
 
-            function lightenHex(hex, amount) {
+            function lightenHex(hex, amount = 0.85) {
                 const [r, g, b] = hexToRgb(hex);
-                const nr = Math.round(r + (255 - r) * amount);
-                const ng = Math.round(g + (255 - g) * amount);
-                const nb = Math.round(b + (255 - b) * amount);
+                const nr = Math.min(255, Math.round(r + (255 - r) * amount));
+                const ng = Math.min(255, Math.round(g + (255 - g) * amount));
+                const nb = Math.min(255, Math.round(b + (255 - b) * amount));
+                const toHex = (n) => n.toString(16).padStart(2, '0').toUpperCase();
                 return {
-                    hex: '#' + [nr, ng, nb].map(v => v.toString(16).padStart(2, '0')).join(''),
+                    hex: `#${toHex(nr)}${toHex(ng)}${toHex(nb)}`,
                     rgb: [nr, ng, nb]
                 };
             }
 
-            const DEFAULT_SETTINGS = {
-                compName: 'CV. SRIKANDI JAYA MANDIRI',
-                compTagline: 'AMANAH DAN BAROKAH',
-                compAddress: 'Widyapura RT 004 RW 003, Kel. Singopuran, Kec. Kartasura, Kab. Sukoharjo, Jawa Tengah 57164',
-                compContact: 'Telp: 081393897867 | Email: srikandijayamandiricv@gmail.com',
-                compNpwp: 'NPWP: 96.733.327.9-532.000',
-                showNpwpDefault: true,
-                uiSkin: 'iphone',
-                invoiceTheme: 'slate',
-                customPrimaryHex: '#0F172A',
-                customAccentHex: '#007AFF',
-                issueCity: 'Sukoharjo',
-                signerName: 'Asih Ermataria',
-                signerRole: 'Direktur',
-                defaultNotes: 'Pembayaran harap ditransfer ke salah satu rekening berikut:\n1. Bank BNI 46 — No. Rekening: 8164444442\n   Atas Nama: SRIKANDI JAYA MANDIRI\n2. BPD JATENG — No. Rekening: 2-059-08065-5\n   Atas Nama: Asih Ermataria\nMohon cantumkan Nomor Invoice pada berita transfer.',
-                logoBase64: ''
-            };
+            let activeCvId = 'sjm';
+            try {
+                const savedCv = localStorage.getItem(ACTIVE_CV_KEY);
+                if (savedCv && CV_PROFILES[savedCv]) {
+                    activeCvId = savedCv;
+                }
+            } catch (e) { /* ignore */ }
+
+            let DEFAULT_SETTINGS = { ...CV_PROFILES[activeCvId].settings };
 
             let ghConfig = {
                 owner: '',
                 repo: '',
-                path: 'data.json',
+                path: CV_PROFILES[activeCvId].defaultJsonFile,
                 branch: 'main',
-                token: ''
+                token: '',
+                pathsByCv: {
+                    sjm: 'data.json',
+                    djm: 'data_djm.json'
+                }
             };
             let lastKnownFileSha = '';
 
-            // Auto-detect GitHub Pages owner & repo from URL
             try {
                 const host = window.location.hostname || '';
                 const pathParts = (window.location.pathname || '').split('/').filter(Boolean);
@@ -1139,11 +1180,18 @@
             try {
                 const savedGh = JSON.parse(localStorage.getItem(GH_CONFIG_KEY) || 'null');
                 if (savedGh) {
-                    ghConfig = { ...ghConfig, ...savedGh };
+                    ghConfig = {
+                        ...ghConfig,
+                        ...savedGh,
+                        pathsByCv: {
+                            sjm: (savedGh.pathsByCv && savedGh.pathsByCv.sjm) || 'data.json',
+                            djm: (savedGh.pathsByCv && savedGh.pathsByCv.djm) || 'data_djm.json'
+                        }
+                    };
+                    ghConfig.path = ghConfig.pathsByCv[activeCvId] || CV_PROFILES[activeCvId].defaultJsonFile;
                 }
             } catch (e) { /* ignore */ }
 
-            // Application State
             let settings = { ...DEFAULT_SETTINGS };
             let clientsDb = [];
             let invoiceHistory = [];
@@ -1154,8 +1202,41 @@
             let manualZoomScale = 0.65;
             let logoAspectType = 'square';
             let confirmCallback = null;
+            let currentPage = 'invoice';
+            let hasUnsavedSettings = false;
 
             const $ = (id) => document.getElementById(id);
+
+            function setUnsavedSettings(flag) {
+                hasUnsavedSettings = Boolean(flag);
+                const badge = $('settingsDirtyBadge');
+                const dotDesktop = $('unsavedSettingsDot');
+                const dotMob = $('mobUnsavedSettingsDot');
+                if (badge) badge.classList.toggle('hidden', !hasUnsavedSettings);
+                if (dotDesktop) dotDesktop.classList.toggle('hidden', !hasUnsavedSettings);
+                if (dotMob) dotMob.classList.toggle('hidden', !hasUnsavedSettings);
+            }
+
+            function revertUnsavedSettings() {
+                setUnsavedSettings(false);
+                applySettingsToUI();
+                updatePreview();
+            }
+
+            function guardUnsavedSettings(proceedFn) {
+                if (!hasUnsavedSettings) {
+                    proceedFn();
+                    return;
+                }
+                openConfirm(
+                    'Pengaturan Belum Disimpan',
+                    'Ada perubahan pada halaman Pengaturan yang belum disimpan. Abaikan perubahan dan lanjutkan?',
+                    () => {
+                        revertUnsavedSettings();
+                        proceedFn();
+                    }
+                );
+            }
 
             function escapeHtml(str) {
                 return String(str || '')
@@ -1234,19 +1315,17 @@
                 confirmCallback = null;
             }
 
-            // =================================================================
-            // REPO LOGO LOADER (sjm1.1.jpg)
-            // =================================================================
             function loadRepoLogoFile(silent = true) {
+                const candidates = (CV_PROFILES[activeCvId] && CV_PROFILES[activeCvId].logoCandidates) || ['sjm1.1.jpg'];
                 return new Promise((resolve) => {
                     let idx = 0;
                     function tryNext() {
-                        if (idx >= REPO_LOGO_CANDIDATES.length) {
-                            if (!silent) showToast('File sjm1.1.jpg belum ditemukan di folder repo. Silakan Upload Logo.');
+                        if (idx >= candidates.length) {
+                            if (!silent) showToast(`File logo repo untuk ${settings.compName} belum ditemukan. Silakan Upload Logo.`);
                             resolve(false);
                             return;
                         }
-                        const candidate = REPO_LOGO_CANDIDATES[idx++];
+                        const candidate = candidates[idx++];
                         const img = new Image();
                         img.crossOrigin = 'anonymous';
                         img.onload = function () {
@@ -1272,7 +1351,7 @@
                                 saveToLocalStorage();
                                 applySettingsToUI();
                                 updatePreview();
-                                if (!silent) showToast(`Logo asli (${candidate}) berhasil dimuat!`);
+                                if (!silent) showToast(`Logo (${candidate}) berhasil dimuat!`);
                                 resolve(true);
                             } catch (e) {
                                 tryNext();
@@ -1285,26 +1364,28 @@
                 });
             }
 
-            // =================================================================
-            // STORAGE & GITHUB SYNC ENGINE
-            // =================================================================
             function updateSyncStatusUI(status, text) {
                 const dot = $('cloudStatusDot');
                 const badge = $('cloudSyncBadge');
+                const subEl = $('headerCompanySub');
+                const jsonName = ghConfig.path || (CV_PROFILES[activeCvId] ? CV_PROFILES[activeCvId].defaultJsonFile : 'data.json');
+                if (subEl) {
+                    subEl.textContent = `File: ${jsonName} • Sistem Billing`;
+                }
                 if (status === 'synced') {
-                    if (dot) dot.className = 'w-2 h-2 rounded-full bg-[#34C759] shrink-0';
+                    if (dot) dot.className = 'w-2 h-2 rounded-full bg-[#34C759] shrink-0 ml-0.5';
                     if (badge) {
                         badge.className = 'px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-bold shrink-0';
-                        badge.textContent = text || 'Tersimpan di GitHub';
+                        badge.textContent = text || `Tersimpan di ${jsonName}`;
                     }
                 } else if (status === 'syncing') {
-                    if (dot) dot.className = 'w-2 h-2 rounded-full bg-[#007AFF] animate-pulse shrink-0';
+                    if (dot) dot.className = 'w-2 h-2 rounded-full bg-[#007AFF] animate-pulse shrink-0 ml-0.5';
                     if (badge) {
                         badge.className = 'px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 text-[10px] font-bold shrink-0';
                         badge.textContent = text || 'Menyinkronkan...';
                     }
                 } else {
-                    if (dot) dot.className = 'w-2 h-2 rounded-full bg-amber-400 shrink-0';
+                    if (dot) dot.className = 'w-2 h-2 rounded-full bg-amber-400 shrink-0 ml-0.5';
                     if (badge) {
                         badge.className = 'px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 text-[10px] font-bold shrink-0';
                         badge.textContent = text || 'Lokal';
@@ -1315,26 +1396,74 @@
             function saveToLocalStorage() {
                 try {
                     const payload = {
+                        cvId: activeCvId,
                         settings,
                         clientsDb,
                         invoiceHistory,
                         updatedAt: new Date().toISOString()
                     };
-                    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(payload));
-                } catch (e) { /* ignore quota error */ }
+                    localStorage.setItem(LOCAL_STORAGE_PREFIX + activeCvId, JSON.stringify(payload));
+                } catch (e) { /* ignore */ }
             }
 
             function loadFromLocalStorage() {
                 try {
-                    const raw = localStorage.getItem(LOCAL_STORAGE_KEY);
-                    if (!raw) return;
-                    const data = JSON.parse(raw);
-                    if (data.settings) {
-                        settings = { ...DEFAULT_SETTINGS, ...data.settings };
+                    const raw = localStorage.getItem(LOCAL_STORAGE_PREFIX + activeCvId);
+                    if (!raw) {
+                        settings = { ...DEFAULT_SETTINGS };
+                        clientsDb = [];
+                        invoiceHistory = [];
+                        return;
                     }
-                    if (Array.isArray(data.clientsDb)) clientsDb = data.clientsDb;
-                    if (Array.isArray(data.invoiceHistory)) invoiceHistory = data.invoiceHistory;
+                    const data = JSON.parse(raw);
+                    settings = data.settings ? { ...DEFAULT_SETTINGS, ...data.settings } : { ...DEFAULT_SETTINGS };
+                    clientsDb = Array.isArray(data.clientsDb) ? data.clientsDb : [];
+                    invoiceHistory = Array.isArray(data.invoiceHistory) ? data.invoiceHistory : [];
+                } catch (e) {
+                    settings = { ...DEFAULT_SETTINGS };
+                    clientsDb = [];
+                    invoiceHistory = [];
+                }
+            }
+
+            async function switchCvProfile(targetCvId) {
+                if (!CV_PROFILES[targetCvId]) return;
+                setUnsavedSettings(false);
+                saveToLocalStorage();
+                try {
+                    ghConfig.pathsByCv[activeCvId] = ($('ghPathInput') ? $('ghPathInput').value.trim() : '') || ghConfig.path || CV_PROFILES[activeCvId].defaultJsonFile;
+                    localStorage.setItem(GH_CONFIG_KEY, JSON.stringify(ghConfig));
                 } catch (e) { /* ignore */ }
+
+                activeCvId = targetCvId;
+                try {
+                    localStorage.setItem(ACTIVE_CV_KEY, activeCvId);
+                } catch (e) { /* ignore */ }
+
+                DEFAULT_SETTINGS = { ...CV_PROFILES[activeCvId].settings };
+                ghConfig.path = (ghConfig.pathsByCv && ghConfig.pathsByCv[activeCvId]) || CV_PROFILES[activeCvId].defaultJsonFile;
+                lastKnownFileSha = '';
+
+                loadFromLocalStorage();
+                applySettingsToUI();
+                renderClientsList();
+                renderHistoryList();
+
+                $('invNumber').value = generateAutoInvoiceNumber();
+                $('invNotes').value = settings.defaultNotes || '';
+                items = [{ id: Date.now(), name: '', qty: 1, unit: 'Pcs', price: 0 }];
+                renderItemRows();
+                updatePreview();
+                updateSyncStatusUI('local', 'Lokal');
+
+                if (!settings.logoBase64) {
+                    await loadRepoLogoFile(true);
+                }
+                if (ghConfig.owner && ghConfig.repo) {
+                    await pullFromGithub(true);
+                }
+
+                showToast(`Beralih ke ${settings.compName} (${ghConfig.path})`);
             }
 
             function encodeBase64Unicode(str) {
@@ -1347,8 +1476,9 @@
 
             async function pullFromGithub(silent = false) {
                 if (!ghConfig.owner || !ghConfig.repo) return false;
+                const filePath = ghConfig.path || (CV_PROFILES[activeCvId] ? CV_PROFILES[activeCvId].defaultJsonFile : 'data.json');
                 updateSyncStatusUI('syncing', 'Memuat...');
-                const apiUrl = `https://api.github.com/repos/${encodeURIComponent(ghConfig.owner)}/${encodeURIComponent(ghConfig.repo)}/contents/${ghConfig.path || 'data.json'}?ref=${encodeURIComponent(ghConfig.branch || 'main')}&t=${Date.now()}`;
+                const apiUrl = `https://api.github.com/repos/${encodeURIComponent(ghConfig.owner)}/${encodeURIComponent(ghConfig.repo)}/contents/${filePath}?ref=${encodeURIComponent(ghConfig.branch || 'main')}&t=${Date.now()}`;
                 const headers = { 'Accept': 'application/vnd.github+json' };
                 if (ghConfig.token) {
                     headers['Authorization'] = `Bearer ${ghConfig.token}`;
@@ -1357,8 +1487,8 @@
                 try {
                     const res = await fetch(apiUrl, { headers });
                     if (res.status === 404) {
-                        updateSyncStatusUI('local', 'Belum ada data.json');
-                        if (!silent) showToast('File data.json belum ada di repo, siap dibuat saat simpan.');
+                        updateSyncStatusUI('local', `Belum ada ${filePath}`);
+                        if (!silent) showToast(`File ${filePath} belum ada di repo, siap dibuat saat simpan.`);
                         return false;
                     }
                     if (!res.ok) throw new Error('HTTP ' + res.status);
@@ -1370,13 +1500,14 @@
                         if (Array.isArray(decoded.clientsDb)) clientsDb = decoded.clientsDb;
                         if (Array.isArray(decoded.invoiceHistory)) invoiceHistory = decoded.invoiceHistory;
                         saveToLocalStorage();
+                        setUnsavedSettings(false);
                         applySettingsToUI();
                         renderClientsList();
                         renderHistoryList();
                         updatePreview();
                     }
-                    updateSyncStatusUI('synced', 'Tersimpan di GitHub');
-                    if (!silent) showToast('Data berhasil dimuat dari GitHub!');
+                    updateSyncStatusUI('synced', `Tersimpan di ${filePath}`);
+                    if (!silent) showToast(`Data berhasil dimuat dari ${filePath}!`);
                     return true;
                 } catch (err) {
                     updateSyncStatusUI('local', 'Offline / Token Salah');
@@ -1387,13 +1518,13 @@
 
             async function pushToGithub(silent = true) {
                 saveToLocalStorage();
+                const filePath = ghConfig.path || (CV_PROFILES[activeCvId] ? CV_PROFILES[activeCvId].defaultJsonFile : 'data.json');
                 if (!ghConfig.owner || !ghConfig.repo || !ghConfig.token) {
                     updateSyncStatusUI('local', 'Lokal (Token belum diisi)');
                     return false;
                 }
 
-                updateSyncStatusUI('syncing', 'Menyimpan ke GitHub...');
-                const filePath = ghConfig.path || 'data.json';
+                updateSyncStatusUI('syncing', `Menyimpan ${filePath}...`);
                 const branch = ghConfig.branch || 'main';
                 const apiUrl = `https://api.github.com/repos/${encodeURIComponent(ghConfig.owner)}/${encodeURIComponent(ghConfig.repo)}/contents/${filePath}`;
                 const headers = {
@@ -1412,7 +1543,8 @@
                     }
 
                     const payloadObj = {
-                        app: 'CV. Srikandi Jaya Mandiri Invoice System',
+                        app: `${settings.compName} Invoice System`,
+                        cvId: activeCvId,
                         updatedAt: new Date().toISOString(),
                         settings,
                         clientsDb,
@@ -1420,7 +1552,7 @@
                     };
 
                     const body = {
-                        message: `Update data.json (${new Date().toLocaleString('id-ID')})`,
+                        message: `Update ${filePath} (${new Date().toLocaleString('id-ID')})`,
                         content: encodeBase64Unicode(JSON.stringify(payloadObj, null, 2)),
                         branch
                     };
@@ -1443,8 +1575,8 @@
                     if (putJson.content && putJson.content.sha) {
                         lastKnownFileSha = putJson.content.sha;
                     }
-                    updateSyncStatusUI('synced', 'Tersimpan di GitHub');
-                    if (!silent) showToast('Berhasil sinkron ke GitHub (data.json)!');
+                    updateSyncStatusUI('synced', `Tersimpan di ${filePath}`);
+                    if (!silent) showToast(`Berhasil sinkron ke GitHub (${filePath})!`);
                     return true;
                 } catch (err) {
                     updateSyncStatusUI('local', 'Gagal Sync GitHub');
@@ -1453,10 +1585,8 @@
                 }
             }
 
-            // =================================================================
-            // NAVIGATION & MOBILE TABS
-            // =================================================================
             function switchPage(pageName) {
+                currentPage = pageName;
                 document.querySelectorAll('.page-section').forEach(sec => sec.classList.add('hidden'));
                 const target = $('page-' + pageName);
                 if (target) target.classList.remove('hidden');
@@ -1507,9 +1637,6 @@
                 }
             }
 
-            // =================================================================
-            // A4 AUTO-FIT & ZOOM CONTROLS
-            // =================================================================
             function applyA4Zoom() {
                 const wrapper = $('previewScrollWrapper');
                 const scaleBox = $('a4ScaleBox');
@@ -1536,9 +1663,6 @@
                 scaleBox.style.height = `${paperHeightPx * scale}px`;
             }
 
-            // =================================================================
-            // LOGO ASPECT RATIO & THEME UTILITIES
-            // =================================================================
             function detectLogoOrientation(src) {
                 if (!src) {
                     logoAspectType = 'square';
@@ -1584,52 +1708,72 @@
             function applyUiSkin(skinKey) {
                 document.body.classList.remove('ui-iphone', 'ui-oneui', 'ui-macos', 'ui-linux');
                 document.body.classList.add('ui-' + (skinKey || 'iphone'));
-                document.querySelectorAll('.uiskin-opt-btn').forEach(btn => {
-                    const isSelected = btn.getAttribute('data-uiskin') === skinKey;
-                    btn.classList.toggle('border-[#007AFF]', isSelected);
-                    btn.classList.toggle('border-transparent', !isSelected);
-                });
+                const uiSelect = $('setUiSkinSelect');
+                if (uiSelect && uiSelect.value !== (skinKey || 'iphone')) {
+                    uiSelect.value = skinKey || 'iphone';
+                }
             }
 
-            function getActiveTheme() {
-                if (settings.invoiceTheme === 'custom') {
-                    const pHex = settings.customPrimaryHex || '#0F172A';
-                    const aHex = settings.customAccentHex || '#007AFF';
-                    const soft = lightenHex(pHex, 0.94);
+            function getActiveTheme(overrideThemeKey) {
+                const themeKey = overrideThemeKey || ($('setInvoiceThemeSelect') ? $('setInvoiceThemeSelect').value : settings.invoiceTheme) || 'slate';
+                if (themeKey === 'custom') {
+                    const pHex = ($('customPrimaryColor') ? $('customPrimaryColor').value : settings.customPrimaryHex) || '#BE123C';
+                    const aHex = ($('customAccentColor') ? $('customAccentColor').value : settings.customAccentHex) || '#F472B6';
+                    const softStart = lightenHex(pHex, 0.93);
+                    const softEnd = lightenHex(aHex, 0.90);
                     const border = lightenHex(pHex, 0.78);
                     return {
-                        name: 'Custom Warna',
+                        name: 'Custom Gradasi',
                         primaryHex: pHex,
                         primaryRgb: hexToRgb(pHex),
-                        accentHex: aHex,
-                        accentRgb: hexToRgb(aHex),
-                        softBgHex: soft.hex,
-                        softBgRgb: soft.rgb,
+                        secondaryHex: aHex,
+                        secondaryRgb: hexToRgb(aHex),
+                        accentHex: pHex,
+                        accentRgb: hexToRgb(pHex),
+                        gradientCss: `linear-gradient(135deg, ${pHex} 0%, ${aHex} 78%, #94A3B8 100%)`,
+                        softGradientCss: `linear-gradient(135deg, ${softStart.hex} 0%, ${softEnd.hex} 65%, #F1F5F9 100%)`,
+                        softBgHex: softStart.hex,
+                        softBgRgb: softStart.rgb,
                         borderHex: border.hex,
                         borderRgb: border.rgb
                     };
                 }
-                return INVOICE_THEMES[settings.invoiceTheme] || INVOICE_THEMES.slate;
+                return INVOICE_THEMES[themeKey] || INVOICE_THEMES.slate;
             }
 
             function updateThemeSelectorUI(selectedKey) {
-                document.querySelectorAll('.theme-opt-btn').forEach(btn => {
-                    const isSelected = btn.getAttribute('data-theme') === selectedKey;
-                    btn.classList.toggle('border-[#007AFF]', isSelected);
-                    btn.classList.toggle('border-transparent', !isSelected);
-                });
+                const themeSelect = $('setInvoiceThemeSelect');
+                if (themeSelect && themeSelect.value !== selectedKey) {
+                    themeSelect.value = selectedKey;
+                }
                 const pickerRow = $('customThemePickerRow');
                 if (pickerRow) {
                     pickerRow.classList.toggle('hidden', selectedKey !== 'custom');
                 }
-                const swatch = $('customThemeSwatch');
-                if (swatch && selectedKey === 'custom') {
-                    swatch.style.background = settings.customPrimaryHex || '#0F172A';
+                const swatch = $('themePreviewSwatch');
+                if (swatch) {
+                    const themeObj = getActiveTheme(selectedKey);
+                    swatch.style.background = themeObj.gradientCss;
                 }
             }
 
             function applySettingsToUI() {
-                $('headerCompanyName').textContent = settings.compName || 'CV. SRIKANDI JAYA MANDIRI';
+                const currentCompName = settings.compName || (CV_PROFILES[activeCvId] ? CV_PROFILES[activeCvId].settings.compName : 'CV. SRIKANDI JAYA MANDIRI');
+                $('headerCompanyName').textContent = currentCompName;
+                if ($('settingsActiveCvBadge')) {
+                    $('settingsActiveCvBadge').textContent = currentCompName;
+                }
+
+                document.querySelectorAll('[data-cv-check]').forEach(el => {
+                    const isActive = el.getAttribute('data-cv-check') === activeCvId;
+                    el.classList.toggle('hidden', !isActive);
+                });
+
+                const logoHint = $('settingsRepoLogoHint');
+                if (logoHint && CV_PROFILES[activeCvId]) {
+                    logoHint.textContent = CV_PROFILES[activeCvId].logoCandidates[0];
+                }
+
                 $('setCompName').value = settings.compName || '';
                 $('setCompTagline').value = settings.compTagline || '';
                 $('setCompContact').value = settings.compContact || '';
@@ -1641,15 +1785,12 @@
                 $('setSignerName').value = settings.signerName || '';
                 $('setSignerRole').value = settings.signerRole || '';
                 $('setDefaultNotes').value = settings.defaultNotes || '';
-                $('customPrimaryColor').value = settings.customPrimaryHex || '#0F172A';
-                $('customAccentColor').value = settings.customAccentHex || '#007AFF';
+
+                $('customPrimaryColor').value = settings.customPrimaryHex || '#BE123C';
+                $('customAccentColor').value = settings.customAccentHex || '#F472B6';
 
                 applyUiSkin(settings.uiSkin || 'iphone');
                 updateThemeSelectorUI(settings.invoiceTheme || 'slate');
-
-                if (!$('invNotes').value.trim()) {
-                    $('invNotes').value = settings.defaultNotes || '';
-                }
 
                 const prevImg = $('settingsLogoPreview');
                 const placeholder = $('settingsLogoPlaceholder');
@@ -1668,16 +1809,14 @@
 
                 $('ghOwnerInput').value = ghConfig.owner || '';
                 $('ghRepoInput').value = ghConfig.repo || '';
-                $('ghPathInput').value = ghConfig.path || 'data.json';
+                $('ghPathInput').value = ghConfig.path || (CV_PROFILES[activeCvId] ? CV_PROFILES[activeCvId].defaultJsonFile : 'data.json');
                 $('ghBranchInput').value = ghConfig.branch || 'main';
                 $('ghTokenInput').value = ghConfig.token || '';
 
+                updateSyncStatusUI('local');
                 detectLogoOrientation(settings.logoBase64);
             }
 
-            // =================================================================
-            // TAX & ITEM CALCULATIONS
-            // =================================================================
             function getTaxRates() {
                 const taxPriceMode = $('taxPriceMode') ? $('taxPriceMode').value : 'exclude';
                 const enablePpn = $('enablePpn') ? $('enablePpn').checked : false;
@@ -1740,9 +1879,6 @@
                 };
             }
 
-            // =================================================================
-            // ITEM ROWS RENDERING
-            // =================================================================
             function renderItemRows() {
                 const container = $('itemsContainer');
                 const hintEl = $('taxPriceModeHint');
@@ -1822,15 +1958,11 @@
                 });
             }
 
-            // =================================================================
-            // LIVE A4 PREVIEW UPDATE
-            // =================================================================
             function updatePreview() {
                 const calc = calculateInvoiceTotals();
                 const theme = getActiveTheme();
                 const isInclusive = calc.taxPriceMode === 'include';
 
-                // Update dynamic item row subtotals in editor
                 calc.computedItems.forEach((ci, idx) => {
                     const lineEl = document.querySelector(`[data-line-total="${idx}"]`);
                     if (lineEl) lineEl.textContent = formatRupiah(ci.netLineTotal);
@@ -1838,7 +1970,6 @@
                     if (netEl) netEl.textContent = formatRupiah(ci.netUnitPrice);
                 });
 
-                // Update editor summary card
                 $('formSubtotalDisplay').textContent = formatRupiah(calc.subtotalNet);
                 $('formPpnRow').classList.toggle('hidden', !calc.enablePpn);
                 $('formPpnLabel').textContent = `PPN (${calc.ppnRate}%)`;
@@ -1849,7 +1980,6 @@
                 $('formPphDisplay').textContent = (calc.pphMode === 'deduct' ? '- ' : '+ ') + formatRupiah(calc.pphAmount);
                 $('formGrandTotalDisplay').textContent = formatRupiah(calc.grandTotal);
 
-                // Apply Invoice Theme Colors to A4 Document
                 const headerWrap = $('docHeaderWrapper');
                 const compNameEl = $('docCompName');
                 const taglineEl = $('docCompTagline');
@@ -1860,23 +1990,25 @@
                 const terbilangBox = $('docTerbilangBox');
                 const grandTotalRow = $('docGrandTotalRow');
 
-                if (headerWrap) headerWrap.style.borderBottomColor = theme.primaryHex;
+                if (headerWrap) {
+                    headerWrap.style.borderBottomColor = 'transparent';
+                    headerWrap.style.borderImage = `${theme.gradientCss} 1`;
+                }
                 if (compNameEl) compNameEl.style.color = theme.primaryHex;
                 if (taglineEl) taglineEl.style.color = theme.accentHex;
-                if (titleBadge) titleBadge.style.backgroundColor = theme.primaryHex;
+                if (titleBadge) titleBadge.style.background = theme.gradientCss;
                 if (clientBox) {
-                    clientBox.style.backgroundColor = theme.softBgHex;
+                    clientBox.style.background = theme.softGradientCss || theme.softBgHex;
                     clientBox.style.borderColor = theme.borderHex;
                 }
                 if (tableWrap) tableWrap.style.borderColor = theme.borderHex;
-                if (tableHeadRow) tableHeadRow.style.backgroundColor = theme.primaryHex;
+                if (tableHeadRow) tableHeadRow.style.background = theme.gradientCss;
                 if (terbilangBox) {
-                    terbilangBox.style.backgroundColor = theme.softBgHex;
+                    terbilangBox.style.background = theme.softGradientCss || theme.softBgHex;
                     terbilangBox.style.borderColor = theme.borderHex;
                 }
-                if (grandTotalRow) grandTotalRow.style.backgroundColor = theme.primaryHex;
+                if (grandTotalRow) grandTotalRow.style.background = theme.gradientCss;
 
-                // Company Header Fields
                 $('docCompName').textContent = settings.compName || 'CV. SRIKANDI JAYA MANDIRI';
                 $('docCompTagline').textContent = settings.compTagline || '';
                 $('docCompTagline').classList.toggle('hidden', !settings.compTagline);
@@ -1887,7 +2019,6 @@
                 $('docCompNpwp').textContent = settings.compNpwp || '';
                 $('docCompNpwp').classList.toggle('hidden', !showNpwp);
 
-                // Invoice Meta & Client
                 $('docInvNumber').textContent = $('invNumber').value.trim() || '-';
                 $('docInvDate').textContent = formatDateIndo($('invDate').value);
                 $('docInvDueDate').textContent = formatDateIndo($('invDueDate').value);
@@ -1901,7 +2032,6 @@
                 $('docClientNpwp').textContent = cNpwp ? `NPWP: ${cNpwp}` : '';
                 $('docClientNpwp').classList.toggle('hidden', !cNpwp);
 
-                // Table Headers & Rows
                 $('docColUnitPrice').textContent = isInclusive ? 'Harga Bruto' : 'Harga Satuan';
                 $('docColNetUnit').classList.toggle('hidden', !isInclusive);
 
@@ -1922,7 +2052,6 @@
                     tbody.appendChild(tr);
                 });
 
-                // Totals & Notes
                 $('docSubtotalLabel').textContent = isInclusive ? 'Subtotal Netto (DPP)' : 'Subtotal';
                 $('docSubtotal').textContent = formatRupiah(calc.subtotalNet);
 
@@ -1938,7 +2067,6 @@
                 $('docTerbilang').textContent = terbilang(calc.grandTotal);
                 $('docNotes').textContent = $('invNotes').value.trim() || '-';
 
-                // Signature Footer
                 $('docFooterCompName').textContent = settings.compName || 'CV. SRIKANDI JAYA MANDIRI';
                 $('docSignCityDate').textContent = `${settings.issueCity || 'Sukoharjo'}, ${formatDateIndo($('invDate').value)}`;
                 $('docSignCompany').textContent = settings.compName || 'CV. SRIKANDI JAYA MANDIRI';
@@ -1950,9 +2078,6 @@
                 }
             }
 
-            // =================================================================
-            // CUSTOMER DATABASE CRUD & RENDERING
-            // =================================================================
             function resetClientForm() {
                 $('editClientId').value = '';
                 $('dbClientName').value = '';
@@ -1967,7 +2092,6 @@
                 const badge = $('badgeClientsCount');
                 if (badge) badge.textContent = String(clientsDb.length);
 
-                // Populate Dropdown on Invoice Form
                 const selectEl = $('selectClientDb');
                 if (selectEl) {
                     const prevVal = selectEl.value;
@@ -1981,7 +2105,6 @@
                     selectEl.value = prevVal;
                 }
 
-                // Render Directory Cards
                 const container = $('clientsListContainer');
                 if (!container) return;
                 const q = ($('searchClientsInput') ? $('searchClientsInput').value : '').toLowerCase().trim();
@@ -2073,9 +2196,6 @@
                 });
             }
 
-            // =================================================================
-            // INVOICE HISTORY CRUD & RENDERING
-            // =================================================================
             function loadInvoiceRecord(record, asDuplicate = false) {
                 $('invNumber').value = asDuplicate ? generateAutoInvoiceNumber() : (record.invNumber || '');
                 $('invDate').value = asDuplicate ? getTodayStr() : (record.invDate || getTodayStr());
@@ -2179,9 +2299,6 @@
                 });
             }
 
-            // =================================================================
-            // VECTOR PDF EXPORT (jsPDF + AutoTable)
-            // =================================================================
             function rasterizeImageToPng(src) {
                 return new Promise((resolve) => {
                     if (!src) {
@@ -2199,11 +2316,7 @@
                             canvas.height = h;
                             const ctx = canvas.getContext('2d');
                             ctx.drawImage(img, 0, 0, w, h);
-                            resolve({
-                                dataUrl: canvas.toDataURL('image/png'),
-                                width: w,
-                                height: h
-                            });
+                            resolve({ dataUrl: canvas.toDataURL('image/png'), width: w, height: h });
                         } catch (e) {
                             resolve(null);
                         }
@@ -2211,6 +2324,32 @@
                     img.onerror = () => resolve(null);
                     img.src = src;
                 });
+            }
+
+            function drawGradientBar(doc, x, y, w, h, rgbStart, rgbEnd, radius = 0) {
+                const steps = 28;
+                const sliceW = w / steps;
+                for (let i = 0; i < steps; i++) {
+                    const t = i / (steps - 1);
+                    const r = Math.round(rgbStart[0] + (rgbEnd[0] - rgbStart[0]) * t);
+                    const g = Math.round(rgbStart[1] + (rgbEnd[1] - rgbStart[1]) * t);
+                    const b = Math.round(rgbStart[2] + (rgbEnd[2] - rgbStart[2]) * t);
+                    doc.setFillColor(r, g, b);
+                    const sx = x + i * sliceW;
+                    const sw = i === steps - 1 ? (x + w - sx) : (sliceW + 0.15);
+                    if (radius > 0 && (i === 0 || i === steps - 1)) {
+                        doc.roundedRect(sx, y, sw, h, radius, radius, 'F');
+                    } else {
+                        doc.rect(sx, y, sw, h, 'F');
+                    }
+                }
+            }
+
+            function drawOutlinedWhiteText(doc, text, x, y, options = {}, strokeWidth = 0.35) {
+                doc.setDrawColor(15, 23, 42);
+                doc.setLineWidth(strokeWidth);
+                doc.setTextColor(255, 255, 255);
+                doc.text(text, x, y, { ...options, renderingMode: 'fillThenStroke' });
             }
 
             async function exportVectorPdf() {
@@ -2232,7 +2371,6 @@
                 const rightX = pageW - marginX;
                 let curY = 16;
 
-                // Logo rendering
                 const rasterLogo = await rasterizeImageToPng(settings.logoBase64);
                 let textStartX = marginX;
 
@@ -2250,7 +2388,6 @@
                     }
                 }
 
-                // Company Info
                 const maxBrandW = 112 - (textStartX - marginX);
                 doc.setFont('helvetica', 'bold');
                 doc.setFontSize(13.5);
@@ -2285,14 +2422,12 @@
                     leftY += 4;
                 }
 
-                // Invoice Badge & Meta on Right
                 const metaTopY = 16;
-                doc.setFillColor(...theme.primaryRgb);
-                doc.roundedRect(rightX - 36, metaTopY, 36, 8.5, 1.5, 1.5, 'F');
+                const secRgb = theme.secondaryRgb || theme.accentRgb;
+                drawGradientBar(doc, rightX - 36, metaTopY, 36, 8.5, theme.primaryRgb, secRgb, 1.5);
                 doc.setFont('helvetica', 'bold');
                 doc.setFontSize(11);
-                doc.setTextColor(255, 255, 255);
-                doc.text('INVOICE', rightX - 18, metaTopY + 5.8, { align: 'center' });
+                drawOutlinedWhiteText(doc, 'INVOICE', rightX - 18, metaTopY + 5.8, { align: 'center' }, 0.42);
 
                 const invNo = $('invNumber').value.trim() || '-';
                 const invDateStr = formatDateIndo($('invDate').value);
@@ -2316,11 +2451,8 @@
                 });
 
                 const headerBottomY = Math.max(leftY, metaY, 36) + 2;
-                doc.setDrawColor(...theme.primaryRgb);
-                doc.setLineWidth(0.6);
-                doc.line(marginX, headerBottomY, rightX, headerBottomY);
+                drawGradientBar(doc, marginX, headerBottomY, rightX - marginX, 0.7, theme.primaryRgb, secRgb, 0);
 
-                // Client Box
                 let boxY = headerBottomY + 5;
                 const cName = $('clientName').value.trim() || '-';
                 const cAddr = $('clientAddress').value.trim() || '-';
@@ -2362,7 +2494,6 @@
                     doc.text(`NPWP: ${cNpwp}`, marginX + 3.5, cTextY);
                 }
 
-                // Items Table via AutoTable
                 const headCols = isInclusive
                     ? [['No', 'Deskripsi Barang / Jasa', 'Qty', 'Sat', 'Harga Bruto', 'Harga Netto', 'Jumlah']]
                     : [['No', 'Deskripsi Barang / Jasa', 'Qty', 'Sat', 'Harga Satuan', 'Jumlah']];
@@ -2411,6 +2542,19 @@
                     alternateRowStyles: {
                         fillColor: theme.softBgRgb
                     },
+                    didDrawCell: function (data) {
+                        if (data.section === 'head' && data.column.index === 0) {
+                            const tblW = rightX - marginX;
+                            drawGradientBar(doc, data.cell.x, data.cell.y, tblW, data.cell.height, theme.primaryRgb, secRgb, 0);
+                        }
+                        if (data.section === 'head') {
+                            doc.setFont('helvetica', 'bold');
+                            doc.setFontSize(8);
+                            const tx = data.cell.x + data.cell.width / 2;
+                            const ty = data.cell.y + data.cell.height / 2 + 1;
+                            drawOutlinedWhiteText(doc, String(data.cell.raw || ''), tx, ty, { align: 'center' }, 0.32);
+                        }
+                    },
                     columnStyles: isInclusive ? {
                         0: { halign: 'center', cellWidth: 10 },
                         1: { halign: 'left' },
@@ -2435,7 +2579,6 @@
                     afterTableY = 20;
                 }
 
-                // Left: Terbilang & Notes
                 const terbText = terbilang(calc.grandTotal);
                 const terbLines = doc.splitTextToSize(terbText, 95);
                 const terbBoxH = 9 + terbLines.length * 3.8;
@@ -2464,7 +2607,6 @@
                 const noteLines = doc.splitTextToSize($('invNotes').value.trim() || '-', 100);
                 doc.text(noteLines, marginX, notesY);
 
-                // Right: Totals Table
                 const sumX = marginX + 105;
                 const sumW = rightX - sumX;
                 let sumY = afterTableY + 3;
@@ -2498,16 +2640,13 @@
                     sumY += 5.5;
                 }
 
-                doc.setFillColor(...theme.primaryRgb);
-                doc.roundedRect(sumX - 2, sumY - 1, sumW + 2, 9.5, 1.8, 1.8, 'F');
+                drawGradientBar(doc, sumX - 2, sumY - 1, sumW + 2, 9.5, theme.primaryRgb, secRgb, 1.5);
                 doc.setFont('helvetica', 'bold');
                 doc.setFontSize(8.5);
-                doc.setTextColor(255, 255, 255);
-                doc.text('TOTAL TAGIHAN', sumX + 1.5, sumY + 5.2);
+                drawOutlinedWhiteText(doc, 'TOTAL TAGIHAN', sumX + 1.5, sumY + 5.2, {}, 0.34);
                 doc.setFontSize(9.5);
-                doc.text(formatRupiah(calc.grandTotal), rightX - 1.5, sumY + 5.2, { align: 'right' });
+                drawOutlinedWhiteText(doc, formatRupiah(calc.grandTotal), rightX - 1.5, sumY + 5.2, { align: 'right' }, 0.36);
 
-                // Signature Area
                 const signY = Math.max(notesY + noteLines.length * 3.5 + 8, sumY + 18, 238);
                 const signCenterX = rightX - 28;
                 doc.setFont('helvetica', 'normal');
@@ -2535,9 +2674,6 @@
                 }
             }
 
-            // =================================================================
-            // DATE & INVOICE NUMBER UTILITIES
-            // =================================================================
             function getTodayStr() {
                 const d = new Date();
                 return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
@@ -2554,12 +2690,10 @@
                 const yyyy = d.getFullYear();
                 const mm = String(d.getMonth() + 1).padStart(2, '0');
                 const seq = String(invoiceHistory.length + 1).padStart(3, '0');
-                return `INV/${yyyy}/${mm}/${seq}`;
+                const prefix = activeCvId === 'djm' ? 'INV/DJM' : 'INV';
+                return `${prefix}/${yyyy}/${mm}/${seq}`;
             }
 
-            // =================================================================
-            // INITIALIZATION & EVENT WIRING
-            // =================================================================
             function init() {
                 loadFromLocalStorage();
 
@@ -2574,18 +2708,42 @@
                 renderItemRows();
                 updatePreview();
 
-                // Navigation Tabs (Desktop & Mobile)
                 document.querySelectorAll('[data-nav]').forEach(btn => {
                     btn.addEventListener('click', () => {
-                        switchPage(btn.getAttribute('data-nav'));
+                        const targetPage = btn.getAttribute('data-nav');
+                        if (targetPage === currentPage) return;
+                        guardUnsavedSettings(() => switchPage(targetPage));
                     });
                 });
 
-                // Mobile Form vs Preview Tabs
+                const cvSwitchBtn = $('btnCompanySwitcher');
+                const cvDropdown = $('companyDropdownMenu');
+                if (cvSwitchBtn && cvDropdown) {
+                    cvSwitchBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        cvDropdown.classList.toggle('hidden');
+                    });
+                    document.addEventListener('click', (e) => {
+                        if (!cvDropdown.classList.contains('hidden') && !cvDropdown.contains(e.target)) {
+                            cvDropdown.classList.add('hidden');
+                        }
+                    });
+                    cvDropdown.querySelectorAll('[data-switch-cv]').forEach(itemBtn => {
+                        itemBtn.addEventListener('click', () => {
+                            const targetCv = itemBtn.getAttribute('data-switch-cv');
+                            cvDropdown.classList.add('hidden');
+                            if (targetCv && targetCv !== activeCvId) {
+                                guardUnsavedSettings(async () => {
+                                    await switchCvProfile(targetCv);
+                                });
+                            }
+                        });
+                    });
+                }
+
                 $('mobTabForm').addEventListener('click', () => switchMobileInvoiceView('form'));
                 $('mobTabPreview').addEventListener('click', () => switchMobileInvoiceView('preview'));
 
-                // Zoom Controls
                 $('btnZoomOut').addEventListener('click', () => {
                     currentZoomMode = 'manual';
                     manualZoomScale = Math.max(0.3, Number((manualZoomScale - 0.1).toFixed(2)));
@@ -2604,13 +2762,11 @@
                     if (currentZoomMode === 'auto') applyA4Zoom();
                 });
 
-                // Auto Number
                 $('btnAutoNumber').addEventListener('click', () => {
                     $('invNumber').value = generateAutoInvoiceNumber();
                     updatePreview();
                 });
 
-                // Live Form Inputs
                 ['invNumber', 'invDate', 'invDueDate', 'clientName', 'clientContact', 'clientNpwp', 'clientAddress', 'invNotes', 'ppnRate', 'pphRate', 'pphLabel'].forEach(id => {
                     const el = $(id);
                     if (el) el.addEventListener('input', updatePreview);
@@ -2624,47 +2780,40 @@
                     updatePreview();
                 });
 
-                // Theme Selector Buttons
-                document.querySelectorAll('.theme-opt-btn').forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        const chosen = btn.getAttribute('data-theme');
-                        settings.invoiceTheme = chosen;
-                        updateThemeSelectorUI(chosen);
-                        updatePreview();
-                    });
+                document.querySelectorAll('.settings-track').forEach(el => {
+                    const evt = (el.tagName === 'SELECT' || el.type === 'checkbox' || el.type === 'color') ? 'change' : 'input';
+                    el.addEventListener(evt, () => setUnsavedSettings(true));
                 });
 
-                $('customPrimaryColor').addEventListener('input', (e) => {
-                    settings.customPrimaryHex = e.target.value;
-                    settings.invoiceTheme = 'custom';
+                $('setUiSkinSelect').addEventListener('change', (e) => {
+                    applyUiSkin(e.target.value);
+                    setUnsavedSettings(true);
+                });
+
+                $('setInvoiceThemeSelect').addEventListener('change', (e) => {
+                    updateThemeSelectorUI(e.target.value);
+                    updatePreview();
+                    setUnsavedSettings(true);
+                });
+
+                $('customPrimaryColor').addEventListener('input', () => {
                     updateThemeSelectorUI('custom');
                     updatePreview();
+                    setUnsavedSettings(true);
                 });
 
-                $('customAccentColor').addEventListener('input', (e) => {
-                    settings.customAccentHex = e.target.value;
-                    settings.invoiceTheme = 'custom';
+                $('customAccentColor').addEventListener('input', () => {
                     updateThemeSelectorUI('custom');
                     updatePreview();
+                    setUnsavedSettings(true);
                 });
 
-                // UI Interface Skin Selector Buttons
-                document.querySelectorAll('.uiskin-opt-btn').forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        const chosenSkin = btn.getAttribute('data-uiskin');
-                        settings.uiSkin = chosenSkin;
-                        applyUiSkin(chosenSkin);
-                    });
-                });
-
-                // Add Item Button
                 $('btnAddItem').addEventListener('click', () => {
                     items.push({ id: Date.now(), name: '', qty: 1, unit: 'Pcs', price: 0 });
                     renderItemRows();
                     updatePreview();
                 });
 
-                // New Invoice Button
                 $('btnNewInvoice').addEventListener('click', () => {
                     openConfirm('Buat Invoice Baru', 'Kosongkan form saat ini untuk membuat invoice baru?', () => {
                         $('invNumber').value = generateAutoInvoiceNumber();
@@ -2691,7 +2840,6 @@
                     });
                 });
 
-                // Load Client from Dropdown
                 $('selectClientDb').addEventListener('change', (e) => {
                     const selectedId = e.target.value;
                     if (!selectedId) return;
@@ -2706,7 +2854,6 @@
                     }
                 });
 
-                // Quick Save Client from Invoice Form
                 $('btnQuickSaveClient').addEventListener('click', () => {
                     const name = $('clientName').value.trim();
                     if (!name) {
@@ -2731,7 +2878,6 @@
                     showToast('Konsumen disimpan ke database!');
                 });
 
-                // Customer Database Page Form Save & Search
                 $('btnSaveClientDb').addEventListener('click', () => {
                     const name = $('dbClientName').value.trim();
                     if (!name) {
@@ -2761,7 +2907,6 @@
                 $('btnCancelClientEdit').addEventListener('click', resetClientForm);
                 $('searchClientsInput').addEventListener('input', renderClientsList);
 
-                // Save Invoice to History
                 $('btnSaveInvoice').addEventListener('click', () => {
                     const calc = calculateInvoiceTotals();
                     const invNo = $('invNumber').value.trim() || generateAutoInvoiceNumber();
@@ -2799,11 +2944,9 @@
 
                 $('searchHistoryInput').addEventListener('input', renderHistoryList);
 
-                // Print & Download PDF
                 $('btnPrintPdf').addEventListener('click', () => window.print());
                 $('btnDownloadPdf').addEventListener('click', exportVectorPdf);
 
-                // Settings Page: Upload Logo
                 $('logoFileInput').addEventListener('change', (e) => {
                     const file = e.target.files && e.target.files[0];
                     if (!file) return;
@@ -2856,14 +2999,17 @@
                     showToast('Logo dihapus');
                 });
 
-                // Save Settings
                 $('btnSaveSettings').addEventListener('click', () => {
-                    settings.compName = $('setCompName').value.trim() || 'CV. SRIKANDI JAYA MANDIRI';
+                    settings.compName = $('setCompName').value.trim() || (CV_PROFILES[activeCvId] ? CV_PROFILES[activeCvId].settings.compName : 'CV. SRIKANDI JAYA MANDIRI');
                     settings.compTagline = $('setCompTagline').value.trim();
                     settings.compContact = $('setCompContact').value.trim();
                     settings.compNpwp = $('setCompNpwp').value.trim();
                     settings.showNpwpDefault = $('setShowNpwpDefault').checked;
                     $('showCompNpwp').checked = settings.showNpwpDefault;
+                    settings.uiSkin = $('setUiSkinSelect').value || 'iphone';
+                    settings.invoiceTheme = $('setInvoiceThemeSelect').value || 'slate';
+                    settings.customPrimaryHex = $('customPrimaryColor').value || '#BE123C';
+                    settings.customAccentHex = $('customAccentColor').value || '#F472B6';
                     settings.compAddress = $('setCompAddress').value.trim();
                     settings.issueCity = $('setIssueCity').value.trim() || 'Sukoharjo';
                     settings.signerName = $('setSignerName').value.trim();
@@ -2871,17 +3017,22 @@
                     settings.defaultNotes = $('setDefaultNotes').value;
 
                     $('invNotes').value = settings.defaultNotes;
+                    setUnsavedSettings(false);
                     applySettingsToUI();
                     updatePreview();
                     pushToGithub(true);
                     showToast('Pengaturan perusahaan disimpan!');
                 });
 
-                // GitHub Sync Buttons
                 function readGithubInputs() {
                     ghConfig.owner = $('ghOwnerInput').value.trim();
                     ghConfig.repo = $('ghRepoInput').value.trim();
-                    ghConfig.path = $('ghPathInput').value.trim() || 'data.json';
+                    const chosenPath = $('ghPathInput').value.trim() || (CV_PROFILES[activeCvId] ? CV_PROFILES[activeCvId].defaultJsonFile : 'data.json');
+                    ghConfig.path = chosenPath;
+                    ghConfig.pathsByCv = {
+                        ...(ghConfig.pathsByCv || { sjm: 'data.json', djm: 'data_djm.json' }),
+                        [activeCvId]: chosenPath
+                    };
                     ghConfig.branch = $('ghBranchInput').value.trim() || 'main';
                     ghConfig.token = $('ghTokenInput').value.trim();
                     try {
@@ -2901,15 +3052,15 @@
                 });
 
                 $('btnExportBackupJson').addEventListener('click', () => {
-                    const dataStr = JSON.stringify({ settings, clientsDb, invoiceHistory }, null, 2);
+                    const dataStr = JSON.stringify({ cvId: activeCvId, settings, clientsDb, invoiceHistory }, null, 2);
                     const blob = new Blob([dataStr], { type: 'application/json' });
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement('a');
                     a.href = url;
-                    a.download = 'data.json';
+                    a.download = ghConfig.path || (CV_PROFILES[activeCvId] ? CV_PROFILES[activeCvId].defaultJsonFile : 'data.json');
                     a.click();
                     URL.revokeObjectURL(url);
-                    showToast('File data.json berhasil diunduh');
+                    showToast(`File ${a.download} berhasil diunduh`);
                 });
 
                 $('importBackupInput').addEventListener('change', (e) => {
@@ -2922,12 +3073,13 @@
                             if (parsed.settings) settings = { ...DEFAULT_SETTINGS, ...parsed.settings };
                             if (Array.isArray(parsed.clientsDb)) clientsDb = parsed.clientsDb;
                             if (Array.isArray(parsed.invoiceHistory)) invoiceHistory = parsed.invoiceHistory;
+                            setUnsavedSettings(false);
                             applySettingsToUI();
                             renderClientsList();
                             renderHistoryList();
                             updatePreview();
                             pushToGithub(true);
-                            showToast('Cadangan data.json berhasil dipulihkan');
+                            showToast('Cadangan JSON berhasil dipulihkan');
                         } catch (err) {
                             showToast('Format file JSON tidak valid');
                         }
@@ -2935,7 +3087,6 @@
                     reader.readAsText(file);
                 });
 
-                // Confirm Modal Actions
                 $('confirmCancelBtn').addEventListener('click', closeConfirm);
                 $('confirmOkBtn').addEventListener('click', () => {
                     const cb = confirmCallback;
@@ -2943,12 +3094,10 @@
                     if (typeof cb === 'function') cb();
                 });
 
-                // Automatically load sjm1.1.jpg from repository if no custom logo is stored yet
                 if (!settings.logoBase64) {
                     loadRepoLogoFile(true);
                 }
 
-                // Initial silent pull from GitHub if configured
                 if (ghConfig.owner && ghConfig.repo) {
                     pullFromGithub(true);
                 }
