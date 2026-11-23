@@ -1,0 +1,2478 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Invoice App — CV. Srikandi Jaya Mandiri</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+            background-color: #F2F2F7;
+            color: #1C1C1E;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .mac-card {
+            background: #FFFFFF;
+            border-radius: 20px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.035), 0 0 0 1px rgba(0, 0, 0, 0.04);
+        }
+
+        .mac-input {
+            background-color: #F2F2F7;
+            border: 1.5px solid transparent;
+            border-radius: 12px;
+            transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+            color: #1C1C1E;
+        }
+        .mac-input:focus {
+            background-color: #FFFFFF;
+            border-color: #007AFF;
+            box-shadow: 0 0 0 3.5px rgba(0, 122, 255, 0.15);
+            outline: none;
+        }
+
+        .ios-switch {
+            appearance: none;
+            width: 44px;
+            height: 26px;
+            background: #E5E5EA;
+            border-radius: 999px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.25s ease;
+            flex-shrink: 0;
+        }
+        .ios-switch::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 22px;
+            height: 22px;
+            background: #FFFFFF;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .ios-switch:checked {
+            background: #34C759;
+        }
+        .ios-switch:checked::after {
+            transform: translateX(18px);
+        }
+
+        .a4-paper {
+            width: 210mm;
+            min-height: 297mm;
+            background: #FFFFFF;
+            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0,0,0,0.05);
+            padding: 15mm 16mm;
+            box-sizing: border-box;
+            color: #0F172A;
+            transform-origin: top left;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.16);
+            border-radius: 99px;
+        }
+
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 0;
+            }
+            body {
+                background: #FFFFFF !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+            #mainContainer {
+                max-width: 100% !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            #page-invoice {
+                display: block !important;
+            }
+            #editorColumn {
+                display: none !important;
+            }
+            #previewColumn {
+                display: block !important;
+                width: 100% !important;
+                position: static !important;
+            }
+            #previewScrollWrapper {
+                padding: 0 !important;
+                background: transparent !important;
+                overflow: visible !important;
+                display: block !important;
+                max-height: none !important;
+            }
+            #a4ScaleBox {
+                width: 210mm !important;
+                height: auto !important;
+            }
+            .a4-paper {
+                width: 210mm !important;
+                min-height: 297mm !important;
+                box-shadow: none !important;
+                margin: 0 !important;
+                transform: none !important;
+            }
+        }
+    </style>
+</head>
+<body class="pb-24 md:pb-10">
+
+    <!-- =================================================================
+         TOP NAVIGATION BAR
+    ================================================================== -->
+    <header class="no-print sticky top-0 z-40 bg-white/85 backdrop-blur-xl border-b border-black/[0.06]">
+        <div class="max-w-[1440px] mx-auto px-3 sm:px-6 h-16 flex items-center justify-between gap-2">
+            <!-- Brand Identity -->
+            <div class="flex items-center gap-2.5 min-w-0">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-[#007AFF] to-[#5856D6] flex items-center justify-center text-white font-bold shadow-sm shrink-0">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                </div>
+                <div class="min-w-0">
+                    <div class="flex items-center gap-1.5">
+                        <h1 id="headerCompanyName" class="text-xs sm:text-sm font-bold text-[#1C1C1E] truncate max-w-[140px] sm:max-w-[230px]">CV. SRIKANDI JAYA MANDIRI</h1>
+                        <span id="cloudStatusDot" title="Status Sinkronisasi" class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span>
+                    </div>
+                    <p class="text-[10px] sm:text-[11px] text-[#8E8E93] font-medium">Sistem Billing &amp; Faktur</p>
+                </div>
+            </div>
+
+            <!-- Desktop Segmented Control Navigation -->
+            <nav class="hidden md:flex items-center bg-[#E5E5EA]/75 p-1 rounded-full">
+                <button type="button" data-nav="invoice" class="nav-tab px-4 py-1.5 rounded-full text-xs font-semibold transition-all bg-white text-[#1C1C1E] shadow-sm">
+                    Buat Invoice
+                </button>
+                <button type="button" data-nav="clients" class="nav-tab px-4 py-1.5 rounded-full text-xs font-semibold transition-all text-[#636366] hover:text-[#1C1C1E] flex items-center gap-1.5">
+                    <span>Data Konsumen</span>
+                    <span id="badgeClientsCount" class="px-1.5 py-0.2 bg-black/10 rounded-full text-[10px]">0</span>
+                </button>
+                <button type="button" data-nav="history" class="nav-tab px-4 py-1.5 rounded-full text-xs font-semibold transition-all text-[#636366] hover:text-[#1C1C1E] flex items-center gap-1.5">
+                    <span>Riwayat</span>
+                    <span id="badgeHistoryCount" class="px-1.5 py-0.2 bg-black/10 rounded-full text-[10px]">0</span>
+                </button>
+                <button type="button" data-nav="settings" class="nav-tab px-4 py-1.5 rounded-full text-xs font-semibold transition-all text-[#636366] hover:text-[#1C1C1E]">
+                    Pengaturan
+                </button>
+            </nav>
+
+            <!-- Primary Action Buttons -->
+            <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+                <button type="button" id="btnNewInvoice" title="Buat Invoice Baru" class="p-2 sm:px-3 sm:py-2 rounded-full bg-[#F2F2F7] hover:bg-[#E5E5EA] text-[#1C1C1E] text-xs font-semibold transition flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+                    <span class="hidden lg:inline">Baru</span>
+                </button>
+                <button type="button" id="btnSaveInvoice" class="px-3 py-2 rounded-full bg-[#1C1C1E] hover:bg-black text-white text-xs font-semibold transition flex items-center gap-1.5 shadow-sm">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/></svg>
+                    <span>Simpan</span>
+                </button>
+                <button type="button" id="btnPrintPdf" title="Cetak Langsung" class="hidden sm:flex p-2 rounded-full bg-[#F2F2F7] hover:bg-[#E5E5EA] text-[#1C1C1E] transition items-center justify-center">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+                </button>
+                <button type="button" id="btnDownloadPdf" class="px-3 sm:px-4 py-2 rounded-full bg-[#007AFF] hover:bg-[#0062CC] text-white text-xs font-semibold transition flex items-center gap-1.5 shadow-sm shadow-blue-500/25">
+                    <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                    <span>PDF</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- =================================================================
+         MAIN CONTENT AREA
+    ================================================================== -->
+    <main id="mainContainer" class="max-w-[1440px] mx-auto px-3 sm:px-6 pt-4 sm:pt-6">
+
+        <!-- =============================================================
+             PAGE 1: INVOICE EDITOR & LIVE A4 PREVIEW
+        ============================================================== -->
+        <section id="page-invoice" class="page-section">
+            <!-- Mobile Switcher: Form Input vs Pratinjau A4 -->
+            <div class="no-print lg:hidden mb-4 bg-[#E5E5EA]/80 p-1 rounded-2xl flex">
+                <button type="button" id="mobTabForm" class="flex-1 py-2 rounded-xl text-xs font-bold bg-white text-[#1C1C1E] shadow-sm transition">
+                    Form Input Invoice
+                </button>
+                <button type="button" id="mobTabPreview" class="flex-1 py-2 rounded-xl text-xs font-bold text-[#636366] transition">
+                    Pratinjau Dokumen A4
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                <!-- LEFT COLUMN: INPUT CARDS -->
+                <div id="editorColumn" class="no-print lg:col-span-5 xl:col-span-5 space-y-4">
+
+                    <!-- Card 1: Detail Nomor & Tanggal -->
+                    <div class="mac-card p-5 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <h2 class="text-xs font-bold uppercase tracking-wider text-[#8E8E93]">1. Detail Invoice</h2>
+                            <button type="button" id="btnAutoNumber" class="text-xs font-semibold text-[#007AFF] hover:underline">
+                                Auto Nomor
+                            </button>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-[#3A3A3C] mb-1.5">Nomor Invoice</label>
+                            <input type="text" id="invNumber" class="mac-input w-full px-3.5 py-2.5 text-sm font-bold tracking-wide" placeholder="INV/2026/11/001">
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-[#3A3A3C] mb-1.5">Tanggal Invoice</label>
+                                <input type="date" id="invDate" class="mac-input w-full px-3 py-2 text-xs sm:text-sm font-medium">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-[#3A3A3C] mb-1.5">Jatuh Tempo</label>
+                                <input type="date" id="invDueDate" class="mac-input w-full px-3 py-2 text-xs sm:text-sm font-medium">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: Data Konsumen / Klien -->
+                    <div class="mac-card p-5 space-y-4">
+                        <div class="flex items-center justify-between gap-2">
+                            <h2 class="text-xs font-bold uppercase tracking-wider text-[#8E8E93]">2. Ditujukan Kepada</h2>
+                            <button type="button" id="btnQuickSaveClient" class="text-xs font-semibold text-[#34C759] hover:underline flex items-center gap-1">
+                                <span>+ Simpan ke Database</span>
+                            </button>
+                        </div>
+
+                        <div>
+                            <select id="selectClientDb" class="mac-input w-full px-3.5 py-2.5 text-xs font-semibold text-[#007AFF] cursor-pointer">
+                                <option value="">-- Muat dari Database Konsumen --</option>
+                            </select>
+                        </div>
+
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-[#3A3A3C] mb-1">Nama Perusahaan / Klien</label>
+                                <input type="text" id="clientName" class="mac-input w-full px-3.5 py-2.5 text-sm font-semibold" placeholder="Contoh: PT. Mitra Sejahtera Abadi">
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-xs font-semibold text-[#3A3A3C] mb-1">UP / No. Telepon</label>
+                                    <input type="text" id="clientContact" class="mac-input w-full px-3.5 py-2 text-sm" placeholder="Bpk. Andi (0812...)">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-[#3A3A3C] mb-1">NPWP Klien (Opsional)</label>
+                                    <input type="text" id="clientNpwp" class="mac-input w-full px-3.5 py-2 text-sm" placeholder="01.234.567.8-901.000">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-[#3A3A3C] mb-1">Alamat Lengkap</label>
+                                <textarea id="clientAddress" rows="2" class="mac-input w-full px-3.5 py-2 text-sm resize-none" placeholder="Alamat lengkap tujuan penagihan..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 3: Item Barang / Jasa -->
+                    <div class="mac-card p-5 space-y-4">
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <h2 class="text-xs font-bold uppercase tracking-wider text-[#8E8E93]">3. Rincian Barang / Jasa</h2>
+                            <button type="button" id="btnAddItem" class="px-3 py-1.5 rounded-full bg-[#007AFF]/10 hover:bg-[#007AFF]/20 text-[#007AFF] text-xs font-bold transition flex items-center gap-1">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+                                <span>Tambah Item</span>
+                            </button>
+                        </div>
+
+                        <!-- Opsi Mode Harga Barang -->
+                        <div class="bg-[#F2F2F7] p-3 rounded-2xl space-y-1.5">
+                            <label class="block text-[11px] font-bold uppercase tracking-wider text-[#636366]">Mode Harga Satuan Item</label>
+                            <select id="taxPriceMode" class="w-full bg-white border border-black/10 rounded-xl px-3 py-2 text-xs font-semibold text-[#1C1C1E] focus:outline-none focus:border-[#007AFF]">
+                                <option value="exclude">1. Harga Belum Termasuk Pajak (Ditambahkan PPN/PPh)</option>
+                                <option value="include">2. Harga Sudah Termasuk Pajak (Hitung Harga Netto)</option>
+                            </select>
+                            <p id="taxPriceModeHint" class="text-[11px] text-[#8E8E93] leading-snug">
+                                Harga satuan merupakan harga dasar; pajak ditambahkan di akhir perhitungan.
+                            </p>
+                        </div>
+
+                        <div id="itemsContainer" class="space-y-3">
+                            <!-- Item rows rendered dynamically via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Card 4: Pajak PPN & PPh -->
+                    <div class="mac-card p-5 space-y-4">
+                        <h2 class="text-xs font-bold uppercase tracking-wider text-[#8E8E93]">4. Pengaturan Pajak</h2>
+
+                        <!-- PPN Row -->
+                        <div class="flex items-center justify-between p-3 rounded-2xl bg-[#F2F2F7]">
+                            <div class="flex items-center gap-3">
+                                <input type="checkbox" id="enablePpn" class="ios-switch" checked>
+                                <div>
+                                    <p class="text-sm font-semibold text-[#1C1C1E]">PPN</p>
+                                    <p class="text-[11px] text-[#8E8E93]">Pajak Pertambahan Nilai</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <input type="number" id="ppnRate" value="11" min="0" max="100" step="0.5" class="w-16 bg-white rounded-xl px-2.5 py-1.5 text-sm font-bold text-right border border-black/10 focus:outline-none focus:border-[#007AFF]">
+                                <span class="text-xs font-bold text-[#636366]">%</span>
+                            </div>
+                        </div>
+
+                        <!-- PPh Row -->
+                        <div class="p-3 rounded-2xl bg-[#F2F2F7] space-y-3">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <input type="checkbox" id="enablePph" class="ios-switch">
+                                    <div>
+                                        <p class="text-sm font-semibold text-[#1C1C1E]">PPh</p>
+                                        <p class="text-[11px] text-[#8E8E93]">Pajak Penghasilan (22 / 23 / Final)</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-1.5">
+                                    <input type="number" id="pphRate" value="2" min="0" max="100" step="0.1" class="w-16 bg-white rounded-xl px-2.5 py-1.5 text-sm font-bold text-right border border-black/10 focus:outline-none focus:border-[#007AFF]">
+                                    <span class="text-xs font-bold text-[#636366]">%</span>
+                                </div>
+                            </div>
+
+                            <div id="pphDetailBox" class="grid grid-cols-2 gap-2 pt-1 border-t border-black/5">
+                                <input type="text" id="pphLabel" value="PPh Pasal 23" class="bg-white rounded-xl px-3 py-1.5 text-xs font-medium border border-black/10" placeholder="Jenis PPh">
+                                <select id="pphMode" class="bg-white rounded-xl px-2.5 py-1.5 text-xs font-medium border border-black/10">
+                                    <option value="deduct">Memotong Tagihan (-)</option>
+                                    <option value="add">Menambah Tagihan (+)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Summary Box -->
+                        <div class="pt-2 border-t border-black/[0.06] space-y-1.5 text-xs">
+                            <div class="flex justify-between text-[#636366]">
+                                <span>Subtotal (DPP / Netto)</span>
+                                <span id="formSubtotalDisplay" class="font-semibold text-[#1C1C1E]">Rp 0</span>
+                            </div>
+                            <div id="formPpnRow" class="flex justify-between text-[#636366]">
+                                <span id="formPpnLabel">PPN (11%)</span>
+                                <span id="formPpnDisplay" class="font-semibold text-[#1C1C1E]">Rp 0</span>
+                            </div>
+                            <div id="formPphRow" class="hidden flex justify-between text-[#636366]">
+                                <span id="formPphLabel">PPh (2%)</span>
+                                <span id="formPphDisplay" class="font-semibold text-rose-600">- Rp 0</span>
+                            </div>
+                            <div class="flex justify-between items-center pt-2 border-t border-black/[0.06]">
+                                <span class="text-sm font-bold text-[#1C1C1E]">Total Tagihan</span>
+                                <span id="formGrandTotalDisplay" class="text-lg font-extrabold text-[#007AFF]">Rp 0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 5: Catatan & Instruksi Pembayaran -->
+                    <div class="mac-card p-5 space-y-3">
+                        <h2 class="text-xs font-bold uppercase tracking-wider text-[#8E8E93]">5. Catatan &amp; Instruksi Pembayaran</h2>
+                        <textarea id="invNotes" rows="5" class="mac-input w-full px-3.5 py-2.5 text-xs leading-relaxed resize-none"></textarea>
+                    </div>
+                </div>
+
+                <!-- RIGHT COLUMN: LIVE A4 DOCUMENT PREVIEW -->
+                <div id="previewColumn" class="hidden lg:block lg:col-span-7 xl:col-span-7 lg:sticky lg:top-20">
+                    <div class="mac-card overflow-hidden">
+                        <!-- Preview Toolbar -->
+                        <div class="no-print px-4 py-2.5 bg-[#F9F9FB] border-b border-black/[0.06] flex flex-wrap items-center justify-between gap-2">
+                            <div class="flex items-center gap-2">
+                                <span class="w-2.5 h-2.5 rounded-full bg-[#FF5F56]"></span>
+                                <span class="w-2.5 h-2.5 rounded-full bg-[#FFBD2E]"></span>
+                                <span class="w-2.5 h-2.5 rounded-full bg-[#27C93F]"></span>
+                                <span class="ml-1 text-xs font-semibold text-[#636366]">Pratinjau A4</span>
+                            </div>
+
+                            <!-- Zoom Controls -->
+                            <div class="flex items-center gap-1 bg-white border border-black/10 rounded-full px-1.5 py-0.5">
+                                <button type="button" id="btnZoomOut" title="Perkecil (Zoom Out)" class="w-6 h-6 rounded-full hover:bg-[#F2F2F7] text-[#1C1C1E] flex items-center justify-center text-sm font-bold transition">
+                                    &minus;
+                                </button>
+                                <span id="zoomLevelLabel" class="px-2 text-[11px] font-bold text-[#3A3A3C] min-w-[46px] text-center">Auto</span>
+                                <button type="button" id="btnZoomIn" title="Perbesar (Zoom In)" class="w-6 h-6 rounded-full hover:bg-[#F2F2F7] text-[#1C1C1E] flex items-center justify-center text-sm font-bold transition">
+                                    +
+                                </button>
+                                <div class="w-[1px] h-3.5 bg-black/10 mx-0.5"></div>
+                                <button type="button" id="btnZoomFit" class="px-2 py-0.5 rounded-full bg-[#007AFF]/10 hover:bg-[#007AFF]/20 text-[#007AFF] text-[10px] font-bold transition">
+                                    Auto Fit
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- A4 Paper Container -->
+                        <div id="previewScrollWrapper" class="p-3 sm:p-5 bg-[#E5E5EA]/60 overflow-auto max-h-[calc(100vh-145px)] flex justify-center">
+                            <div id="a4ScaleBox" class="relative">
+                                <div id="invoicePaper" class="a4-paper flex flex-col justify-between">
+                                    <div>
+                                        <!-- Company Header -->
+                                        <div id="docHeaderWrapper" class="flex justify-between items-start gap-5 pb-5 border-b-2 border-slate-900">
+                                            <!-- Company Brand Block -->
+                                            <div id="docCompanyBrand" class="flex items-start gap-4 flex-1">
+                                                <div id="docLogoWrapper" class="hidden shrink-0">
+                                                    <img id="docLogoImg" src="" alt="Logo Perusahaan" class="object-contain">
+                                                </div>
+                                                <div>
+                                                    <h1 id="docCompName" class="text-xl font-extrabold tracking-tight text-slate-900 uppercase">CV. SRIKANDI JAYA MANDIRI</h1>
+                                                    <p id="docCompTagline" class="text-xs font-semibold text-blue-700 mt-0.5">AMANAH DAN BAROKAH</p>
+                                                    <p id="docCompAddress" class="text-[11px] text-slate-600 mt-1.5 leading-relaxed">Widyapura RT 004 RW 003, Kel. Singopuran, Kec. Kartasura, Kab. Sukoharjo, Jawa Tengah 57164</p>
+                                                    <p id="docCompContact" class="text-[11px] text-slate-600 mt-0.5">Telp: 081393897867 | Email: srikandijayamandiricv@gmail.com</p>
+                                                    <p id="docCompNpwp" class="text-[11px] font-semibold text-slate-700 mt-0.5">NPWP: 02.456.789.1-005.000</p>
+                                                </div>
+                                            </div>
+
+                                            <!-- Invoice Title & Meta -->
+                                            <div class="text-right shrink-0">
+                                                <div class="inline-block bg-slate-900 text-white px-3.5 py-1 rounded-md text-lg font-extrabold tracking-widest uppercase">
+                                                    INVOICE
+                                                </div>
+                                                <table class="mt-2.5 ml-auto text-xs">
+                                                    <tr>
+                                                        <td class="text-slate-500 pr-2.5 py-0.5">No. Invoice</td>
+                                                        <td id="docInvNumber" class="font-bold text-slate-900 py-0.5">INV/2026/11/001</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-slate-500 pr-2.5 py-0.5">Tanggal</td>
+                                                        <td id="docInvDate" class="font-semibold text-slate-800 py-0.5">-</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-slate-500 pr-2.5 py-0.5">Jatuh Tempo</td>
+                                                        <td id="docInvDueDate" class="font-semibold text-slate-800 py-0.5">-</td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+
+                                        <!-- Client Info -->
+                                        <div class="mt-5 mb-5 flex justify-between gap-6">
+                                            <div class="bg-slate-50 border border-slate-200/80 rounded-xl p-3.5 w-full max-w-md">
+                                                <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Kepada Yth / Ditagihkan Kepada:</p>
+                                                <p id="docClientName" class="text-sm font-bold text-slate-900 mt-1">-</p>
+                                                <p id="docClientAddress" class="text-xs text-slate-600 mt-1 leading-relaxed whitespace-pre-line">-</p>
+                                                <p id="docClientContact" class="text-xs text-slate-600 mt-1"></p>
+                                                <p id="docClientNpwp" class="text-xs font-semibold text-slate-700 mt-0.5"></p>
+                                            </div>
+                                        </div>
+
+                                        <!-- Items Table -->
+                                        <div class="overflow-hidden rounded-lg border border-slate-200">
+                                            <table class="w-full text-left border-collapse">
+                                                <thead>
+                                                    <tr class="bg-slate-900 text-white text-[10.5px] uppercase tracking-wider">
+                                                        <th class="py-2.5 px-2.5 text-center w-9">No</th>
+                                                        <th class="py-2.5 px-2.5">Deskripsi Barang / Jasa</th>
+                                                        <th class="py-2.5 px-2 text-center w-14">Qty</th>
+                                                        <th class="py-2.5 px-2 text-center w-14">Sat</th>
+                                                        <th id="docColUnitPrice" class="py-2.5 px-2.5 text-right w-28">Harga Satuan</th>
+                                                        <th id="docColNetUnit" class="hidden py-2.5 px-2.5 text-right w-28">Harga Netto</th>
+                                                        <th class="py-2.5 px-2.5 text-right w-32">Jumlah</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="docItemsBody" class="divide-y divide-slate-200 text-xs">
+                                                    <!-- Populated via JS -->
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <!-- Totals & Terbilang -->
+                                        <div class="mt-4 grid grid-cols-12 gap-4 items-start">
+                                            <div class="col-span-7 space-y-2.5">
+                                                <div class="bg-slate-50 border border-slate-200/80 rounded-lg p-3">
+                                                    <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Terbilang:</p>
+                                                    <p id="docTerbilang" class="text-xs font-bold italic text-slate-800 mt-0.5">Nol Rupiah</p>
+                                                </div>
+                                                <div class="text-[11px] text-slate-600 leading-relaxed whitespace-pre-line">
+                                                    <p class="font-bold text-slate-800 text-[11px] mb-0.5">Keterangan &amp; Pembayaran:</p>
+                                                    <span id="docNotes">-</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-span-5">
+                                                <table class="w-full text-xs">
+                                                    <tr class="border-b border-slate-200">
+                                                        <td id="docSubtotalLabel" class="py-1.5 text-slate-600">Subtotal</td>
+                                                        <td id="docSubtotal" class="py-1.5 text-right font-semibold text-slate-900">Rp 0</td>
+                                                    </tr>
+                                                    <tr id="docPpnRow" class="border-b border-slate-200">
+                                                        <td id="docPpnLabel" class="py-1.5 text-slate-600">PPN (11%)</td>
+                                                        <td id="docPpnAmount" class="py-1.5 text-right font-semibold text-slate-900">Rp 0</td>
+                                                    </tr>
+                                                    <tr id="docPphRow" class="hidden border-b border-slate-200">
+                                                        <td id="docPphLabel" class="py-1.5 text-slate-600">PPh 23 (2%)</td>
+                                                        <td id="docPphAmount" class="py-1.5 text-right font-semibold text-rose-700">- Rp 0</td>
+                                                    </tr>
+                                                    <tr class="bg-slate-900 text-white">
+                                                        <td class="py-2.5 px-3 font-bold rounded-l-lg">TOTAL TAGIHAN</td>
+                                                        <td id="docGrandTotal" class="py-2.5 px-3 text-right font-extrabold text-sm rounded-r-lg">Rp 0</td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Signature Footer -->
+                                    <div class="mt-8 pt-4 flex justify-between items-end">
+                                        <div class="text-[10px] text-slate-400">
+                                            Dokumen sah diterbitkan oleh <span id="docFooterCompName">CV. SRIKANDI JAYA MANDIRI</span>.
+                                        </div>
+                                        <div class="text-center w-56">
+                                            <p id="docSignCityDate" class="text-xs text-slate-700">Sukoharjo, -</p>
+                                            <p id="docSignCompany" class="text-xs font-bold text-slate-900 mt-0.5">CV. SRIKANDI JAYA MANDIRI</p>
+                                            <div class="h-16"></div>
+                                            <p id="docSignerName" class="text-xs font-bold text-slate-900 underline underline-offset-4">Asih Ermataria</p>
+                                            <p id="docSignerRole" class="text-[11px] text-slate-500 mt-0.5">Direktur</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =============================================================
+             PAGE 2: DATABASE KONSUMEN
+        ============================================================== -->
+        <section id="page-clients" class="page-section hidden max-w-5xl mx-auto">
+            <div class="mb-5">
+                <h2 class="text-xl font-bold text-[#1C1C1E]">Database Konsumen</h2>
+                <p class="text-xs text-[#8E8E93] mt-0.5">Simpan data pelanggan tetap untuk mempercepat pembuatan invoice</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
+                <!-- Form Add / Edit Client -->
+                <div class="md:col-span-5 mac-card p-5 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h3 id="clientFormHeading" class="text-sm font-bold text-[#1C1C1E]">Tambah Konsumen</h3>
+                        <button type="button" id="btnCancelClientEdit" class="hidden text-xs font-semibold text-[#8E8E93] hover:text-[#1C1C1E]">Batal</button>
+                    </div>
+
+                    <input type="hidden" id="editClientId" value="">
+
+                    <div>
+                        <label class="block text-xs font-semibold text-[#3A3A3C] mb-1">Nama Perusahaan / Klien *</label>
+                        <input type="text" id="dbClientName" class="mac-input w-full px-3.5 py-2.5 text-sm font-medium" placeholder="PT. Maju Bersama">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-[#3A3A3C] mb-1">Kontak / UP / Telepon</label>
+                        <input type="text" id="dbClientContact" class="mac-input w-full px-3.5 py-2 text-sm" placeholder="Ibu Rina (0812-3456-7890)">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-[#3A3A3C] mb-1">NPWP Klien</label>
+                        <input type="text" id="dbClientNpwp" class="mac-input w-full px-3.5 py-2 text-sm" placeholder="01.234.567.8-901.000">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-[#3A3A3C] mb-1">Alamat Lengkap</label>
+                        <textarea id="dbClientAddress" rows="3" class="mac-input w-full px-3.5 py-2 text-sm resize-none" placeholder="Jl. Sudirman No. 10, Surakarta"></textarea>
+                    </div>
+
+                    <button type="button" id="btnSaveClientDb" class="w-full py-2.5 rounded-xl bg-[#007AFF] hover:bg-[#0062CC] text-white text-sm font-semibold transition shadow-sm">
+                        Simpan Data Konsumen
+                    </button>
+                </div>
+
+                <!-- Client Directory List -->
+                <div class="md:col-span-7 mac-card p-5 space-y-4">
+                    <div class="relative">
+                        <input type="text" id="searchClientsInput" class="mac-input w-full pl-9 pr-4 py-2.5 text-sm" placeholder="Cari nama, kontak, atau alamat konsumen...">
+                        <svg class="w-4 h-4 text-[#8E8E93] absolute left-3 top-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                    </div>
+
+                    <div id="clientsListContainer" class="space-y-2.5 max-h-[540px] overflow-y-auto pr-1">
+                        <!-- Rendered via JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =============================================================
+             PAGE 3: RIWAYAT INVOICE
+        ============================================================== -->
+        <section id="page-history" class="page-section hidden max-w-5xl mx-auto">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
+                <div>
+                    <h2 class="text-xl font-bold text-[#1C1C1E]">Riwayat Invoice</h2>
+                    <p class="text-xs text-[#8E8E93] mt-0.5">Daftar invoice yang tersimpan untuk dibuka kembali atau diduplikasi</p>
+                </div>
+                <div class="relative w-full sm:w-72">
+                    <input type="text" id="searchHistoryInput" class="mac-input w-full pl-9 pr-4 py-2 text-sm bg-white" placeholder="Cari nomor atau klien...">
+                    <svg class="w-4 h-4 text-[#8E8E93] absolute left-3 top-2.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                </div>
+            </div>
+
+            <div id="historyListContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Rendered via JS -->
+            </div>
+        </section>
+
+        <!-- =============================================================
+             PAGE 4: PENGATURAN PERUSAHAAN & LOGO
+        ============================================================== -->
+        <section id="page-settings" class="page-section hidden max-w-3xl mx-auto">
+            <div class="mb-5">
+                <h2 class="text-xl font-bold text-[#1C1C1E]">Pengaturan Perusahaan</h2>
+                <p class="text-xs text-[#8E8E93] mt-0.5">Konfigurasi identitas CV. Srikandi Jaya Mandiri, logo, rekening default, dan database GitHub</p>
+            </div>
+
+            <div class="space-y-5">
+                <!-- Logo Upload Card -->
+                <div class="mac-card p-6">
+                    <h3 class="text-sm font-bold text-[#1C1C1E] mb-4">Logo Perusahaan</h3>
+                    <div class="flex flex-col sm:flex-row items-center gap-5">
+                        <div class="w-36 h-24 rounded-2xl bg-[#F2F2F7] border-2 border-dashed border-black/15 flex items-center justify-center overflow-hidden shrink-0 p-2">
+                            <img id="settingsLogoPreview" src="" alt="Preview Logo" class="hidden w-full h-full object-contain">
+                            <span id="settingsLogoPlaceholder" class="text-xs font-semibold text-[#8E8E93] text-center px-2">Belum ada logo</span>
+                        </div>
+                        <div class="space-y-2 text-center sm:text-left">
+                            <p class="text-xs text-[#636366] leading-relaxed">
+                                Mendukung logo persegi (1:1) maupun memanjang (landscape). Unggah file logo asli Anda (<code class="font-mono text-[#1C1C1E]">sjm1.1.jpg</code>) atau simpan file tersebut di repository GitHub bersama <code class="font-mono text-[#1C1C1E]">index.html</code> agar otomatis dimuat.
+                            </p>
+                            <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-1">
+                                <label class="cursor-pointer px-4 py-2 rounded-full bg-[#007AFF] hover:bg-[#0062CC] text-white text-xs font-semibold transition shadow-sm">
+                                    <span>Upload Logo (JPG/PNG)</span>
+                                    <input type="file" id="logoFileInput" accept="image/*" class="hidden">
+                                </label>
+                                <button type="button" id="btnResetDefaultLogo" class="px-4 py-2 rounded-full bg-[#F2F2F7] hover:bg-[#E5E5EA] text-[#1C1C1E] text-xs font-semibold transition">
+                                    Muat File Repo (sjm1.1.jpg)
+                                </button>
+                                <button type="button" id="btnRemoveLogo" class="hidden px-4 py-2 rounded-full bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs font-semibold transition">
+                                    Hapus Logo
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Company Identity Card -->
+                <div class="mac-card p-6 space-y-4">
+                    <h3 class="text-sm font-bold text-[#1C1C1E]">Identitas &amp; Kop Dokumen</h3>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-[#3A3A3C] mb-1.5">Nama Perusahaan</label>
+                            <input type="text" id="setCompName" class="mac-input w-full px-3.5 py-2.5 text-sm font-semibold">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-[#3A3A3C] mb-1.5">Bidang Usaha / Tagline</label>
+                            <input type="text" id="setCompTagline" class="mac-input w-full px-3.5 py-2.5 text-sm">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-[#3A3A3C] mb-1.5">Kontak (Telepon &amp; Email)</label>
+                            <input type="text" id="setCompContact" class="mac-input w-full px-3.5 py-2.5 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-[#3A3A3C] mb-1.5">NPWP Perusahaan</label>
+                            <input type="text" id="setCompNpwp" class="mac-input w-full px-3.5 py-2.5 text-sm">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-[#3A3A3C] mb-1.5">Alamat Kantor</label>
+                        <textarea id="setCompAddress" rows="2" class="mac-input w-full px-3.5 py-2 text-sm resize-none"></textarea>
+                    </div>
+
+                    <div class="pt-3 border-t border-black/[0.06] grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-[#3A3A3C] mb-1.5">Kota Terbit</label>
+                            <input type="text" id="setIssueCity" class="mac-input w-full px-3.5 py-2 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-[#3A3A3C] mb-1.5">Nama Penandatangan</label>
+                            <input type="text" id="setSignerName" class="mac-input w-full px-3.5 py-2 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-[#3A3A3C] mb-1.5">Jabatan</label>
+                            <input type="text" id="setSignerRole" class="mac-input w-full px-3.5 py-2 text-sm">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-[#3A3A3C] mb-1.5">Catatan &amp; Rekening Pembayaran Default</label>
+                        <textarea id="setDefaultNotes" rows="5" class="mac-input w-full px-3.5 py-2 text-xs leading-relaxed resize-none"></textarea>
+                    </div>
+
+                    <div class="pt-3 flex justify-end">
+                        <button type="button" id="btnSaveSettings" class="px-6 py-2.5 rounded-xl bg-[#007AFF] text-white text-sm font-semibold hover:bg-[#0062CC] shadow-sm transition">
+                            Simpan Pengaturan
+                        </button>
+                    </div>
+                </div>
+
+                <!-- GitHub Repository Database Card -->
+                <div class="mac-card p-6 space-y-4">
+                    <div class="flex items-center justify-between gap-2">
+                        <div>
+                            <h3 class="text-sm font-bold text-[#1C1C1E]">Database File GitHub (data.json)</h3>
+                            <p class="text-[11px] text-[#8E8E93] mt-0.5">Simpan pengaturan, logo, konsumen &amp; riwayat langsung ke file JSON di repository GitHub Anda</p>
+                        </div>
+                        <span id="cloudSyncBadge" class="px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 text-[10px] font-bold shrink-0">Lokal</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[11px] font-bold text-[#3A3A3C] mb-1">Username GitHub (Owner)</label>
+                            <input type="text" id="ghOwnerInput" class="mac-input w-full px-3 py-2 text-xs font-mono" placeholder="contoh: srikandijayamandiri">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-[#3A3A3C] mb-1">Nama Repository</label>
+                            <input type="text" id="ghRepoInput" class="mac-input w-full px-3 py-2 text-xs font-mono" placeholder="contoh: invoice-srikandi">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-[#3A3A3C] mb-1">Nama File Database di Repo</label>
+                            <input type="text" id="ghPathInput" class="mac-input w-full px-3 py-2 text-xs font-mono" value="data.json" placeholder="data.json">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-[#3A3A3C] mb-1">Branch</label>
+                            <input type="text" id="ghBranchInput" class="mac-input w-full px-3 py-2 text-xs font-mono" value="main" placeholder="main">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-[11px] font-bold text-[#3A3A3C] mb-1">GitHub Personal Access Token (Fine-grained / Classic)</label>
+                        <input type="password" id="ghTokenInput" class="mac-input w-full px-3 py-2 text-xs font-mono" placeholder="github_pat_... atau ghp_...">
+                        <p class="text-[10.5px] text-[#8E8E93] mt-1 leading-relaxed">
+                            Token disimpan di browser ini agar aplikasi dapat menulis otomatis ke file <code class="font-mono text-[#1C1C1E]">data.json</code> di GitHub setiap kali Anda klik Simpan atau Upload Logo.
+                        </p>
+                    </div>
+
+                    <div class="flex flex-wrap items-center gap-2 pt-1">
+                        <button type="button" id="btnConnectGithub" class="px-4 py-2 rounded-xl bg-[#1C1C1E] hover:bg-black text-white text-xs font-semibold transition">
+                            Hubungkan &amp; Muat dari GitHub
+                        </button>
+                        <button type="button" id="btnPushGithubNow" class="px-4 py-2 rounded-xl bg-[#007AFF]/10 hover:bg-[#007AFF]/20 text-[#007AFF] text-xs font-bold transition">
+                            Paksa Sinkron ke GitHub
+                        </button>
+                        <button type="button" id="btnExportBackupJson" class="px-4 py-2 rounded-xl bg-[#F2F2F7] hover:bg-[#E5E5EA] text-[#1C1C1E] text-xs font-semibold transition">
+                            Export data.json
+                        </button>
+                        <label class="cursor-pointer px-4 py-2 rounded-xl bg-[#F2F2F7] hover:bg-[#E5E5EA] text-[#1C1C1E] text-xs font-semibold transition">
+                            <span>Import data.json</span>
+                            <input type="file" id="importBackupInput" accept=".json,application/json" class="hidden">
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- =================================================================
+         MOBILE BOTTOM NAVIGATION BAR
+    ================================================================== -->
+    <nav class="no-print md:hidden fixed bottom-0 inset-x-0 z-40 bg-white/90 backdrop-blur-xl border-t border-black/[0.08] px-2 py-1.5 flex items-center justify-around">
+        <button type="button" data-nav="invoice" class="mob-nav-btn flex flex-col items-center gap-0.5 py-1 px-3 text-[#007AFF]">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            <span class="text-[10px] font-semibold">Invoice</span>
+        </button>
+        <button type="button" data-nav="clients" class="mob-nav-btn flex flex-col items-center gap-0.5 py-1 px-3 text-[#8E8E93]">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            <span class="text-[10px] font-semibold">Konsumen</span>
+        </button>
+        <button type="button" data-nav="history" class="mob-nav-btn flex flex-col items-center gap-0.5 py-1 px-3 text-[#8E8E93]">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <span class="text-[10px] font-semibold">Riwayat</span>
+        </button>
+        <button type="button" data-nav="settings" class="mob-nav-btn flex flex-col items-center gap-0.5 py-1 px-3 text-[#8E8E93]">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            <span class="text-[10px] font-semibold">Pengaturan</span>
+        </button>
+    </nav>
+
+    <!-- =================================================================
+         TOAST NOTIFICATION & CUSTOM CONFIRMATION MODAL
+    ================================================================== -->
+    <div id="toastBanner" class="no-print fixed bottom-20 md:bottom-6 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 translate-y-3 transition-all duration-300">
+        <div class="bg-[#1C1C1E]/95 backdrop-blur-md text-white px-4 py-2.5 rounded-full text-xs font-semibold shadow-lg flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-[#34C759]"></span>
+            <span id="toastText">Berhasil</span>
+        </div>
+    </div>
+
+    <div id="confirmModal" class="no-print hidden fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl space-y-4">
+            <h3 id="confirmTitle" class="text-base font-bold text-[#1C1C1E]">Konfirmasi</h3>
+            <p id="confirmMessage" class="text-xs text-[#636366] leading-relaxed">Apakah Anda yakin?</p>
+            <div class="flex gap-2.5 pt-2">
+                <button type="button" id="confirmCancelBtn" class="flex-1 py-2.5 rounded-xl bg-[#F2F2F7] hover:bg-[#E5E5EA] text-[#1C1C1E] text-xs font-bold transition">
+                    Batal
+                </button>
+                <button type="button" id="confirmOkBtn" class="flex-1 py-2.5 rounded-xl bg-[#007AFF] hover:bg-[#0062CC] text-white text-xs font-bold transition">
+                    Ya, Lanjutkan
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- =================================================================
+         APPLICATION SCRIPT
+    ================================================================== -->
+    <script>
+        (function () {
+            'use strict';
+
+            const LOCAL_STORAGE_KEY = 'sjm_invoice_app_state_v4';
+            const GH_CONFIG_KEY = 'sjm_github_repo_config_v1';
+            const REPO_LOGO_CANDIDATES = ['sjm1.1.jpg', 'sjm1.1.jpeg', 'logo.jpg', 'logo.png'];
+
+            const DEFAULT_LOGO_SVG = '';
+
+            const DEFAULT_SETTINGS = {
+                compName: 'CV. SRIKANDI JAYA MANDIRI',
+                compTagline: 'AMANAH DAN BAROKAH',
+                compAddress: 'Widyapura RT 004 RW 003, Kel. Singopuran, Kec. Kartasura, Kab. Sukoharjo, Jawa Tengah 57164',
+                compContact: 'Telp: 081393897867 | Email: srikandijayamandiricv@gmail.com',
+                compNpwp: 'NPWP: 02.456.789.1-005.000',
+                issueCity: 'Sukoharjo',
+                signerName: 'Asih Ermataria',
+                signerRole: 'Direktur',
+                defaultNotes: 'Pembayaran harap ditransfer ke salah satu rekening berikut:\n1. Bank BNI 46 — No. Rekening: 8164444442\n   Atas Nama: SRIKANDI JAYA MANDIRI\n2. BPD JATENG — No. Rekening: 2-059-08065-5\n   Atas Nama: Asih Ermataria\nMohon cantumkan Nomor Invoice pada berita transfer.',
+                logoBase64: ''
+            };
+
+            // Load local repository image file (e.g., sjm1.1.jpg) into Base64 DataURL
+            function loadRepoLogoFile(silent = true) {
+                return new Promise((resolve) => {
+                    let idx = 0;
+                    function tryNext() {
+                        if (idx >= REPO_LOGO_CANDIDATES.length) {
+                            if (!silent) showToast('File sjm1.1.jpg belum ditemukan di folder repo. Silakan Upload Logo.');
+                            resolve(false);
+                            return;
+                        }
+                        const candidate = REPO_LOGO_CANDIDATES[idx++];
+                        const img = new Image();
+                        img.crossOrigin = 'anonymous';
+                        img.onload = function () {
+                            try {
+                                const maxDim = 500;
+                                let w = img.naturalWidth || img.width;
+                                let h = img.naturalHeight || img.height;
+                                if (w > maxDim || h > maxDim) {
+                                    if (w > h) {
+                                        h = Math.round((h * maxDim) / w);
+                                        w = maxDim;
+                                    } else {
+                                        w = Math.round((w * maxDim) / h);
+                                        h = maxDim;
+                                    }
+                                }
+                                const canvas = document.createElement('canvas');
+                                canvas.width = w;
+                                canvas.height = h;
+                                const ctx = canvas.getContext('2d');
+                                ctx.drawImage(img, 0, 0, w, h);
+                                settings.logoBase64 = canvas.toDataURL('image/jpeg', 0.92);
+                                saveToLocalStorage();
+                                applySettingsToUI();
+                                updatePreview();
+                                if (!silent) showToast(`Logo asli (${candidate}) berhasil dimuat!`);
+                                resolve(true);
+                            } catch (e) {
+                                tryNext();
+                            }
+                        };
+                        img.onerror = tryNext;
+                        img.src = candidate + '?t=' + Date.now();
+                    }
+                    tryNext();
+                });
+            }
+
+            let ghConfig = {
+                owner: '',
+                repo: '',
+                path: 'data.json',
+                branch: 'main',
+                token: ''
+            };
+            let lastKnownFileSha = '';
+
+            // Auto-detect GitHub Pages owner & repo from URL
+            try {
+                const host = window.location.hostname || '';
+                const pathParts = (window.location.pathname || '').split('/').filter(Boolean);
+                if (host.endsWith('.github.io')) {
+                    ghConfig.owner = host.replace('.github.io', '');
+                    ghConfig.repo = pathParts.length > 0 ? pathParts[0] : host;
+                }
+            } catch (e) { /* ignore */ }
+
+            try {
+                const savedGh = JSON.parse(localStorage.getItem(GH_CONFIG_KEY) || 'null');
+                if (savedGh) {
+                    ghConfig = { ...ghConfig, ...savedGh };
+                }
+            } catch (e) { /* ignore */ }
+
+            // Application State
+            let settings = { ...DEFAULT_SETTINGS };
+            let clientsDb = [];
+            let invoiceHistory = [];
+            let items = [
+                { id: 1, name: 'Pengadaan Barang & Jasa Operasional', qty: 1, unit: 'Paket', price: 1000000 }
+            ];
+            let currentZoomMode = 'auto';
+            let manualZoomScale = 0.65;
+            let logoAspectType = 'square';
+            let confirmCallback = null;
+
+            // Helpers
+            const $ = (id) => document.getElementById(id);
+
+            function formatRupiah(num) {
+                const n = Math.round(Number(num) || 0);
+                return 'Rp ' + n.toLocaleString('id-ID');
+            }
+
+            function formatNumber(num) {
+                const n = Math.round(Number(num) || 0);
+                return n.toLocaleString('id-ID');
+            }
+
+            function formatDateIndo(dateStr) {
+                if (!dateStr) return '-';
+                const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+                const parts = dateStr.split('-');
+                if (parts.length !== 3) return dateStr;
+                const y = parts[0];
+                const m = parseInt(parts[1], 10) - 1;
+                const d = parseInt(parts[2], 10);
+                return `${d} ${months[m] || ''} ${y}`;
+            }
+
+            function terbilang(angka) {
+                const n = Math.abs(Math.round(Number(angka) || 0));
+                if (n === 0) return 'Nol Rupiah';
+                const satuan = ['', 'Satu', 'Dua', 'Tiga', 'Empat', 'Lima', 'Enam', 'Tujuh', 'Delapan', 'Sembilan', 'Sepuluh', 'Sebelas'];
+                function sebut(x) {
+                    x = Math.floor(x);
+                    if (x < 12) return satuan[x];
+                    if (x < 20) return sebut(x - 10) + ' Belas';
+                    if (x < 100) return sebut(x / 10) + ' Puluh ' + sebut(x % 10);
+                    if (x < 200) return 'Seratus ' + sebut(x - 100);
+                    if (x < 1000) return sebut(x / 100) + ' Ratus ' + sebut(x % 100);
+                    if (x < 2000) return 'Seribu ' + sebut(x - 1000);
+                    if (x < 1000000) return sebut(x / 1000) + ' Ribu ' + sebut(x % 1000);
+                    if (x < 1000000000) return sebut(x / 1000000) + ' Juta ' + sebut(x % 1000000);
+                    if (x < 1000000000000) return sebut(x / 1000000000) + ' Miliar ' + sebut(x % 1000000000);
+                    return sebut(x / 1000000000000) + ' Triliun ' + sebut(x % 1000000000000);
+                }
+                return sebut(n).replace(/\s+/g, ' ').trim() + ' Rupiah';
+            }
+
+            let toastTimer = null;
+            function showToast(msg) {
+                const banner = $('toastBanner');
+                const text = $('toastText');
+                if (!banner || !text) return;
+                text.textContent = msg;
+                banner.classList.remove('opacity-0', 'translate-y-3');
+                banner.classList.add('opacity-100', 'translate-y-0');
+                clearTimeout(toastTimer);
+                toastTimer = setTimeout(() => {
+                    banner.classList.add('opacity-0', 'translate-y-3');
+                    banner.classList.remove('opacity-100', 'translate-y-0');
+                }, 2800);
+            }
+
+            function openConfirm(title, message, onConfirm) {
+                $('confirmTitle').textContent = title;
+                $('confirmMessage').textContent = message;
+                confirmCallback = onConfirm;
+                $('confirmModal').classList.remove('hidden');
+            }
+
+            function closeConfirm() {
+                $('confirmModal').classList.add('hidden');
+                confirmCallback = null;
+            }
+
+            // =================================================================
+            // STORAGE & GITHUB SYNC ENGINE
+            // =================================================================
+            function updateSyncStatusUI(status, text) {
+                const dot = $('cloudStatusDot');
+                const badge = $('cloudSyncBadge');
+                if (status === 'synced') {
+                    if (dot) dot.className = 'w-2 h-2 rounded-full bg-[#34C759] shrink-0';
+                    if (badge) {
+                        badge.className = 'px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-bold shrink-0';
+                        badge.textContent = text || 'Tersimpan di GitHub';
+                    }
+                } else if (status === 'syncing') {
+                    if (dot) dot.className = 'w-2 h-2 rounded-full bg-[#007AFF] animate-pulse shrink-0';
+                    if (badge) {
+                        badge.className = 'px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 text-[10px] font-bold shrink-0';
+                        badge.textContent = text || 'Menyinkronkan...';
+                    }
+                } else {
+                    if (dot) dot.className = 'w-2 h-2 rounded-full bg-amber-400 shrink-0';
+                    if (badge) {
+                        badge.className = 'px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 text-[10px] font-bold shrink-0';
+                        badge.textContent = text || 'Lokal';
+                    }
+                }
+            }
+
+            function saveToLocalStorage() {
+                try {
+                    const payload = {
+                        settings,
+                        clientsDb,
+                        invoiceHistory,
+                        updatedAt: new Date().toISOString()
+                    };
+                    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(payload));
+                } catch (e) { /* ignore quota error */ }
+            }
+
+            function loadFromLocalStorage() {
+                try {
+                    const raw = localStorage.getItem(LOCAL_STORAGE_KEY);
+                    if (!raw) return;
+                    const data = JSON.parse(raw);
+                    if (data.settings) {
+                        settings = { ...DEFAULT_SETTINGS, ...data.settings };
+                        if (!settings.logoBase64 && settings.logoBase64 !== '') {
+                            settings.logoBase64 = DEFAULT_LOGO_SVG;
+                        }
+                    }
+                    if (Array.isArray(data.clientsDb)) clientsDb = data.clientsDb;
+                    if (Array.isArray(data.invoiceHistory)) invoiceHistory = data.invoiceHistory;
+                } catch (e) { /* ignore */ }
+            }
+
+            function encodeBase64Unicode(str) {
+                return btoa(unescape(encodeURIComponent(str)));
+            }
+
+            function decodeBase64Unicode(b64) {
+                return decodeURIComponent(escape(atob(b64.replace(/\n/g, ''))));
+            }
+
+            async function pullFromGithub(silent = false) {
+                if (!ghConfig.owner || !ghConfig.repo) return false;
+                updateSyncStatusUI('syncing', 'Memuat...');
+                const apiUrl = `https://api.github.com/repos/${encodeURIComponent(ghConfig.owner)}/${encodeURIComponent(ghConfig.repo)}/contents/${ghConfig.path || 'data.json'}?ref=${encodeURIComponent(ghConfig.branch || 'main')}&t=${Date.now()}`;
+                const headers = { 'Accept': 'application/vnd.github+json' };
+                if (ghConfig.token) {
+                    headers['Authorization'] = `Bearer ${ghConfig.token}`;
+                }
+
+                try {
+                    const res = await fetch(apiUrl, { headers });
+                    if (res.status === 404) {
+                        updateSyncStatusUI('local', 'Belum ada data.json');
+                        if (!silent) showToast('File data.json belum ada di repo, siap dibuat saat simpan.');
+                        return false;
+                    }
+                    if (!res.ok) throw new Error('HTTP ' + res.status);
+                    const json = await res.json();
+                    lastKnownFileSha = json.sha || '';
+                    if (json.content) {
+                        const decoded = JSON.parse(decodeBase64Unicode(json.content));
+                        if (decoded.settings) settings = { ...DEFAULT_SETTINGS, ...decoded.settings };
+                        if (Array.isArray(decoded.clientsDb)) clientsDb = decoded.clientsDb;
+                        if (Array.isArray(decoded.invoiceHistory)) invoiceHistory = decoded.invoiceHistory;
+                        saveToLocalStorage();
+                        applySettingsToUI();
+                        renderClientsList();
+                        renderHistoryList();
+                        updatePreview();
+                    }
+                    updateSyncStatusUI('synced', 'Tersimpan di GitHub');
+                    if (!silent) showToast('Data berhasil dimuat dari GitHub!');
+                    return true;
+                } catch (err) {
+                    updateSyncStatusUI('local', 'Offline / Token Salah');
+                    if (!silent) showToast('Gagal memuat dari GitHub: ' + err.message);
+                    return false;
+                }
+            }
+
+            async function pushToGithub(silent = true) {
+                saveToLocalStorage();
+                if (!ghConfig.owner || !ghConfig.repo || !ghConfig.token) {
+                    updateSyncStatusUI('local', 'Lokal (Token belum diisi)');
+                    return false;
+                }
+
+                updateSyncStatusUI('syncing', 'Menyimpan ke GitHub...');
+                const filePath = ghConfig.path || 'data.json';
+                const branch = ghConfig.branch || 'main';
+                const apiUrl = `https://api.github.com/repos/${encodeURIComponent(ghConfig.owner)}/${encodeURIComponent(ghConfig.repo)}/contents/${filePath}`;
+                const headers = {
+                    'Accept': 'application/vnd.github+json',
+                    'Authorization': `Bearer ${ghConfig.token}`,
+                    'Content-Type': 'application/json'
+                };
+
+                try {
+                    if (!lastKnownFileSha) {
+                        const getRes = await fetch(`${apiUrl}?ref=${encodeURIComponent(branch)}&t=${Date.now()}`, { headers });
+                        if (getRes.ok) {
+                            const existing = await getRes.json();
+                            lastKnownFileSha = existing.sha || '';
+                        }
+                    }
+
+                    const payloadObj = {
+                        app: 'CV. Srikandi Jaya Mandiri Invoice System',
+                        updatedAt: new Date().toISOString(),
+                        settings,
+                        clientsDb,
+                        invoiceHistory
+                    };
+
+                    const body = {
+                        message: `Update data.json (${new Date().toLocaleString('id-ID')})`,
+                        content: encodeBase64Unicode(JSON.stringify(payloadObj, null, 2)),
+                        branch
+                    };
+                    if (lastKnownFileSha) {
+                        body.sha = lastKnownFileSha;
+                    }
+
+                    const putRes = await fetch(apiUrl, {
+                        method: 'PUT',
+                        headers,
+                        body: JSON.stringify(body)
+                    });
+
+                    if (!putRes.ok) {
+                        const errData = await putRes.json().catch(() => ({}));
+                        throw new Error(errData.message || ('HTTP ' + putRes.status));
+                    }
+
+                    const putJson = await putRes.json();
+                    if (putJson.content && putJson.content.sha) {
+                        lastKnownFileSha = putJson.content.sha;
+                    }
+                    updateSyncStatusUI('synced', 'Tersimpan di GitHub');
+                    if (!silent) showToast('Berhasil sinkron ke GitHub (data.json)!');
+                    return true;
+                } catch (err) {
+                    updateSyncStatusUI('local', 'Gagal Sync GitHub');
+                    if (!silent) showToast('Gagal sync GitHub: ' + err.message);
+                    return false;
+                }
+            }
+
+            // =================================================================
+            // NAVIGATION & MOBILE TABS
+            // =================================================================
+            function switchPage(pageName) {
+                document.querySelectorAll('.page-section').forEach(sec => sec.classList.add('hidden'));
+                const target = $('page-' + pageName);
+                if (target) target.classList.remove('hidden');
+
+                // Desktop segmented nav
+                document.querySelectorAll('.nav-tab').forEach(btn => {
+                    const active = btn.getAttribute('data-nav') === pageName;
+                    if (active) {
+                        btn.classList.add('bg-white', 'text-[#1C1C1E]', 'shadow-sm');
+                        btn.classList.remove('text-[#636366]');
+                    } else {
+                        btn.classList.remove('bg-white', 'text-[#1C1C1E]', 'shadow-sm');
+                        btn.classList.add('text-[#636366]');
+                    }
+                });
+
+                // Mobile bottom nav
+                document.querySelectorAll('.mob-nav-btn').forEach(btn => {
+                    const active = btn.getAttribute('data-nav') === pageName;
+                    btn.classList.toggle('text-[#007AFF]', active);
+                    btn.classList.toggle('text-[#8E8E93]', !active);
+                });
+
+                if (pageName === 'invoice') {
+                    setTimeout(applyA4Zoom, 50);
+                }
+            }
+
+            function switchMobileInvoiceView(view) {
+                const editorCol = $('editorColumn');
+                const previewCol = $('previewColumn');
+                const tabForm = $('mobTabForm');
+                const tabPrev = $('mobTabPreview');
+
+                if (view === 'preview') {
+                    editorCol.classList.add('hidden');
+                    previewCol.classList.remove('hidden');
+                    tabPrev.classList.add('bg-white', 'text-[#1C1C1E]', 'shadow-sm');
+                    tabPrev.classList.remove('text-[#636366]');
+                    tabForm.classList.remove('bg-white', 'text-[#1C1C1E]', 'shadow-sm');
+                    tabForm.classList.add('text-[#636366]');
+                    setTimeout(applyA4Zoom, 40);
+                } else {
+                    previewCol.classList.add('hidden');
+                    editorCol.classList.remove('hidden');
+                    tabForm.classList.add('bg-white', 'text-[#1C1C1E]', 'shadow-sm');
+                    tabForm.classList.remove('text-[#636366]');
+                    tabPrev.classList.remove('bg-white', 'text-[#1C1C1E]', 'shadow-sm');
+                    tabPrev.classList.add('text-[#636366]');
+                }
+            }
+
+            // =================================================================
+            // A4 AUTO-FIT & ZOOM CONTROLS
+            // =================================================================
+            function applyA4Zoom() {
+                const wrapper = $('previewScrollWrapper');
+                const scaleBox = $('a4ScaleBox');
+                const paper = $('invoicePaper');
+                const label = $('zoomLevelLabel');
+                if (!wrapper || !scaleBox || !paper) return;
+
+                const paperWidthPx = paper.offsetWidth || 794;
+                const paperHeightPx = paper.offsetHeight || 1123;
+                const availableWidth = Math.max(260, wrapper.clientWidth - 32);
+
+                let scale = 1;
+                if (currentZoomMode === 'auto') {
+                    scale = Math.min(1, availableWidth / paperWidthPx);
+                    manualZoomScale = scale;
+                    if (label) label.textContent = 'Auto';
+                } else {
+                    scale = manualZoomScale;
+                    if (label) label.textContent = Math.round(scale * 100) + '%';
+                }
+
+                paper.style.transform = `scale(${scale})`;
+                scaleBox.style.width = `${paperWidthPx * scale}px`;
+                scaleBox.style.height = `${paperHeightPx * scale}px`;
+            }
+
+            // =================================================================
+            // LOGO ASPECT RATIO DETECTION & SETTINGS UI
+            // =================================================================
+            function detectLogoOrientation(src) {
+                if (!src) {
+                    logoAspectType = 'square';
+                    updateHeaderLogoLayout();
+                    return;
+                }
+                const img = new Image();
+                img.onload = function () {
+                    const ratio = (img.naturalWidth || 1) / (img.naturalHeight || 1);
+                    logoAspectType = ratio > 1.35 ? 'landscape' : 'square';
+                    updateHeaderLogoLayout();
+                };
+                img.src = src;
+            }
+
+            function updateHeaderLogoLayout() {
+                const brandBox = $('docCompanyBrand');
+                const logoWrap = $('docLogoWrapper');
+                const logoImg = $('docLogoImg');
+                if (!brandBox || !logoWrap || !logoImg) return;
+
+                if (!settings.logoBase64) {
+                    logoWrap.classList.add('hidden');
+                    brandBox.classList.remove('flex-col');
+                    brandBox.classList.add('flex-row');
+                    return;
+                }
+
+                logoImg.src = settings.logoBase64;
+                logoWrap.classList.remove('hidden');
+
+                if (logoAspectType === 'landscape') {
+                    brandBox.classList.remove('flex-row', 'items-start');
+                    brandBox.classList.add('flex-col', 'items-start');
+                    logoImg.className = 'h-14 max-w-[230px] object-contain mb-1';
+                } else {
+                    brandBox.classList.remove('flex-col');
+                    brandBox.classList.add('flex-row', 'items-start');
+                    logoImg.className = 'w-16 h-16 object-contain';
+                }
+            }
+
+            function applySettingsToUI() {
+                $('headerCompanyName').textContent = settings.compName || 'CV. SRIKANDI JAYA MANDIRI';
+                $('setCompName').value = settings.compName || '';
+                $('setCompTagline').value = settings.compTagline || '';
+                $('setCompContact').value = settings.compContact || '';
+                $('setCompNpwp').value = settings.compNpwp || '';
+                $('setCompAddress').value = settings.compAddress || '';
+                $('setIssueCity').value = settings.issueCity || '';
+                $('setSignerName').value = settings.signerName || '';
+                $('setSignerRole').value = settings.signerRole || '';
+                $('setDefaultNotes').value = settings.defaultNotes || '';
+
+                if (!$('invNotes').value.trim()) {
+                    $('invNotes').value = settings.defaultNotes || '';
+                }
+
+                // Settings Logo Preview
+                const prevImg = $('settingsLogoPreview');
+                const placeholder = $('settingsLogoPlaceholder');
+                const btnRemove = $('btnRemoveLogo');
+                if (settings.logoBase64) {
+                    prevImg.src = settings.logoBase64;
+                    prevImg.classList.remove('hidden');
+                    placeholder.classList.add('hidden');
+                    btnRemove.classList.remove('hidden');
+                } else {
+                    prevImg.src = '';
+                    prevImg.classList.add('hidden');
+                    placeholder.classList.remove('hidden');
+                    btnRemove.classList.add('hidden');
+                }
+
+                // GitHub inputs
+                $('ghOwnerInput').value = ghConfig.owner || '';
+                $('ghRepoInput').value = ghConfig.repo || '';
+                $('ghPathInput').value = ghConfig.path || 'data.json';
+                $('ghBranchInput').value = ghConfig.branch || 'main';
+                $('ghTokenInput').value = ghConfig.token || '';
+
+                detectLogoOrientation(settings.logoBase64);
+            }
+
+            // =================================================================
+            // ITEMS & TAX CALCULATION ENGINE
+            // =================================================================
+            function getTaxRates() {
+                const priceMode = $('taxPriceMode').value;
+                const ppnEnabled = $('enablePpn').checked;
+                const ppnRate = ppnEnabled ? (parseFloat($('ppnRate').value) || 0) : 0;
+                const pphEnabled = $('enablePph').checked;
+                const pphRate = pphEnabled ? (parseFloat($('pphRate').value) || 0) : 0;
+                const pphMode = $('pphMode').value;
+                const pphLabel = $('pphLabel').value.trim() || 'PPh';
+                return { priceMode, ppnEnabled, ppnRate, pphEnabled, pphRate, pphMode, pphLabel };
+            }
+
+            function calculateInvoiceTotals() {
+                const tax = getTaxRates();
+                let totalNetSubtotal = 0;
+                let totalGrossEntered = 0;
+
+                // Divisor if price already includes tax
+                let inclusiveRateSum = 0;
+                if (tax.priceMode === 'include') {
+                    if (tax.ppnEnabled) inclusiveRateSum += tax.ppnRate;
+                    if (tax.pphEnabled && tax.pphMode === 'add') inclusiveRateSum += tax.pphRate;
+                }
+                const divisor = 1 + (inclusiveRateSum / 100);
+
+                const computedItems = items.map((item, idx) => {
+                    const qty = parseFloat(item.qty) || 0;
+                    const inputPrice = parseFloat(item.price) || 0;
+                    const netUnitPrice = tax.priceMode === 'include' ? (inputPrice / divisor) : inputPrice;
+                    const netLineTotal = netUnitPrice * qty;
+                    const grossLineTotal = inputPrice * qty;
+
+                    totalNetSubtotal += netLineTotal;
+                    totalGrossEntered += grossLineTotal;
+
+                    return {
+                        ...item,
+                        no: idx + 1,
+                        qty,
+                        inputPrice,
+                        netUnitPrice,
+                        netLineTotal,
+                        grossLineTotal
+                    };
+                });
+
+                const ppnAmount = tax.ppnEnabled ? (totalNetSubtotal * (tax.ppnRate / 100)) : 0;
+                const pphAmount = tax.pphEnabled ? (totalNetSubtotal * (tax.pphRate / 100)) : 0;
+
+                let grandTotal = totalNetSubtotal + ppnAmount;
+                if (tax.pphEnabled) {
+                    if (tax.pphMode === 'deduct') {
+                        grandTotal -= pphAmount;
+                    } else {
+                        grandTotal += pphAmount;
+                    }
+                }
+
+                return {
+                    tax,
+                    computedItems,
+                    subtotal: totalNetSubtotal,
+                    ppnAmount,
+                    pphAmount,
+                    grandTotal: Math.max(0, Math.round(grandTotal))
+                };
+            }
+
+            function renderItemRows() {
+                const container = $('itemsContainer');
+                if (!container) return;
+                const calc = calculateInvoiceTotals();
+                const isInclude = calc.tax.priceMode === 'include';
+
+                container.innerHTML = '';
+                calc.computedItems.forEach((item, idx) => {
+                    const card = document.createElement('div');
+                    card.className = 'p-3.5 rounded-2xl bg-[#F2F2F7] space-y-2.5 relative';
+                    card.innerHTML = `
+                        <div class="flex items-center justify-between gap-2">
+                            <span class="text-[11px] font-bold text-[#8E8E93]">Item #${idx + 1}</span>
+                            ${items.length > 1 ? `
+                                <button type="button" data-remove-idx="${idx}" class="btn-remove-item text-[11px] font-semibold text-rose-500 hover:text-rose-700">
+                                    Hapus
+                                </button>
+                            ` : ''}
+                        </div>
+                        <input type="text" data-idx="${idx}" data-field="name" value="${escapeHtml(item.name)}" class="item-input w-full bg-white border border-black/10 rounded-xl px-3 py-2 text-xs sm:text-sm font-medium focus:outline-none focus:border-[#007AFF]" placeholder="Nama barang atau jasa...">
+                        <div class="grid grid-cols-12 gap-2">
+                            <div class="col-span-3">
+                                <label class="block text-[10px] font-semibold text-[#636366] mb-0.5">Qty</label>
+                                <input type="number" min="0" step="any" data-idx="${idx}" data-field="qty" value="${item.qty}" class="item-input w-full bg-white border border-black/10 rounded-xl px-2.5 py-1.5 text-xs font-bold text-center focus:outline-none focus:border-[#007AFF]">
+                            </div>
+                            <div class="col-span-3">
+                                <label class="block text-[10px] font-semibold text-[#636366] mb-0.5">Satuan</label>
+                                <input type="text" data-idx="${idx}" data-field="unit" value="${escapeHtml(item.unit)}" class="item-input w-full bg-white border border-black/10 rounded-xl px-2 py-1.5 text-xs font-medium text-center focus:outline-none focus:border-[#007AFF]" placeholder="Pcs">
+                            </div>
+                            <div class="col-span-6">
+                                <label class="block text-[10px] font-semibold text-[#636366] mb-0.5">${isInclude ? 'Harga (Inc. Pajak)' : 'Harga Satuan (Rp)'}</label>
+                                <input type="number" min="0" step="any" data-idx="${idx}" data-field="price" value="${item.inputPrice}" class="item-input w-full bg-white border border-black/10 rounded-xl px-2.5 py-1.5 text-xs font-bold text-right focus:outline-none focus:border-[#007AFF]">
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between pt-1 border-t border-black/5 text-[11px]">
+                            <span class="text-[#636366]">
+                                ${isInclude ? `Netto: <strong class="text-[#1C1C1E]">${formatRupiah(item.netUnitPrice)}</strong>/sat` : 'Subtotal Item'}
+                            </span>
+                            <span class="font-bold text-[#1C1C1E]">${formatRupiah(item.netLineTotal)}</span>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+
+                // Attach listeners
+                container.querySelectorAll('.item-input').forEach(inp => {
+                    inp.addEventListener('input', (e) => {
+                        const i = parseInt(e.target.getAttribute('data-idx'), 10);
+                        const f = e.target.getAttribute('data-field');
+                        if (!items[i]) return;
+                        items[i][f] = (f === 'qty' || f === 'price') ? (parseFloat(e.target.value) || 0) : e.target.value;
+                        updatePreview();
+                    });
+                });
+
+                container.querySelectorAll('.btn-remove-item').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const i = parseInt(e.target.getAttribute('data-remove-idx'), 10);
+                        if (items.length > 1) {
+                            items.splice(i, 1);
+                            renderItemRows();
+                            updatePreview();
+                        }
+                    });
+                });
+            }
+
+            function escapeHtml(str) {
+                return String(str || '')
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;');
+            }
+
+            // =================================================================
+            // LIVE PREVIEW RENDERER
+            // =================================================================
+            function updatePreview() {
+                const calc = calculateInvoiceTotals();
+                const isInclude = calc.tax.priceMode === 'include';
+
+                // Hint text
+                $('taxPriceModeHint').textContent = isInclude
+                    ? 'Harga satuan sudah mencakup pajak; sistem menampilkan Harga Netto per item secara otomatis.'
+                    : 'Harga satuan merupakan harga dasar; pajak ditambahkan di akhir perhitungan.';
+
+                // Form summary
+                $('formSubtotalDisplay').textContent = formatRupiah(calc.subtotal);
+                $('formPpnRow').classList.toggle('hidden', !calc.tax.ppnEnabled);
+                $('formPpnLabel').textContent = `PPN (${calc.tax.ppnRate}%)`;
+                $('formPpnDisplay').textContent = formatRupiah(calc.ppnAmount);
+
+                $('formPphRow').classList.toggle('hidden', !calc.tax.pphEnabled);
+                $('formPphLabel').textContent = `${calc.tax.pphLabel} (${calc.tax.pphRate}%)`;
+                $('formPphDisplay').textContent = (calc.tax.pphMode === 'deduct' ? '- ' : '+ ') + formatRupiah(calc.pphAmount);
+                $('formGrandTotalDisplay').textContent = formatRupiah(calc.grandTotal);
+
+                // A4 Document Header
+                $('docCompName').textContent = settings.compName || 'CV. SRIKANDI JAYA MANDIRI';
+                $('docCompTagline').textContent = settings.compTagline || '';
+                $('docCompAddress').textContent = settings.compAddress || '';
+                $('docCompContact').textContent = settings.compContact || '';
+                $('docCompNpwp').textContent = settings.compNpwp || '';
+                $('docFooterCompName').textContent = settings.compName || 'CV. SRIKANDI JAYA MANDIRI';
+                $('docSignCompany').textContent = settings.compName || 'CV. SRIKANDI JAYA MANDIRI';
+                $('docSignerName').textContent = settings.signerName || '';
+                $('docSignerRole').textContent = settings.signerRole || '';
+
+                const invDateVal = $('invDate').value;
+                $('docInvNumber').textContent = $('invNumber').value.trim() || '-';
+                $('docInvDate').textContent = formatDateIndo(invDateVal);
+                $('docInvDueDate').textContent = formatDateIndo($('invDueDate').value);
+                $('docSignCityDate').textContent = `${settings.issueCity || 'Sukoharjo'}, ${formatDateIndo(invDateVal)}`;
+
+                // Client
+                $('docClientName').textContent = $('clientName').value.trim() || 'Nama Pelanggan / Instansi';
+                $('docClientAddress').textContent = $('clientAddress').value.trim() || '-';
+                const cContact = $('clientContact').value.trim();
+                const cNpwp = $('clientNpwp').value.trim();
+                $('docClientContact').textContent = cContact ? `UP / Telp: ${cContact}` : '';
+                $('docClientNpwp').textContent = cNpwp ? `NPWP: ${cNpwp}` : '';
+
+                // Table columns
+                $('docColUnitPrice').textContent = isInclude ? 'Harga (Inc.)' : 'Harga Satuan';
+                $('docColNetUnit').classList.toggle('hidden', !isInclude);
+
+                const tbody = $('docItemsBody');
+                tbody.innerHTML = '';
+                calc.computedItems.forEach((item) => {
+                    const tr = document.createElement('tr');
+                    tr.className = 'align-top';
+                    tr.innerHTML = `
+                        <td class="py-2.5 px-2.5 text-center text-slate-500">${item.no}</td>
+                        <td class="py-2.5 px-2.5 font-medium text-slate-900">${escapeHtml(item.name || '-')}</td>
+                        <td class="py-2.5 px-2 text-center text-slate-800">${item.qty}</td>
+                        <td class="py-2.5 px-2 text-center text-slate-600">${escapeHtml(item.unit || '-')}</td>
+                        <td class="py-2.5 px-2.5 text-right text-slate-800">${formatNumber(item.inputPrice)}</td>
+                        ${isInclude ? `<td class="py-2.5 px-2.5 text-right font-semibold text-blue-700">${formatNumber(item.netUnitPrice)}</td>` : ''}
+                        <td class="py-2.5 px-2.5 text-right font-bold text-slate-900">${formatNumber(item.netLineTotal)}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+
+                // Totals & Terbilang
+                $('docSubtotalLabel').textContent = isInclude ? 'Subtotal Netto (DPP)' : 'Subtotal';
+                $('docSubtotal').textContent = formatRupiah(calc.subtotal);
+
+                $('docPpnRow').classList.toggle('hidden', !calc.tax.ppnEnabled);
+                $('docPpnLabel').textContent = `PPN (${calc.tax.ppnRate}%)`;
+                $('docPpnAmount').textContent = formatRupiah(calc.ppnAmount);
+
+                $('docPphRow').classList.toggle('hidden', !calc.tax.pphEnabled);
+                $('docPphLabel').textContent = `${calc.tax.pphLabel} (${calc.tax.pphRate}%)`;
+                $('docPphAmount').textContent = (calc.tax.pphMode === 'deduct' ? '- ' : '+ ') + formatRupiah(calc.pphAmount);
+
+                $('docGrandTotal').textContent = formatRupiah(calc.grandTotal);
+                $('docTerbilang').textContent = terbilang(calc.grandTotal);
+                $('docNotes').textContent = $('invNotes').value || '-';
+
+                // Update item net labels inside form without losing focus
+                const formCards = $('itemsContainer').children;
+                calc.computedItems.forEach((item, idx) => {
+                    if (formCards[idx]) {
+                        const footerDiv = formCards[idx].lastElementChild;
+                        if (footerDiv) {
+                            footerDiv.children[0].innerHTML = isInclude
+                                ? `Netto: <strong class="text-[#1C1C1E]">${formatRupiah(item.netUnitPrice)}</strong>/sat`
+                                : 'Subtotal Item';
+                            footerDiv.children[1].textContent = formatRupiah(item.netLineTotal);
+                        }
+                    }
+                });
+
+                applyA4Zoom();
+            }
+
+            // =================================================================
+            // CUSTOMER DATABASE (CRUD)
+            // =================================================================
+            function populateClientDropdown() {
+                const select = $('selectClientDb');
+                if (!select) return;
+                const currentVal = select.value;
+                select.innerHTML = '<option value="">-- Muat dari Database Konsumen --</option>';
+                clientsDb.forEach(c => {
+                    const opt = document.createElement('option');
+                    opt.value = c.id;
+                    opt.textContent = c.name + (c.contact ? ` (${c.contact})` : '');
+                    select.appendChild(opt);
+                });
+                select.value = currentVal;
+                $('badgeClientsCount').textContent = clientsDb.length;
+            }
+
+            function renderClientsList() {
+                populateClientDropdown();
+                const container = $('clientsListContainer');
+                if (!container) return;
+                const q = ($('searchClientsInput').value || '').toLowerCase().trim();
+                const filtered = clientsDb.filter(c =>
+                    (c.name || '').toLowerCase().includes(q) ||
+                    (c.contact || '').toLowerCase().includes(q) ||
+                    (c.address || '').toLowerCase().includes(q)
+                );
+
+                if (filtered.length === 0) {
+                    container.innerHTML = `<div class="text-center py-10 text-xs text-[#8E8E93]">Belum ada data konsumen yang cocok.</div>`;
+                    return;
+                }
+
+                container.innerHTML = '';
+                filtered.forEach(c => {
+                    const div = document.createElement('div');
+                    div.className = 'p-3.5 rounded-2xl bg-[#F2F2F7] flex flex-col sm:flex-row sm:items-center justify-between gap-3';
+                    div.innerHTML = `
+                        <div class="min-w-0">
+                            <p class="text-sm font-bold text-[#1C1C1E] truncate">${escapeHtml(c.name)}</p>
+                            <p class="text-xs text-[#636366] mt-0.5">${escapeHtml(c.contact || 'Tanpa kontak')} ${c.npwp ? '• NPWP: ' + escapeHtml(c.npwp) : ''}</p>
+                            <p class="text-[11px] text-[#8E8E93] mt-0.5 line-clamp-2">${escapeHtml(c.address || '-')}</p>
+                        </div>
+                        <div class="flex items-center gap-1.5 shrink-0">
+                            <button type="button" data-use-id="${c.id}" class="btn-use-client px-3 py-1.5 rounded-xl bg-[#007AFF] text-white text-xs font-semibold hover:bg-[#0062CC]">Pakai</button>
+                            <button type="button" data-edit-id="${c.id}" class="btn-edit-client px-2.5 py-1.5 rounded-xl bg-white text-[#1C1C1E] text-xs font-semibold border border-black/10">Edit</button>
+                            <button type="button" data-del-id="${c.id}" class="btn-del-client px-2.5 py-1.5 rounded-xl bg-rose-50 text-rose-600 text-xs font-semibold">Hapus</button>
+                        </div>
+                    `;
+                    container.appendChild(div);
+                });
+
+                container.querySelectorAll('.btn-use-client').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const c = clientsDb.find(x => x.id === btn.getAttribute('data-use-id'));
+                        if (!c) return;
+                        $('clientName').value = c.name || '';
+                        $('clientContact').value = c.contact || '';
+                        $('clientNpwp').value = c.npwp || '';
+                        $('clientAddress').value = c.address || '';
+                        $('selectClientDb').value = c.id;
+                        updatePreview();
+                        switchPage('invoice');
+                        showToast('Data konsumen dimuat ke invoice');
+                    });
+                });
+
+                container.querySelectorAll('.btn-edit-client').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const c = clientsDb.find(x => x.id === btn.getAttribute('data-edit-id'));
+                        if (!c) return;
+                        $('editClientId').value = c.id;
+                        $('dbClientName').value = c.name || '';
+                        $('dbClientContact').value = c.contact || '';
+                        $('dbClientNpwp').value = c.npwp || '';
+                        $('dbClientAddress').value = c.address || '';
+                        $('clientFormHeading').textContent = 'Edit Data Konsumen';
+                        $('btnCancelClientEdit').classList.remove('hidden');
+                    });
+                });
+
+                container.querySelectorAll('.btn-del-client').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const id = btn.getAttribute('data-del-id');
+                        openConfirm('Hapus Konsumen', 'Hapus data konsumen ini dari database?', () => {
+                            clientsDb = clientsDb.filter(x => x.id !== id);
+                            renderClientsList();
+                            pushToGithub(true);
+                            showToast('Konsumen dihapus');
+                        });
+                    });
+                });
+            }
+
+            function resetClientForm() {
+                $('editClientId').value = '';
+                $('dbClientName').value = '';
+                $('dbClientContact').value = '';
+                $('dbClientNpwp').value = '';
+                $('dbClientAddress').value = '';
+                $('clientFormHeading').textContent = 'Tambah Konsumen';
+                $('btnCancelClientEdit').classList.add('hidden');
+            }
+
+            // =================================================================
+            // INVOICE HISTORY
+            // =================================================================
+            function renderHistoryList() {
+                $('badgeHistoryCount').textContent = invoiceHistory.length;
+                const container = $('historyListContainer');
+                if (!container) return;
+
+                const q = ($('searchHistoryInput').value || '').toLowerCase().trim();
+                const filtered = invoiceHistory.filter(inv =>
+                    (inv.invNumber || '').toLowerCase().includes(q) ||
+                    (inv.clientName || '').toLowerCase().includes(q)
+                );
+
+                if (filtered.length === 0) {
+                    container.innerHTML = `<div class="col-span-full mac-card p-10 text-center text-xs text-[#8E8E93]">Belum ada riwayat invoice tersimpan.</div>`;
+                    return;
+                }
+
+                container.innerHTML = '';
+                filtered.forEach(inv => {
+                    const card = document.createElement('div');
+                    card.className = 'mac-card p-5 flex flex-col justify-between gap-4';
+                    card.innerHTML = `
+                        <div>
+                            <div class="flex items-center justify-between gap-2">
+                                <span class="text-xs font-extrabold text-[#007AFF]">${escapeHtml(inv.invNumber)}</span>
+                                <span class="text-[11px] text-[#8E8E93]">${formatDateIndo(inv.invDate)}</span>
+                            </div>
+                            <h4 class="text-sm font-bold text-[#1C1C1E] mt-1.5">${escapeHtml(inv.clientName || 'Tanpa Nama Klien')}</h4>
+                            <p class="text-base font-extrabold text-[#1C1C1E] mt-2">${formatRupiah(inv.grandTotal || 0)}</p>
+                        </div>
+                        <div class="flex items-center gap-2 pt-3 border-t border-black/[0.06]">
+                            <button type="button" data-open-id="${inv.id}" class="btn-open-inv flex-1 py-2 rounded-xl bg-[#007AFF] text-white text-xs font-semibold hover:bg-[#0062CC]">Buka</button>
+                            <button type="button" data-dup-id="${inv.id}" class="btn-dup-inv px-3 py-2 rounded-xl bg-[#F2F2F7] text-[#1C1C1E] text-xs font-semibold hover:bg-[#E5E5EA]">Duplikat</button>
+                            <button type="button" data-del-id="${inv.id}" class="btn-del-inv px-3 py-2 rounded-xl bg-rose-50 text-rose-600 text-xs font-semibold hover:bg-rose-100">Hapus</button>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+
+                container.querySelectorAll('.btn-open-inv').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const inv = invoiceHistory.find(x => x.id === btn.getAttribute('data-open-id'));
+                        if (inv) loadInvoiceIntoForm(inv, false);
+                    });
+                });
+
+                container.querySelectorAll('.btn-dup-inv').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const inv = invoiceHistory.find(x => x.id === btn.getAttribute('data-dup-id'));
+                        if (inv) loadInvoiceIntoForm(inv, true);
+                    });
+                });
+
+                container.querySelectorAll('.btn-del-inv').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const id = btn.getAttribute('data-del-id');
+                        openConfirm('Hapus Riwayat', 'Hapus invoice ini dari riwayat tersimpan?', () => {
+                            invoiceHistory = invoiceHistory.filter(x => x.id !== id);
+                            renderHistoryList();
+                            pushToGithub(true);
+                            showToast('Riwayat invoice dihapus');
+                        });
+                    });
+                });
+            }
+
+            function loadInvoiceIntoForm(inv, asDuplicate) {
+                $('invNumber').value = asDuplicate ? generateAutoInvoiceNumber() : (inv.invNumber || '');
+                $('invDate').value = asDuplicate ? getTodayStr() : (inv.invDate || getTodayStr());
+                $('invDueDate').value = inv.invDueDate || getFutureDateStr(14);
+                $('clientName').value = inv.clientName || '';
+                $('clientContact').value = inv.clientContact || '';
+                $('clientNpwp').value = inv.clientNpwp || '';
+                $('clientAddress').value = inv.clientAddress || '';
+                $('taxPriceMode').value = inv.taxPriceMode || 'exclude';
+                $('enablePpn').checked = inv.enablePpn !== undefined ? inv.enablePpn : true;
+                $('ppnRate').value = inv.ppnRate !== undefined ? inv.ppnRate : 11;
+                $('enablePph').checked = !!inv.enablePph;
+                $('pphRate').value = inv.pphRate !== undefined ? inv.pphRate : 2;
+                $('pphLabel').value = inv.pphLabel || 'PPh Pasal 23';
+                $('pphMode').value = inv.pphMode || 'deduct';
+                $('invNotes').value = inv.invNotes || settings.defaultNotes || '';
+
+                items = Array.isArray(inv.items) && inv.items.length > 0
+                    ? JSON.parse(JSON.stringify(inv.items))
+                    : [{ id: Date.now(), name: '', qty: 1, unit: 'Pcs', price: 0 }];
+
+                renderItemRows();
+                updatePreview();
+                switchPage('invoice');
+                showToast(asDuplicate ? 'Invoice diduplikasi dengan nomor baru' : 'Invoice dibuka');
+            }
+
+            // =================================================================
+            // VECTOR PDF EXPORT (jsPDF)
+            // =================================================================
+            function exportVectorPdf() {
+                try {
+                    if (!window.jspdf || !window.jspdf.jsPDF) {
+                        window.print();
+                        return;
+                    }
+                    const { jsPDF } = window.jspdf;
+                    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+                    const calc = calculateInvoiceTotals();
+                    const isInclude = calc.tax.priceMode === 'include';
+
+                    const marginL = 16;
+                    const marginR = 16;
+                    const pageW = 210;
+                    const contentW = pageW - marginL - marginR;
+                    let y = 16;
+
+                    // Company Header
+                    let textStartX = marginL;
+                    if (settings.logoBase64) {
+                        try {
+                            const imgFormat = settings.logoBase64.startsWith('data:image/png') ? 'PNG' : 'JPEG';
+                            if (logoAspectType === 'landscape') {
+                                doc.addImage(settings.logoBase64, imgFormat, marginL, y, 48, 15);
+                                y += 18;
+                            } else {
+                                doc.addImage(settings.logoBase64, imgFormat, marginL, y, 18, 18);
+                                textStartX = marginL + 22;
+                            }
+                        } catch (e) { /* skip image if unsupported */ }
+                    }
+
+                    doc.setFont('helvetica', 'bold');
+                    doc.setFontSize(14);
+                    doc.setTextColor(15, 23, 42);
+                    doc.text((settings.compName || 'CV. SRIKANDI JAYA MANDIRI').toUpperCase(), textStartX, y + 4);
+
+                    let leftY = y + 9;
+                    if (settings.compTagline) {
+                        doc.setFont('helvetica', 'bold');
+                        doc.setFontSize(8.5);
+                        doc.setTextColor(29, 78, 216);
+                        doc.text(settings.compTagline, textStartX, leftY);
+                        leftY += 4.5;
+                    }
+
+                    doc.setFont('helvetica', 'normal');
+                    doc.setFontSize(8);
+                    doc.setTextColor(71, 85, 105);
+                    const addrLines = doc.splitTextToSize(settings.compAddress || '', 95);
+                    doc.text(addrLines, textStartX, leftY);
+                    leftY += addrLines.length * 3.8;
+
+                    if (settings.compContact) {
+                        doc.text(settings.compContact, textStartX, leftY);
+                        leftY += 4;
+                    }
+                    if (settings.compNpwp) {
+                        doc.setFont('helvetica', 'bold');
+                        doc.text(settings.compNpwp, textStartX, leftY);
+                        leftY += 4;
+                    }
+
+                    // Right Invoice Badge & Meta
+                    const rightX = pageW - marginR;
+                    doc.setFillColor(15, 23, 42);
+                    doc.roundedRect(rightX - 36, y - 1, 36, 8.5, 1.5, 1.5, 'F');
+                    doc.setFont('helvetica', 'bold');
+                    doc.setFontSize(12);
+                    doc.setTextColor(255, 255, 255);
+                    doc.text('INVOICE', rightX - 18, y + 4.8, { align: 'center' });
+
+                    doc.setFontSize(8.5);
+                    doc.setTextColor(100, 116, 139);
+                    doc.setFont('helvetica', 'normal');
+                    doc.text('No. Invoice:', rightX - 38, y + 13, { align: 'right' });
+                    doc.setFont('helvetica', 'bold');
+                    doc.setTextColor(15, 23, 42);
+                    doc.text($('invNumber').value.trim() || '-', rightX, y + 13, { align: 'right' });
+
+                    doc.setFont('helvetica', 'normal');
+                    doc.setTextColor(100, 116, 139);
+                    doc.text('Tanggal:', rightX - 38, y + 17.5, { align: 'right' });
+                    doc.setFont('helvetica', 'bold');
+                    doc.setTextColor(15, 23, 42);
+                    doc.text(formatDateIndo($('invDate').value), rightX, y + 17.5, { align: 'right' });
+
+                    doc.setFont('helvetica', 'normal');
+                    doc.setTextColor(100, 116, 139);
+                    doc.text('Jatuh Tempo:', rightX - 38, y + 22, { align: 'right' });
+                    doc.setFont('helvetica', 'bold');
+                    doc.setTextColor(15, 23, 42);
+                    doc.text(formatDateIndo($('invDueDate').value), rightX, y + 22, { align: 'right' });
+
+                    y = Math.max(leftY, y + 26) + 2;
+                    doc.setDrawColor(15, 23, 42);
+                    doc.setLineWidth(0.6);
+                    doc.line(marginL, y, rightX, y);
+                    y += 6;
+
+                    // Client Box
+                    const cName = $('clientName').value.trim() || 'Nama Pelanggan / Instansi';
+                    const cAddr = $('clientAddress').value.trim() || '-';
+                    const cContact = $('clientContact').value.trim();
+                    const cNpwp = $('clientNpwp').value.trim();
+                    const cAddrLines = doc.splitTextToSize(cAddr, 95);
+                    let boxH = 14 + (cAddrLines.length * 4) + (cContact ? 4 : 0) + (cNpwp ? 4 : 0);
+
+                    doc.setFillColor(248, 250, 252);
+                    doc.setDrawColor(226, 232, 240);
+                    doc.setLineWidth(0.3);
+                    doc.roundedRect(marginL, y, 105, boxH, 2, 2, 'FD');
+
+                    let cy = y + 5;
+                    doc.setFont('helvetica', 'bold');
+                    doc.setFontSize(7);
+                    doc.setTextColor(148, 163, 184);
+                    doc.text('KEPADA YTH / DITAGIHKAN KEPADA:', marginL + 3.5, cy);
+                    cy += 4.5;
+
+                    doc.setFontSize(10);
+                    doc.setTextColor(15, 23, 42);
+                    doc.text(cName, marginL + 3.5, cy);
+                    cy += 4.5;
+
+                    doc.setFont('helvetica', 'normal');
+                    doc.setFontSize(8);
+                    doc.setTextColor(71, 85, 105);
+                    doc.text(cAddrLines, marginL + 3.5, cy);
+                    cy += cAddrLines.length * 4;
+
+                    if (cContact) {
+                        doc.text(`UP / Telp: ${cContact}`, marginL + 3.5, cy);
+                        cy += 4;
+                    }
+                    if (cNpwp) {
+                        doc.setFont('helvetica', 'bold');
+                        doc.text(`NPWP: ${cNpwp}`, marginL + 3.5, cy);
+                    }
+
+                    y += boxH + 6;
+
+                    // Items Table via autoTable
+                    const headCols = isInclude
+                        ? [['No', 'Deskripsi Barang / Jasa', 'Qty', 'Sat', 'Harga (Inc.)', 'Harga Netto', 'Jumlah']]
+                        : [['No', 'Deskripsi Barang / Jasa', 'Qty', 'Sat', 'Harga Satuan', 'Jumlah']];
+
+                    const bodyRows = calc.computedItems.map(it => {
+                        if (isInclude) {
+                            return [
+                                it.no,
+                                it.name || '-',
+                                it.qty,
+                                it.unit || '-',
+                                formatNumber(it.inputPrice),
+                                formatNumber(it.netUnitPrice),
+                                formatNumber(it.netLineTotal)
+                            ];
+                        }
+                        return [
+                            it.no,
+                            it.name || '-',
+                            it.qty,
+                            it.unit || '-',
+                            formatNumber(it.inputPrice),
+                            formatNumber(it.netLineTotal)
+                        ];
+                    });
+
+                    doc.autoTable({
+                        startY: y,
+                        head: headCols,
+                        body: bodyRows,
+                        margin: { left: marginL, right: marginR },
+                        theme: 'grid',
+                        headStyles: {
+                            fillColor: [15, 23, 42],
+                            textColor: [255, 255, 255],
+                            fontSize: 8,
+                            fontStyle: 'bold'
+                        },
+                        bodyStyles: {
+                            fontSize: 8.5,
+                            textColor: [15, 23, 42]
+                        },
+                        columnStyles: isInclude ? {
+                            0: { halign: 'center', cellWidth: 10 },
+                            2: { halign: 'center', cellWidth: 14 },
+                            3: { halign: 'center', cellWidth: 15 },
+                            4: { halign: 'right', cellWidth: 26 },
+                            5: { halign: 'right', cellWidth: 26, textColor: [29, 78, 216] },
+                            6: { halign: 'right', cellWidth: 28, fontStyle: 'bold' }
+                        } : {
+                            0: { halign: 'center', cellWidth: 10 },
+                            2: { halign: 'center', cellWidth: 15 },
+                            3: { halign: 'center', cellWidth: 16 },
+                            4: { halign: 'right', cellWidth: 30 },
+                            5: { halign: 'right', cellWidth: 32, fontStyle: 'bold' }
+                        }
+                    });
+
+                    y = doc.lastAutoTable.finalY + 6;
+
+                    // Terbilang & Totals
+                    const terbilangText = terbilang(calc.grandTotal);
+                    const terbLines = doc.splitTextToSize(terbilangText, 92);
+                    const terbH = 10 + terbLines.length * 4;
+
+                    doc.setFillColor(248, 250, 252);
+                    doc.setDrawColor(226, 232, 240);
+                    doc.roundedRect(marginL, y, 98, terbH, 1.5, 1.5, 'FD');
+                    doc.setFont('helvetica', 'bold');
+                    doc.setFontSize(7);
+                    doc.setTextColor(148, 163, 184);
+                    doc.text('TERBILANG:', marginL + 3, y + 4.5);
+                    doc.setFont('helvetica', 'bolditalic');
+                    doc.setFontSize(8.5);
+                    doc.setTextColor(15, 23, 42);
+                    doc.text(terbLines, marginL + 3, y + 9);
+
+                    // Notes below terbilang
+                    let notesY = y + terbH + 5;
+                    doc.setFont('helvetica', 'bold');
+                    doc.setFontSize(8);
+                    doc.setTextColor(15, 23, 42);
+                    doc.text('Keterangan & Pembayaran:', marginL, notesY);
+                    notesY += 4;
+                    doc.setFont('helvetica', 'normal');
+                    doc.setFontSize(7.8);
+                    doc.setTextColor(71, 85, 105);
+                    const noteLines = doc.splitTextToSize($('invNotes').value || '-', 98);
+                    doc.text(noteLines, marginL, notesY);
+
+                    // Totals Table on Right
+                    const totRows = [
+                        [isInclude ? 'Subtotal Netto' : 'Subtotal', formatRupiah(calc.subtotal)]
+                    ];
+                    if (calc.tax.ppnEnabled) {
+                        totRows.push([`PPN (${calc.tax.ppnRate}%)`, formatRupiah(calc.ppnAmount)]);
+                    }
+                    if (calc.tax.pphEnabled) {
+                        totRows.push([
+                            `${calc.tax.pphLabel} (${calc.tax.pphRate}%)`,
+                            (calc.tax.pphMode === 'deduct' ? '- ' : '+ ') + formatRupiah(calc.pphAmount)
+                        ]);
+                    }
+                    totRows.push(['TOTAL TAGIHAN', formatRupiah(calc.grandTotal)]);
+
+                    doc.autoTable({
+                        startY: y,
+                        body: totRows,
+                        margin: { left: marginL + 104, right: marginR },
+                        theme: 'plain',
+                        styles: { fontSize: 8.5, cellPadding: 2 },
+                        columnStyles: {
+                            0: { textColor: [71, 85, 105] },
+                            1: { halign: 'right', fontStyle: 'bold', textColor: [15, 23, 42] }
+                        },
+                        didParseCell: function (data) {
+                            if (data.row.index === totRows.length - 1) {
+                                data.cell.styles.fillColor = [15, 23, 42];
+                                data.cell.styles.textColor = [255, 255, 255];
+                                data.cell.styles.fontStyle = 'bold';
+                                data.cell.styles.fontSize = 9.5;
+                            }
+                        }
+                    });
+
+                    // Signature
+                    const signY = Math.max(notesY + noteLines.length * 3.8 + 12, doc.lastAutoTable.finalY + 18);
+                    const signCenterX = rightX - 28;
+                    doc.setFont('helvetica', 'normal');
+                    doc.setFontSize(8.5);
+                    doc.setTextColor(51, 65, 85);
+                    doc.text(`${settings.issueCity || 'Sukoharjo'}, ${formatDateIndo($('invDate').value)}`, signCenterX, signY, { align: 'center' });
+
+                    doc.setFont('helvetica', 'bold');
+                    doc.setTextColor(15, 23, 42);
+                    doc.text(settings.compName || 'CV. SRIKANDI JAYA MANDIRI', signCenterX, signY + 4.5, { align: 'center' });
+
+                    doc.text(settings.signerName || 'Asih Ermataria', signCenterX, signY + 24, { align: 'center' });
+                    doc.setFont('helvetica', 'normal');
+                    doc.setFontSize(8);
+                    doc.setTextColor(100, 116, 139);
+                    doc.text(settings.signerRole || 'Direktur', signCenterX, signY + 28.5, { align: 'center' });
+
+                    const safeFilename = ($('invNumber').value.trim() || 'Invoice-SJM').replace(/[^a-zA-Z0-9-_]/g, '_') + '.pdf';
+                    doc.save(safeFilename);
+                    showToast('File PDF berhasil diunduh!');
+                } catch (err) {
+                    showToast('Membuka dialog cetak...');
+                    window.print();
+                }
+            }
+
+            // =================================================================
+            // DATE & INVOICE NUMBER UTILITIES
+            // =================================================================
+            function getTodayStr() {
+                const d = new Date();
+                return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+            }
+
+            function getFutureDateStr(days) {
+                const d = new Date();
+                d.setDate(d.getDate() + days);
+                return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+            }
+
+            function generateAutoInvoiceNumber() {
+                const d = new Date();
+                const yyyy = d.getFullYear();
+                const mm = String(d.getMonth() + 1).padStart(2, '0');
+                const seq = String(invoiceHistory.length + 1).padStart(3, '0');
+                return `INV/${yyyy}/${mm}/${seq}`;
+            }
+
+            // =================================================================
+            // INITIALIZATION & EVENT WIRING
+            // =================================================================
+            function init() {
+                loadFromLocalStorage();
+
+                $('invDate').value = getTodayStr();
+                $('invDueDate').value = getFutureDateStr(14);
+                $('invNumber').value = generateAutoInvoiceNumber();
+                $('invNotes').value = settings.defaultNotes || '';
+
+                applySettingsToUI();
+                renderClientsList();
+                renderHistoryList();
+                renderItemRows();
+                updatePreview();
+
+                // Navigation Tabs (Desktop & Mobile)
+                document.querySelectorAll('[data-nav]').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        switchPage(btn.getAttribute('data-nav'));
+                    });
+                });
+
+                // Mobile Form vs Preview Tabs
+                $('mobTabForm').addEventListener('click', () => switchMobileInvoiceView('form'));
+                $('mobTabPreview').addEventListener('click', () => switchMobileInvoiceView('preview'));
+
+                // Zoom Controls
+                $('btnZoomOut').addEventListener('click', () => {
+                    currentZoomMode = 'manual';
+                    manualZoomScale = Math.max(0.3, Number((manualZoomScale - 0.1).toFixed(2)));
+                    applyA4Zoom();
+                });
+                $('btnZoomIn').addEventListener('click', () => {
+                    currentZoomMode = 'manual';
+                    manualZoomScale = Math.min(1.5, Number((manualZoomScale + 0.1).toFixed(2)));
+                    applyA4Zoom();
+                });
+                $('btnZoomFit').addEventListener('click', () => {
+                    currentZoomMode = 'auto';
+                    applyA4Zoom();
+                });
+                window.addEventListener('resize', () => {
+                    if (currentZoomMode === 'auto') applyA4Zoom();
+                });
+
+                // Auto Number
+                $('btnAutoNumber').addEventListener('click', () => {
+                    $('invNumber').value = generateAutoInvoiceNumber();
+                    updatePreview();
+                });
+
+                // Live Form Inputs
+                ['invNumber', 'invDate', 'invDueDate', 'clientName', 'clientContact', 'clientNpwp', 'clientAddress', 'invNotes', 'ppnRate', 'pphRate', 'pphLabel'].forEach(id => {
+                    const el = $(id);
+                    if (el) el.addEventListener('input', updatePreview);
+                });
+                ['enablePpn', 'enablePph', 'pphMode'].forEach(id => {
+                    const el = $(id);
+                    if (el) el.addEventListener('change', updatePreview);
+                });
+                $('taxPriceMode').addEventListener('change', () => {
+                    renderItemRows();
+                    updatePreview();
+                });
+
+                // Add Item
+                $('btnAddItem').addEventListener('click', () => {
+                    items.push({ id: Date.now(), name: '', qty: 1, unit: 'Pcs', price: 0 });
+                    renderItemRows();
+                    updatePreview();
+                });
+
+                // Select Client from DB
+                $('selectClientDb').addEventListener('change', (e) => {
+                    const c = clientsDb.find(x => x.id === e.target.value);
+                    if (!c) return;
+                    $('clientName').value = c.name || '';
+                    $('clientContact').value = c.contact || '';
+                    $('clientNpwp').value = c.npwp || '';
+                    $('clientAddress').value = c.address || '';
+                    updatePreview();
+                });
+
+                // Quick Save Client from Invoice Form
+                $('btnQuickSaveClient').addEventListener('click', () => {
+                    const name = $('clientName').value.trim();
+                    if (!name) {
+                        showToast('Isi nama perusahaan/klien terlebih dahulu');
+                        return;
+                    }
+                    const existingIdx = clientsDb.findIndex(c => (c.name || '').toLowerCase() === name.toLowerCase());
+                    const record = {
+                        id: existingIdx >= 0 ? clientsDb[existingIdx].id : 'cli_' + Date.now(),
+                        name,
+                        contact: $('clientContact').value.trim(),
+                        npwp: $('clientNpwp').value.trim(),
+                        address: $('clientAddress').value.trim()
+                    };
+                    if (existingIdx >= 0) {
+                        clientsDb[existingIdx] = record;
+                    } else {
+                        clientsDb.unshift(record);
+                    }
+                    renderClientsList();
+                    $('selectClientDb').value = record.id;
+                    pushToGithub(true);
+                    showToast('Data konsumen disimpan ke database');
+                });
+
+                // Customer DB Page CRUD
+                $('btnSaveClientDb').addEventListener('click', () => {
+                    const name = $('dbClientName').value.trim();
+                    if (!name) {
+                        showToast('Nama konsumen wajib diisi');
+                        return;
+                    }
+                    const editId = $('editClientId').value;
+                    const record = {
+                        id: editId || ('cli_' + Date.now()),
+                        name,
+                        contact: $('dbClientContact').value.trim(),
+                        npwp: $('dbClientNpwp').value.trim(),
+                        address: $('dbClientAddress').value.trim()
+                    };
+                    if (editId) {
+                        const idx = clientsDb.findIndex(c => c.id === editId);
+                        if (idx >= 0) clientsDb[idx] = record;
+                    } else {
+                        clientsDb.unshift(record);
+                    }
+                    resetClientForm();
+                    renderClientsList();
+                    pushToGithub(true);
+                    showToast('Data konsumen tersimpan');
+                });
+                $('btnCancelClientEdit').addEventListener('click', resetClientForm);
+                $('searchClientsInput').addEventListener('input', renderClientsList);
+
+                // New Invoice
+                $('btnNewInvoice').addEventListener('click', () => {
+                    openConfirm('Invoice Baru', 'Kosongkan form untuk membuat invoice baru?', () => {
+                        $('invNumber').value = generateAutoInvoiceNumber();
+                        $('invDate').value = getTodayStr();
+                        $('invDueDate').value = getFutureDateStr(14);
+                        $('selectClientDb').value = '';
+                        $('clientName').value = '';
+                        $('clientContact').value = '';
+                        $('clientNpwp').value = '';
+                        $('clientAddress').value = '';
+                        $('invNotes').value = settings.defaultNotes || '';
+                        items = [{ id: Date.now(), name: '', qty: 1, unit: 'Pcs', price: 0 }];
+                        renderItemRows();
+                        updatePreview();
+                        showToast('Form invoice baru siap');
+                    });
+                });
+
+                // Save Invoice to History
+                $('btnSaveInvoice').addEventListener('click', () => {
+                    const calc = calculateInvoiceTotals();
+                    const invNo = $('invNumber').value.trim() || generateAutoInvoiceNumber();
+                    const existingIdx = invoiceHistory.findIndex(x => x.invNumber === invNo);
+                    const record = {
+                        id: existingIdx >= 0 ? invoiceHistory[existingIdx].id : ('inv_' + Date.now()),
+                        invNumber: invNo,
+                        invDate: $('invDate').value,
+                        invDueDate: $('invDueDate').value,
+                        clientName: $('clientName').value.trim(),
+                        clientContact: $('clientContact').value.trim(),
+                        clientNpwp: $('clientNpwp').value.trim(),
+                        clientAddress: $('clientAddress').value.trim(),
+                        taxPriceMode: $('taxPriceMode').value,
+                        enablePpn: $('enablePpn').checked,
+                        ppnRate: parseFloat($('ppnRate').value) || 0,
+                        enablePph: $('enablePph').checked,
+                        pphRate: parseFloat($('pphRate').value) || 0,
+                        pphLabel: $('pphLabel').value.trim(),
+                        pphMode: $('pphMode').value,
+                        invNotes: $('invNotes').value,
+                        items: JSON.parse(JSON.stringify(items)),
+                        grandTotal: calc.grandTotal,
+                        savedAt: new Date().toISOString()
+                    };
+                    if (existingIdx >= 0) {
+                        invoiceHistory[existingIdx] = record;
+                    } else {
+                        invoiceHistory.unshift(record);
+                    }
+                    renderHistoryList();
+                    pushToGithub(true);
+                    showToast('Invoice tersimpan ke riwayat!');
+                });
+
+                $('searchHistoryInput').addEventListener('input', renderHistoryList);
+
+                // Print & Download PDF
+                $('btnPrintPdf').addEventListener('click', () => window.print());
+                $('btnDownloadPdf').addEventListener('click', exportVectorPdf);
+
+                // Settings Page: Upload Logo
+                $('logoFileInput').addEventListener('change', (e) => {
+                    const file = e.target.files && e.target.files[0];
+                    if (!file) return;
+                    const reader = new FileReader();
+                    reader.onload = function (ev) {
+                        const img = new Image();
+                        img.onload = function () {
+                            const maxDim = 480;
+                            let w = img.width;
+                            let h = img.height;
+                            if (w > maxDim || h > maxDim) {
+                                if (w > h) {
+                                    h = Math.round((h * maxDim) / w);
+                                    w = maxDim;
+                                } else {
+                                    w = Math.round((w * maxDim) / h);
+                                    h = maxDim;
+                                }
+                            }
+                            const canvas = document.createElement('canvas');
+                            canvas.width = w;
+                            canvas.height = h;
+                            const ctx = canvas.getContext('2d');
+                            ctx.fillStyle = '#FFFFFF';
+                            ctx.fillRect(0, 0, w, h);
+                            ctx.drawImage(img, 0, 0, w, h);
+                            settings.logoBase64 = canvas.toDataURL('image/jpeg', 0.92);
+                            applySettingsToUI();
+                            updatePreview();
+                            pushToGithub(true);
+                            showToast('Logo berhasil diunggah & disimpan');
+                        };
+                        img.src = ev.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                });
+
+                $('btnResetDefaultLogo').addEventListener('click', async () => {
+                    const loaded = await loadRepoLogoFile(false);
+                    if (loaded) {
+                        pushToGithub(true);
+                    }
+                });
+
+                $('btnRemoveLogo').addEventListener('click', () => {
+                    settings.logoBase64 = '';
+                    applySettingsToUI();
+                    updatePreview();
+                    pushToGithub(true);
+                    showToast('Logo dihapus');
+                });
+
+                // Save Settings
+                $('btnSaveSettings').addEventListener('click', () => {
+                    settings.compName = $('setCompName').value.trim() || 'CV. SRIKANDI JAYA MANDIRI';
+                    settings.compTagline = $('setCompTagline').value.trim();
+                    settings.compContact = $('setCompContact').value.trim();
+                    settings.compNpwp = $('setCompNpwp').value.trim();
+                    settings.compAddress = $('setCompAddress').value.trim();
+                    settings.issueCity = $('setIssueCity').value.trim() || 'Sukoharjo';
+                    settings.signerName = $('setSignerName').value.trim();
+                    settings.signerRole = $('setSignerRole').value.trim();
+                    settings.defaultNotes = $('setDefaultNotes').value;
+
+                    $('invNotes').value = settings.defaultNotes;
+                    applySettingsToUI();
+                    updatePreview();
+                    pushToGithub(true);
+                    showToast('Pengaturan perusahaan disimpan!');
+                });
+
+                // GitHub Sync Buttons
+                function readGithubInputs() {
+                    ghConfig.owner = $('ghOwnerInput').value.trim();
+                    ghConfig.repo = $('ghRepoInput').value.trim();
+                    ghConfig.path = $('ghPathInput').value.trim() || 'data.json';
+                    ghConfig.branch = $('ghBranchInput').value.trim() || 'main';
+                    ghConfig.token = $('ghTokenInput').value.trim();
+                    try {
+                        localStorage.setItem(GH_CONFIG_KEY, JSON.stringify(ghConfig));
+                    } catch (e) { /* ignore */ }
+                }
+
+                $('btnConnectGithub').addEventListener('click', async () => {
+                    readGithubInputs();
+                    lastKnownFileSha = '';
+                    await pullFromGithub(false);
+                });
+
+                $('btnPushGithubNow').addEventListener('click', async () => {
+                    readGithubInputs();
+                    await pushToGithub(false);
+                });
+
+                $('btnExportBackupJson').addEventListener('click', () => {
+                    const dataStr = JSON.stringify({ settings, clientsDb, invoiceHistory }, null, 2);
+                    const blob = new Blob([dataStr], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'data.json';
+                    a.click();
+                    URL.revokeObjectURL(url);
+                    showToast('File data.json berhasil diunduh');
+                });
+
+                $('importBackupInput').addEventListener('change', (e) => {
+                    const file = e.target.files && e.target.files[0];
+                    if (!file) return;
+                    const reader = new FileReader();
+                    reader.onload = function (ev) {
+                        try {
+                            const parsed = JSON.parse(ev.target.result);
+                            if (parsed.settings) settings = { ...DEFAULT_SETTINGS, ...parsed.settings };
+                            if (Array.isArray(parsed.clientsDb)) clientsDb = parsed.clientsDb;
+                            if (Array.isArray(parsed.invoiceHistory)) invoiceHistory = parsed.invoiceHistory;
+                            applySettingsToUI();
+                            renderClientsList();
+                            renderHistoryList();
+                            updatePreview();
+                            pushToGithub(true);
+                            showToast('Cadangan data.json berhasil dipulihkan');
+                        } catch (err) {
+                            showToast('Format file JSON tidak valid');
+                        }
+                    };
+                    reader.readAsText(file);
+                });
+
+                // Confirm Modal Actions
+                $('confirmCancelBtn').addEventListener('click', closeConfirm);
+                $('confirmOkBtn').addEventListener('click', () => {
+                    const cb = confirmCallback;
+                    closeConfirm();
+                    if (typeof cb === 'function') cb();
+                });
+
+                // Automatically load sjm1.1.jpg from repository if no custom logo is stored yet
+                if (!settings.logoBase64) {
+                    loadRepoLogoFile(true);
+                }
+
+                // Initial silent pull from GitHub if configured
+                if (ghConfig.owner && ghConfig.repo) {
+                    pullFromGithub(true);
+                }
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
+            } else {
+                init();
+            }
+        })();
+    </script>
+</body>
+</html>
