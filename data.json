@@ -1,6 +1,7 @@
 {
-  "app": "CV. Srikandi Jaya Mandiri Invoice System",
-  "updatedAt": "2026-11-23T05:06:48.037Z",
+  "app": "CV. SRIKANDI JAYA MANDIRI Invoice System",
+  "cvId": "sjm",
+  "updatedAt": "2026-11-23T05:52:02.962Z",
   "settings": {
     "compName": "CV. SRIKANDI JAYA MANDIRI",
     "compTagline": "AMANAH DAN BAROKAH",
@@ -9,9 +10,9 @@
     "compNpwp": "NPWP: 96.733.327.9-532.000",
     "showNpwpDefault": false,
     "uiSkin": "oneui",
-    "invoiceTheme": "linux",
-    "customPrimaryHex": "#0F172A",
-    "customAccentHex": "#007AFF",
+    "invoiceTheme": "slate",
+    "customPrimaryHex": "#0f172a",
+    "customAccentHex": "#007aff",
     "issueCity": "Sukoharjo",
     "signerName": "Asih Ermataria",
     "signerRole": "Direktur",
