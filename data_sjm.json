@@ -1,7 +1,7 @@
 {
   "app": "CV. SRIKANDI JAYA MANDIRI Invoice System",
   "cvId": "sjm",
-  "updatedAt": "2026-11-23T15:36:15.003Z",
+  "updatedAt": "2026-11-23T15:36:20.258Z",
   "settings": {
     "compName": "CV. SRIKANDI JAYA MANDIRI",
     "compTagline": "AMANAH DAN BAROKAH",
@@ -76,35 +76,6 @@
       ],
       "grandTotal": 2469750,
       "savedAt": "2026-11-23T15:36:14.999Z"
-    },
-    {
-      "id": "inv_1795425081087",
-      "invNumber": "INV/2026/11/001",
-      "invDate": "2026-11-23",
-      "invDueDate": "2026-12-07",
-      "clientName": "",
-      "clientContact": "",
-      "clientNpwp": "",
-      "clientAddress": "",
-      "taxPriceMode": "exclude",
-      "enablePpn": true,
-      "ppnRate": 11,
-      "enablePph": false,
-      "pphRate": 2,
-      "pphLabel": "PPh Pasal 23",
-      "pphMode": "deduct",
-      "invNotes": "Pembayaran harap ditransfer ke salah satu rekening berikut:\n1. Bank BNI 46 — No. Rekening: 8164444442\n   Atas Nama: SRIKANDI JAYA MANDIRI\n2. BPD JATENG — No. Rekening: 2-059-08065-5\n   Atas Nama: Asih Ermataria\nMohon cantumkan Nomor Invoice pada berita transfer.",
-      "items": [
-        {
-          "id": 1795425079120,
-          "name": "",
-          "qty": 1,
-          "unit": "Pcs",
-          "price": 0
-        }
-      ],
-      "grandTotal": 0,
-      "savedAt": "2026-11-23T09:11:21.087Z"
     }
   ]
 }
