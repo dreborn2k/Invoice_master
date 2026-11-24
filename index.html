@@ -2,8 +2,21 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Invoice App — Multi-CV Billing</title>
+
+    <!-- PWA Full-Screen Meta Tags (Android Chrome, Samsung Internet & iOS Safari) -->
+    <meta name="application-name" content="Invoice Master">
+    <meta name="apple-mobile-web-app-title" content="Invoice Master">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="theme-color" content="#FFFFFF">
+    <meta name="format-detection" content="telephone=no">
+    <link id="pwaManifestLink" rel="manifest" href="">
+    <link id="pwaAppleIconLink" rel="apple-touch-icon" href="">
+    <link id="pwaFaviconLink" rel="icon" type="image/png" href="">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
@@ -11,11 +24,23 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        html, body {
+            overscroll-behavior-y: contain;
+        }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
             background-color: #F2F2F7;
             color: #1C1C1E;
             -webkit-font-smoothing: antialiased;
+            padding-top: env(safe-area-inset-top);
+            padding-left: env(safe-area-inset-left);
+            padding-right: env(safe-area-inset-right);
+        }
+        .pwa-top-bar {
+            top: env(safe-area-inset-top);
+        }
+        .pwa-bottom-bar {
+            padding-bottom: calc(0.375rem + env(safe-area-inset-bottom));
         }
 
         .mac-card {
@@ -224,7 +249,7 @@
 <body class="min-h-screen pb-24 md:pb-10">
 
     <!-- TOP NAVIGATION BAR -->
-    <header class="no-print sticky top-0 z-30 bg-white/85 backdrop-blur-xl border-b border-black/[0.06]">
+    <header class="no-print sticky pwa-top-bar z-30 bg-white/85 backdrop-blur-xl border-b border-black/[0.06]">
         <div class="max-w-[1440px] mx-auto px-3 sm:px-6 h-16 flex items-center justify-between gap-2">
             <!-- Brand Identity & Multi-CV Switcher -->
             <div class="flex items-center gap-2.5 min-w-0 relative">
@@ -284,6 +309,10 @@
 
             <!-- Primary Action Buttons -->
             <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+                <button type="button" id="btnInstallPwa" title="Install Aplikasi Full Screen" class="hidden px-2.5 sm:px-3 py-2 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-semibold transition items-center gap-1 shadow-sm">
+                    <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+                    <span class="hidden sm:inline">Install App</span>
+                </button>
                 <button type="button" id="btnNewInvoice" title="Buat Invoice Baru" class="p-2 sm:px-3 sm:py-2 rounded-full bg-[#F2F2F7] hover:bg-[#E5E5EA] text-[#1C1C1E] text-xs font-semibold transition flex items-center gap-1">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
                     <span class="hidden lg:inline">Baru</span>
@@ -356,39 +385,33 @@
                     </div>
 
                     <!-- Card 2: Data Konsumen / Klien -->
-                    <div class="mac-card p-5 space-y-4">
+                    <div class="mac-card p-5 space-y-3.5">
                         <div class="flex items-center justify-between gap-2">
                             <h2 class="text-xs font-bold uppercase tracking-wider text-[#8E8E93]">2. Ditujukan Kepada</h2>
-                            <button type="button" id="btnQuickSaveClient" class="text-xs font-semibold text-[#34C759] hover:underline flex items-center gap-1">
-                                <span>+ Simpan ke Database</span>
+                            <button type="button" id="btnGoToClientsTab" class="text-xs font-semibold text-[#007AFF] hover:underline flex items-center gap-1">
+                                <span>Kelola Konsumen &rarr;</span>
                             </button>
                         </div>
 
                         <div>
-                            <select id="selectClientDb" class="mac-input w-full px-3.5 py-2.5 text-xs font-semibold text-[#007AFF] cursor-pointer">
-                                <option value="">-- Muat dari Database Konsumen --</option>
+                            <label class="block text-xs font-semibold text-[#3A3A3C] mb-1.5">Pilih Konsumen Tersimpan</label>
+                            <select id="selectClientDb" class="mac-input w-full px-3.5 py-2.5 text-xs sm:text-sm font-semibold text-[#1C1C1E] cursor-pointer">
+                                <option value="">-- Pilih Konsumen dari Database --</option>
                             </select>
                         </div>
 
-                        <div class="space-y-3">
-                            <div>
-                                <label class="block text-xs font-semibold text-[#3A3A3C] mb-1">Nama Perusahaan / Klien</label>
-                                <input type="text" id="clientName" class="mac-input w-full px-3.5 py-2.5 text-sm font-semibold" placeholder="Contoh: PT. Mitra Sejahtera Abadi">
-                            </div>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                <div>
-                                    <label class="block text-xs font-semibold text-[#3A3A3C] mb-1">UP / No. Telepon</label>
-                                    <input type="text" id="clientContact" class="mac-input w-full px-3.5 py-2 text-sm" placeholder="Bpk. Andi (0812...)">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-semibold text-[#3A3A3C] mb-1">NPWP Klien (Opsional)</label>
-                                    <input type="text" id="clientNpwp" class="mac-input w-full px-3.5 py-2 text-sm" placeholder="01.234.567.8-901.000">
-                                </div>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-semibold text-[#3A3A3C] mb-1">Alamat Lengkap</label>
-                                <textarea id="clientAddress" rows="2" class="mac-input w-full px-3.5 py-2 text-sm resize-none" placeholder="Alamat lengkap tujuan penagihan..."></textarea>
-                            </div>
+                        <!-- Hidden fields synced with selected customer -->
+                        <input type="hidden" id="clientName" value="">
+                        <input type="hidden" id="clientContact" value="">
+                        <input type="hidden" id="clientNpwp" value="">
+                        <input type="hidden" id="clientAddress" value="">
+
+                        <!-- Read-only Selected Customer Summary -->
+                        <div id="selectedClientSummaryBox" class="p-3.5 rounded-2xl bg-[#F2F2F7] border border-black/[0.04] space-y-1">
+                            <p id="summaryClientName" class="text-xs sm:text-sm font-bold text-[#8E8E93]">Belum ada konsumen dipilih</p>
+                            <p id="summaryClientContact" class="hidden text-xs text-[#636366]"></p>
+                            <p id="summaryClientNpwp" class="hidden text-[11px] font-semibold text-[#007AFF]"></p>
+                            <p id="summaryClientAddress" class="text-[11px] text-[#8E8E93] leading-relaxed">Pilih konsumen dari dropdown di atas, atau tambah data baru di tab Data Konsumen.</p>
                         </div>
                     </div>
 
@@ -620,6 +643,22 @@
             </div>
 
             <div class="space-y-5">
+                <!-- PWA App Mode Card -->
+                <div class="mac-card p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div class="space-y-1">
+                        <div class="flex items-center gap-2">
+                            <h3 class="text-sm font-bold text-[#1C1C1E]">Mode Aplikasi Layar Penuh (PWA)</h3>
+                            <span id="pwaModeBadge" class="px-2 py-0.5 rounded-full bg-blue-50 text-[#007AFF] text-[10px] font-bold">Browser Mode</span>
+                        </div>
+                        <p id="pwaInstallHintText" class="text-xs text-[#636366] leading-relaxed">
+                            Pasang ke layar utama HP (Add to Home Screen) untuk membuka aplikasi secara full-screen tanpa address bar browser.
+                        </p>
+                    </div>
+                    <button type="button" id="btnSettingsInstallPwa" class="px-4 py-2.5 rounded-xl bg-[#007AFF] hover:bg-[#0062CC] text-white text-xs font-semibold transition shrink-0 shadow-sm">
+                        Pasang ke Layar Utama
+                    </button>
+                </div>
+
                 <!-- Logo Upload Card -->
                 <div class="mac-card p-6">
                     <h3 class="text-sm font-bold text-[#1C1C1E] mb-4">Logo Perusahaan</h3>
@@ -825,7 +864,7 @@
     </main>
 
     <!-- MOBILE BOTTOM NAVIGATION BAR -->
-    <nav class="no-print md:hidden fixed bottom-0 inset-x-0 z-40 bg-white/90 backdrop-blur-xl border-t border-black/[0.08] px-2 py-1.5 flex items-center justify-around">
+    <nav class="no-print md:hidden fixed bottom-0 inset-x-0 z-40 bg-white/90 backdrop-blur-xl border-t border-black/[0.08] px-2 pt-1.5 pwa-bottom-bar flex items-center justify-around">
         <button type="button" data-nav="invoice" class="mob-nav-btn flex flex-col items-center gap-0.5 py-1 px-3 text-[#007AFF]">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
             <span class="text-[10px] font-semibold">Invoice</span>
@@ -873,21 +912,226 @@
         (function () {
             'use strict';
 
-            const LOCAL_STORAGE_PREFIX = 'sjm_invoice_app_state_v8_';
-            const SHARED_CLIENTS_STORAGE_KEY = 'sjm_shared_clients_db_v1';
-            const GH_CONFIG_KEY = 'sjm_github_repo_config_v4';
-            const ACTIVE_CV_KEY = 'sjm_active_cv_profile_v1';
+            // =========================================================================
+            // 0. PWA FULL-SCREEN MANIFEST, ICON GENERATOR & SERVICE WORKER
+            // =========================================================================
+            let deferredInstallPrompt = null;
+
+            function generatePwaIconDataUrl(size) {
+                const canvas = document.createElement('canvas');
+                canvas.width = size;
+                canvas.height = size;
+                const ctx = canvas.getContext('2d');
+
+                const r = Math.round(size * 0.22);
+                ctx.beginPath();
+                ctx.moveTo(r, 0);
+                ctx.lineTo(size - r, 0);
+                ctx.quadraticCurveTo(size, 0, size, r);
+                ctx.lineTo(size, size - r);
+                ctx.quadraticCurveTo(size, size, size - r, size);
+                ctx.lineTo(r, size);
+                ctx.quadraticCurveTo(0, size, 0, size - r);
+                ctx.lineTo(0, r);
+                ctx.quadraticCurveTo(0, 0, r, 0);
+                ctx.closePath();
+
+                const grad = ctx.createLinearGradient(0, 0, size, size);
+                grad.addColorStop(0, '#007AFF');
+                grad.addColorStop(1, '#5856D6');
+                ctx.fillStyle = grad;
+                ctx.fill();
+
+                ctx.fillStyle = '#FFFFFF';
+                const docW = Math.round(size * 0.46);
+                const docH = Math.round(size * 0.58);
+                const docX = Math.round((size - docW) / 2);
+                const docY = Math.round((size - docH) / 2);
+                const docR = Math.round(size * 0.05);
+
+                ctx.beginPath();
+                ctx.moveTo(docX + docR, docY);
+                ctx.lineTo(docX + docW - docR, docY);
+                ctx.quadraticCurveTo(docX + docW, docY, docX + docW, docY + docR);
+                ctx.lineTo(docX + docW, docY + docH - docR);
+                ctx.quadraticCurveTo(docX + docW, docY + docH, docX + docW - docR, docY + docH);
+                ctx.lineTo(docX + docR, docY + docH);
+                ctx.quadraticCurveTo(docX, docY + docH, docX, docY + docH - docR);
+                ctx.lineTo(docX, docY + docR);
+                ctx.quadraticCurveTo(docX, docY, docX + docR, docY);
+                ctx.closePath();
+                ctx.fill();
+
+                ctx.fillStyle = '#007AFF';
+                const lineX = docX + Math.round(docW * 0.18);
+                const lineW = Math.round(docW * 0.64);
+                const lineH = Math.max(3, Math.round(size * 0.032));
+                ctx.fillRect(lineX, docY + Math.round(docH * 0.28), lineW, lineH);
+                ctx.fillRect(lineX, docY + Math.round(docH * 0.48), lineW, lineH);
+                ctx.fillRect(lineX, docY + Math.round(docH * 0.68), Math.round(lineW * 0.62), lineH);
+
+                return canvas.toDataURL('image/png');
+            }
+
+            function initPwaSupport() {
+                try {
+                    const icon192 = generatePwaIconDataUrl(192);
+                    const icon512 = generatePwaIconDataUrl(512);
+
+                    const appleIconEl = document.getElementById('pwaAppleIconLink');
+                    const faviconEl = document.getElementById('pwaFaviconLink');
+                    if (appleIconEl) appleIconEl.href = icon192;
+                    if (faviconEl) faviconEl.href = icon192;
+
+                    const startUrl = window.location.href.split('#')[0];
+                    const scopeUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
+
+                    const manifestObj = {
+                        name: 'Invoice Master — Multi-CV Billing',
+                        short_name: 'Invoice App',
+                        description: 'Aplikasi Invoice A4 Multi-CV (CV. Srikandi Jaya Mandiri & Digital Jaya Mandiri)',
+                        start_url: startUrl,
+                        scope: scopeUrl,
+                        display: 'standalone',
+                        orientation: 'any',
+                        background_color: '#F2F2F7',
+                        theme_color: '#FFFFFF',
+                        icons: [
+                            { src: icon192, sizes: '192x192', type: 'image/png', purpose: 'any maskable' },
+                            { src: icon512, sizes: '512x512', type: 'image/png', purpose: 'any maskable' }
+                        ]
+                    };
+
+                    const manifestBlob = new Blob([JSON.stringify(manifestObj)], { type: 'application/manifest+json' });
+                    const manifestUrl = URL.createObjectURL(manifestBlob);
+                    const manifestLink = document.getElementById('pwaManifestLink');
+                    if (manifestLink) manifestLink.href = manifestUrl;
+
+                    if ('serviceWorker' in navigator && (window.location.protocol === 'https:' || window.location.hostname === 'localhost')) {
+                        const swCode = `
+                            const CACHE_NAME = 'invoice-master-pwa-v1';
+                            self.addEventListener('install', (event) => {
+                                self.skipWaiting();
+                            });
+                            self.addEventListener('activate', (event) => {
+                                event.waitUntil(self.clients.claim());
+                            });
+                            self.addEventListener('fetch', (event) => {
+                                if (event.request.method !== 'GET') return;
+                                const reqUrl = event.request.url || '';
+                                if (reqUrl.includes('api.github.com')) return;
+                                event.respondWith(
+                                    fetch(event.request)
+                                        .then((networkRes) => {
+                                            if (networkRes && networkRes.status === 200 && (reqUrl.startsWith(self.location.origin) || reqUrl.includes('cdn.tailwindcss.com') || reqUrl.includes('cdnjs.cloudflare.com'))) {
+                                                const clone = networkRes.clone();
+                                                caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
+                                            }
+                                            return networkRes;
+                                        })
+                                        .catch(() => caches.match(event.request))
+                                );
+                            });
+                        `;
+                        const swBlob = new Blob([swCode], { type: 'application/javascript' });
+                        const swUrl = URL.createObjectURL(swBlob);
+                        navigator.serviceWorker.register(swUrl).catch(() => { /* ignore if restricted */ });
+                    }
+                } catch (e) { /* ignore */ }
+            }
+
+            function updatePwaStatusUI() {
+                const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+                const badge = document.getElementById('pwaModeBadge');
+                const hint = document.getElementById('pwaInstallHintText');
+                const btnTop = document.getElementById('btnInstallPwa');
+                const btnSet = document.getElementById('btnSettingsInstallPwa');
+
+                if (isStandalone) {
+                    if (badge) {
+                        badge.textContent = 'Full Screen Aktif';
+                        badge.className = 'px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-bold';
+                    }
+                    if (hint) {
+                        hint.textContent = 'Aplikasi sedang berjalan dalam mode layar penuh (PWA Standalone) tanpa header browser.';
+                    }
+                    if (btnTop) btnTop.classList.add('hidden');
+                    if (btnSet) {
+                        btnSet.textContent = 'Terpasang (Full Screen)';
+                        btnSet.className = 'px-4 py-2.5 rounded-xl bg-emerald-50 text-emerald-700 text-xs font-bold shrink-0 cursor-default';
+                    }
+                } else {
+                    if (btnTop && deferredInstallPrompt) {
+                        btnTop.classList.remove('hidden');
+                        btnTop.classList.add('flex');
+                    }
+                }
+            }
+
+            async function triggerPwaInstall() {
+                const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+                if (isStandalone) {
+                    showToast('Aplikasi sudah berjalan dalam mode Full Screen!');
+                    return;
+                }
+                if (deferredInstallPrompt) {
+                    deferredInstallPrompt.prompt();
+                    const choice = await deferredInstallPrompt.userChoice;
+                    if (choice && choice.outcome === 'accepted') {
+                        deferredInstallPrompt = null;
+                        updatePwaStatusUI();
+                        showToast('Aplikasi berhasil dipasang ke layar utama!');
+                    }
+                    return;
+                }
+                const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
+                if (isIos) {
+                    openConfirm(
+                        'Pasang Full Screen di iPhone / iPad',
+                        'Ketuk ikon Bagikan (Share / kotak panah atas) di Safari, lalu pilih "Add to Home Screen" (Tambah ke Layar Utama) untuk membuka full-screen tanpa address bar.',
+                        () => {}
+                    );
+                } else {
+                    openConfirm(
+                        'Pasang Full Screen (PWA)',
+                        'Ketuk menu titik tiga (⋮) atau garis tiga di browser HP Anda, lalu pilih "Tambahkan ke layar utama" (Add to Home screen / Install app) agar terbuka full-screen seperti aplikasi native.',
+                        () => {}
+                    );
+                }
+            }
+
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredInstallPrompt = e;
+                updatePwaStatusUI();
+            });
+
+            window.addEventListener('appinstalled', () => {
+                deferredInstallPrompt = null;
+                updatePwaStatusUI();
+                showToast('Aplikasi Full Screen berhasil dipasang!');
+            });
+
+            initPwaSupport();
+
+            // =========================================================================
+            // 1. MULTI-CV PROFILES & PERSISTENT STORAGE KEYS
+            // =========================================================================
+            const ACTIVE_CV_KEY = 'invoice_active_cv_v1';
+            const LOCAL_STORAGE_PREFIX = 'invoice_cv_data_v1_';
+            const SHARED_CLIENTS_STORAGE_KEY = 'invoice_shared_clients_v1';
+            const GH_CONFIG_KEY = 'srikandi_invoice_gh_config_v1';
 
             const CV_PROFILES = {
                 sjm: {
                     id: 'sjm',
                     defaultJsonFile: 'data_sjm.json',
-                    logoCandidates: ['sjm1.1.jpg', 'sjm1.1.jpeg', 'logo.jpg', 'logo.png'],
+                    logoCandidates: ['sjm1.1.jpg'],
                     settings: {
                         compName: 'CV. SRIKANDI JAYA MANDIRI',
-                        compTagline: 'AMANAH DAN BAROKAH',
-                        compAddress: 'Widyapura RT 004 RW 003, Kel. Singopuran, Kec. Kartasura, Kab. Sukoharjo, Jawa Tengah 57164',
-                        compContact: 'Telp: 081393897867 | Email: srikandijayamandiricv@gmail.com',
+                        compTagline: 'Amanah dan Barokah',
+                        compAddress: 'Widyapura RT.001/RW.003, Singopuran, Kec. Kartasura, Kab. Sukoharjo, Jawa Tengah 57164',
+                        compContact: 'Telp: 0821-3838-6789 | Email: srikandi.jm21@gmail.com',
                         compNpwp: 'NPWP: 96.733.327.9-532.000',
                         showNpwpDefault: true,
                         uiSkin: 'iphone',
@@ -897,29 +1141,29 @@
                         issueCity: 'Sukoharjo',
                         signerName: 'Asih Ermataria',
                         signerRole: 'Direktur',
-                        defaultNotes: 'Pembayaran harap ditransfer ke salah satu rekening berikut:\n1. Bank BNI 46 — No. Rekening: 8164444442\n   Atas Nama: SRIKANDI JAYA MANDIRI\n2. BPD JATENG — No. Rekening: 2-059-08065-5\n   Atas Nama: Asih Ermataria\nMohon cantumkan Nomor Invoice pada berita transfer.',
+                        defaultNotes: 'Pembayaran dapat ditransfer ke rekening resmi kami:\n• Bank BNI 46 No. Rek: 1207144926 a.n. CV. SRIKANDI JAYA MANDIRI\n• Bank BPD Jateng No. Rek: 1-031-01264-1 a.n. CV. SRIKANDI JAYA MANDIRI',
                         logoBase64: ''
                     }
                 },
                 djm: {
                     id: 'djm',
                     defaultJsonFile: 'data_djm.json',
-                    logoCandidates: ['1789605894732.png', 'djm.png', 'djm.jpg', 'logo-djm.png', 'logo-djm.jpg'],
+                    logoCandidates: ['djm.png', 'djm.jpg', '1789605894732.png'],
                     settings: {
                         compName: 'Digital Jaya Mandiri',
                         compTagline: 'Solusi belanja digital',
-                        compAddress: 'Perum puri permata A1, Desa Gajah, Kec. Colomadu, Kab. Karanganyar, Jawa Tengah 57176',
+                        compAddress: 'Perum puri permata A1, Gajah, Kec. Colomadu, Kab. Karanganyar, Jawa Tengah 57176',
                         compContact: 'Telp: 08551291055 | Email: digital.jm2k@gmail.com',
                         compNpwp: '',
                         showNpwpDefault: false,
-                        uiSkin: 'oneui',
+                        uiSkin: 'iphone',
                         invoiceTheme: 'oneui',
                         customPrimaryHex: '#1259C3',
                         customAccentHex: '#38BDF8',
                         issueCity: 'Karanganyar',
                         signerName: 'Pramudityo kuntoro',
-                        signerRole: 'Direktur',
-                        defaultNotes: 'DATA REKENING TOKO:\nBank         : BCA\nAtas Nama    : Pramudityo kuntoro\nNo. Rekening : 2410025038\nMohon cantumkan Nomor Invoice pada berita transfer.',
+                        signerRole: 'Owner',
+                        defaultNotes: 'Pembayaran dapat ditransfer ke rekening resmi kami:\n• Bank BCA No. Rek: 2410025038 a.n. Pramudityo kuntoro',
                         logoBase64: ''
                     }
                 }
@@ -2359,6 +2603,46 @@
                 $('btnCancelClientEdit').classList.add('hidden');
             }
 
+            function setSelectedInvoiceClient(clientObj) {
+                const nameVal = clientObj ? (clientObj.name || '') : '';
+                const contactVal = clientObj ? (clientObj.contact || '') : '';
+                const npwpVal = clientObj ? (clientObj.npwp || '') : '';
+                const addressVal = clientObj ? (clientObj.address || '') : '';
+
+                $('clientName').value = nameVal;
+                $('clientContact').value = contactVal;
+                $('clientNpwp').value = npwpVal;
+                $('clientAddress').value = addressVal;
+
+                const sumName = $('summaryClientName');
+                const sumContact = $('summaryClientContact');
+                const sumNpwp = $('summaryClientNpwp');
+                const sumAddr = $('summaryClientAddress');
+
+                if (sumName) {
+                    if (nameVal) {
+                        sumName.textContent = nameVal;
+                        sumName.classList.remove('text-[#8E8E93]');
+                        sumName.classList.add('text-[#1C1C1E]');
+                    } else {
+                        sumName.textContent = 'Belum ada konsumen dipilih';
+                        sumName.classList.add('text-[#8E8E93]');
+                        sumName.classList.remove('text-[#1C1C1E]');
+                    }
+                }
+                if (sumContact) {
+                    sumContact.textContent = contactVal ? `UP / Telp: ${contactVal}` : '';
+                    sumContact.classList.toggle('hidden', !contactVal);
+                }
+                if (sumNpwp) {
+                    sumNpwp.textContent = npwpVal ? `NPWP: ${npwpVal}` : '';
+                    sumNpwp.classList.toggle('hidden', !npwpVal);
+                }
+                if (sumAddr) {
+                    sumAddr.textContent = addressVal || (nameVal ? '-' : 'Pilih konsumen dari dropdown di atas, atau tambah data baru di tab Data Konsumen.');
+                }
+            }
+
             function renderClientsList() {
                 const badge = $('badgeClientsCount');
                 if (badge) badge.textContent = String(clientsDb.length);
@@ -2366,7 +2650,7 @@
                 const selectEl = $('selectClientDb');
                 if (selectEl) {
                     const prevVal = selectEl.value;
-                    selectEl.innerHTML = '<option value="">-- Muat dari Database Konsumen --</option>';
+                    selectEl.innerHTML = '<option value="">-- Pilih Konsumen dari Database --</option>';
                     clientsDb.forEach((c) => {
                         const opt = document.createElement('option');
                         opt.value = c.id;
@@ -2374,6 +2658,10 @@
                         selectEl.appendChild(opt);
                     });
                     selectEl.value = prevVal;
+                    if (selectEl.value) {
+                        const activeClient = clientsDb.find(c => c.id === selectEl.value);
+                        if (activeClient) setSelectedInvoiceClient(activeClient);
+                    }
                 }
 
                 const container = $('clientsListContainer');
@@ -2425,10 +2713,7 @@
                         const id = btn.getAttribute('data-use-client');
                         const found = clientsDb.find(c => c.id === id);
                         if (found) {
-                            $('clientName').value = found.name || '';
-                            $('clientContact').value = found.contact || '';
-                            $('clientNpwp').value = found.npwp || '';
-                            $('clientAddress').value = found.address || '';
+                            setSelectedInvoiceClient(found);
                             $('selectClientDb').value = found.id;
                             updatePreview();
                             switchPage('invoice');
@@ -2459,6 +2744,11 @@
                         const found = clientsDb.find(c => c.id === id);
                         openConfirm('Hapus Konsumen', `Hapus "${found ? found.name : 'konsumen ini'}" dari database?`, () => {
                             clientsDb = clientsDb.filter(c => c.id !== id);
+                            if ($('selectClientDb') && $('selectClientDb').value === id) {
+                                $('selectClientDb').value = '';
+                                setSelectedInvoiceClient(null);
+                                updatePreview();
+                            }
                             renderClientsList();
                             pushToGithub(true, 'cons');
                             showToast('Konsumen dihapus');
@@ -2471,10 +2761,16 @@
                 $('invNumber').value = asDuplicate ? generateAutoInvoiceNumber() : (record.invNumber || '');
                 $('invDate').value = asDuplicate ? getTodayStr() : (record.invDate || getTodayStr());
                 $('invDueDate').value = asDuplicate ? getFutureDateStr(14) : (record.invDueDate || getFutureDateStr(14));
-                $('clientName').value = record.clientName || '';
-                $('clientContact').value = record.clientContact || '';
-                $('clientNpwp').value = record.clientNpwp || '';
-                $('clientAddress').value = record.clientAddress || '';
+                setSelectedInvoiceClient({
+                    name: record.clientName || '',
+                    contact: record.clientContact || '',
+                    npwp: record.clientNpwp || '',
+                    address: record.clientAddress || ''
+                });
+                const matchedClient = clientsDb.find(c => (c.name || '').toLowerCase() === (record.clientName || '').toLowerCase());
+                if ($('selectClientDb')) {
+                    $('selectClientDb').value = matchedClient ? matchedClient.id : '';
+                }
                 $('taxPriceMode').value = record.taxPriceMode || 'exclude';
                 $('enablePpn').checked = record.enablePpn !== false;
                 $('ppnRate').value = record.ppnRate != null ? record.ppnRate : 11;
@@ -2652,7 +2948,6 @@
                     try {
                         const parsed = JSON.parse(ev.target.result);
 
-                        // Case 1: File berisi daftar item saja (exportType === 'invoice_items_only' atau array langsung)
                         if (Array.isArray(parsed) || parsed.exportType === 'invoice_items_only' || (Array.isArray(parsed.items) && !parsed.transaction && !parsed.invNumber)) {
                             const rawItems = Array.isArray(parsed) ? parsed : (parsed.items || []);
                             if (rawItems.length === 0) {
@@ -2684,7 +2979,6 @@
                             return;
                         }
 
-                        // Case 2: File berisi 1 transaksi penuh (exportType === 'single_invoice_transaction' atau objek invoice)
                         const tx = parsed.transaction || (parsed.invNumber || parsed.clientName || Array.isArray(parsed.items) ? parsed : null);
                         if (!tx) {
                             showToast('Format file JSON tidak dikenali');
@@ -2795,7 +3089,6 @@
                 const cleanOpts = { ...options };
                 delete cleanOpts.renderingMode;
 
-                // Draw clean dark outline behind the text without eating into the white glyph fill
                 doc.setTextColor(15, 23, 42);
                 const d = strokeOffset;
                 doc.text(str, x - d, y, cleanOpts);
@@ -2804,7 +3097,6 @@
                 doc.text(str, x, y + d, cleanOpts);
                 doc.text(str, x, y + d * 1.35, cleanOpts);
 
-                // Draw crisp solid white text on top
                 doc.setTextColor(255, 255, 255);
                 doc.text(str, x, y, cleanOpts);
             }
@@ -3203,6 +3495,12 @@
 
             function init() {
                 loadFromLocalStorage();
+                updatePwaStatusUI();
+
+                const btnTopInstall = $('btnInstallPwa');
+                const btnSettingsInstall = $('btnSettingsInstallPwa');
+                if (btnTopInstall) btnTopInstall.addEventListener('click', triggerPwaInstall);
+                if (btnSettingsInstall) btnSettingsInstall.addEventListener('click', triggerPwaInstall);
 
                 $('invDate').value = getTodayStr();
                 $('invDueDate').value = getFutureDateStr(14);
@@ -3274,7 +3572,7 @@
                     updatePreview();
                 });
 
-                ['invNumber', 'invDate', 'invDueDate', 'clientName', 'clientContact', 'clientNpwp', 'clientAddress', 'invNotes', 'ppnRate', 'pphRate', 'pphLabel'].forEach(id => {
+                ['invNumber', 'invDate', 'invDueDate', 'invNotes', 'ppnRate', 'pphRate', 'pphLabel'].forEach(id => {
                     const el = $(id);
                     if (el) el.addEventListener('input', updatePreview);
                 });
@@ -3350,10 +3648,7 @@
                         $('invDate').value = getTodayStr();
                         $('invDueDate').value = getFutureDateStr(14);
                         $('selectClientDb').value = '';
-                        $('clientName').value = '';
-                        $('clientContact').value = '';
-                        $('clientNpwp').value = '';
-                        $('clientAddress').value = '';
+                        setSelectedInvoiceClient(null);
                         $('taxPriceMode').value = 'exclude';
                         $('enablePpn').checked = true;
                         $('ppnRate').value = 11;
@@ -3372,41 +3667,25 @@
 
                 $('selectClientDb').addEventListener('change', (e) => {
                     const selectedId = e.target.value;
-                    if (!selectedId) return;
+                    if (!selectedId) {
+                        setSelectedInvoiceClient(null);
+                        updatePreview();
+                        return;
+                    }
                     const found = clientsDb.find(c => c.id === selectedId);
                     if (found) {
-                        $('clientName').value = found.name || '';
-                        $('clientContact').value = found.contact || '';
-                        $('clientNpwp').value = found.npwp || '';
-                        $('clientAddress').value = found.address || '';
+                        setSelectedInvoiceClient(found);
                         updatePreview();
                         showToast('Data konsumen dimuat');
                     }
                 });
 
-                $('btnQuickSaveClient').addEventListener('click', () => {
-                    const name = $('clientName').value.trim();
-                    if (!name) {
-                        showToast('Isi nama perusahaan/klien terlebih dahulu');
-                        return;
-                    }
-                    const contact = $('clientContact').value.trim();
-                    const npwp = $('clientNpwp').value.trim();
-                    const address = $('clientAddress').value.trim();
-                    const existingIdx = clientsDb.findIndex(c => (c.name || '').toLowerCase() === name.toLowerCase());
-                    if (existingIdx >= 0) {
-                        clientsDb[existingIdx] = { ...clientsDb[existingIdx], name, contact, npwp, address };
-                        renderClientsList();
-                        $('selectClientDb').value = clientsDb[existingIdx].id;
-                    } else {
-                        const newClient = { id: 'cli_' + Date.now(), name, contact, npwp, address };
-                        clientsDb.unshift(newClient);
-                        renderClientsList();
-                        $('selectClientDb').value = newClient.id;
-                    }
-                    pushToGithub(true, 'cons');
-                    showToast('Konsumen disimpan ke database bersama (data_cons.json)!');
-                });
+                const btnGoClients = $('btnGoToClientsTab');
+                if (btnGoClients) {
+                    btnGoClients.addEventListener('click', () => {
+                        guardUnsavedSettings(() => switchPage('clients'));
+                    });
+                }
 
                 $('btnSaveClientDb').addEventListener('click', () => {
                     const name = $('dbClientName').value.trim();
