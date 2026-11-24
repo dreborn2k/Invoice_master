@@ -1,9 +1,10 @@
-const CACHE_NAME = 'invoice-master-pwa-v2';
+const CACHE_NAME = 'invoice-master-pwa-v3';
 const PRECACHE_URLS = [
   './',
   './index.html',
-  './manifest.json',
-  './sjm1.1.jpg'
+  './manifest.webmanifest',
+  './icon-192.png',
+  './icon-512.png'
 ];
 
 self.addEventListener('install', (event) => {
