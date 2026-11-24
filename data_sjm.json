@@ -1,7 +1,7 @@
 {
   "app": "CV. SRIKANDI JAYA MANDIRI Invoice System",
   "cvId": "sjm",
-  "updatedAt": "2026-11-23T15:59:30.214Z",
+  "updatedAt": "2026-11-24T00:27:20.354Z",
   "settings": {
     "compName": "CV. SRIKANDI JAYA MANDIRI",
     "compTagline": "AMANAH DAN BAROKAH",
@@ -26,7 +26,7 @@
       "invDate": "2026-11-23",
       "invDueDate": "2026-12-07",
       "clientName": "SD MOJO SURAKARTA",
-      "clientContact": "Yona Yulistyaningrum (0271)2932784",
+      "clientContact": "BUDI RINANTO, S.Pd., M.Pd. (0271)2932784",
       "clientNpwp": "",
       "clientAddress": "Jl. Sungai Serang  RT 03/ 03 Mojo Pasarkliwon Surakarta 57117",
       "taxPriceMode": "include",
@@ -75,7 +75,7 @@
         }
       ],
       "grandTotal": 1900000,
-      "savedAt": "2026-11-23T15:59:24.615Z"
+      "savedAt": "2026-11-24T00:27:20.349Z"
     },
     {
       "id": "inv_1795448545786",
