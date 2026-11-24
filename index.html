@@ -3197,73 +3197,6 @@
                 doc.text(str, x, y, cleanOpts);
             }
 
-            async function exportHighResPrint2Pdf(invNo) {
-                const { jsPDF } = window.jspdf;
-                const stack = $('invoicePagesStack');
-                if (!stack) return false;
-
-                updatePreview();
-                const paperNodes = Array.from(stack.querySelectorAll('.a4-paper'));
-                if (paperNodes.length === 0) return false;
-
-                const sandbox = document.createElement('div');
-                sandbox.style.position = 'fixed';
-                sandbox.style.left = '-10000px';
-                sandbox.style.top = '0';
-                sandbox.style.width = '210mm';
-                sandbox.style.background = '#FFFFFF';
-                sandbox.style.zIndex = '-9999';
-                document.body.appendChild(sandbox);
-
-                try {
-                    const doc = new jsPDF({
-                        orientation: 'portrait',
-                        unit: 'mm',
-                        format: 'a4',
-                        compress: true
-                    });
-
-                    for (let i = 0; i < paperNodes.length; i++) {
-                        const clone = paperNodes[i].cloneNode(true);
-                        clone.style.transform = 'none';
-                        clone.style.margin = '0';
-                        clone.style.boxShadow = 'none';
-                        clone.style.width = '210mm';
-                        clone.style.height = '297mm';
-                        sandbox.innerHTML = '';
-                        sandbox.appendChild(clone);
-
-                        await new Promise((r) => requestAnimationFrame(() => setTimeout(r, 40)));
-
-                        const canvas = await window.html2canvas(clone, {
-                            scale: 3,
-                            useCORS: true,
-                            allowTaint: true,
-                            backgroundColor: '#FFFFFF',
-                            logging: false
-                        });
-
-                        const imgData = canvas.toDataURL('image/jpeg', 0.96);
-                        if (i > 0) doc.addPage('a4', 'portrait');
-                        doc.addImage(imgData, 'JPEG', 0, 0, 210, 297, undefined, 'FAST');
-                    }
-
-                    const safeFilename = (invNo || 'Invoice').replace(/[^a-zA-Z0-9_-]/g, '_') + '.pdf';
-                    try {
-                        doc.save(safeFilename);
-                        showToast(`PDF HD (${paperNodes.length} halaman) berhasil diunduh!`);
-                    } catch (e) {
-                        const blobUrl = doc.output('bloburl');
-                        window.open(blobUrl, '_blank');
-                    }
-                    return true;
-                } finally {
-                    if (sandbox.parentNode) {
-                        sandbox.parentNode.removeChild(sandbox);
-                    }
-                }
-            }
-
             async function exportVectorPdf() {
                 if (!window.jspdf || !window.jspdf.jsPDF) {
                     showToast('Library PDF belum termuat, membuka dialog cetak...');
@@ -3272,17 +3205,6 @@
                 }
 
                 const invNo = $('invNumber').value.trim() || '-';
-                showToast('Merender PDF kualitas tinggi (Print2PDF HD)...');
-
-                if (typeof window.html2canvas === 'function') {
-                    try {
-                        const ok = await exportHighResPrint2Pdf(invNo);
-                        if (ok) return;
-                    } catch (err) {
-                        // Fallback ke generator vektor jika terjadi kendala canvas
-                    }
-                }
-
                 const { jsPDF } = window.jspdf;
                 const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
                 const calc = calculateInvoiceTotals();
