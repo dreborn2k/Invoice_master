@@ -662,7 +662,7 @@
                         </div>
                         <div class="space-y-2 text-center sm:text-left">
                             <p class="text-xs text-[#636366] leading-relaxed">
-                                Mendukung logo persegi (1:1) maupun memanjang (landscape). Unggah file logo asli Anda atau muat logo bawaan dari repository (<code id="settingsRepoLogoHint" class="font-mono text-[#1C1C1E]">sjm1.1.jpg</code>).
+                                Mendukung logo persegi (1:1) maupun memanjang (landscape). Saat diunggah, logo otomatis tersimpan ke repository sebagai <code id="settingsRepoLogoHint" class="font-mono text-[#1C1C1E]">logo_sjm.png</code>.
                             </p>
                             <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-1">
                                 <label class="cursor-pointer px-4 py-2 rounded-full bg-[#007AFF] hover:bg-[#0062CC] text-white text-xs font-semibold transition shadow-sm">
@@ -1030,7 +1030,7 @@
                 } else {
                     openConfirm(
                         'Install WebAPK (Full Screen)',
-                        'Pastikan file manifest.webmanifest, sw.js, icon-192.png, dan icon-512.png sudah terpasang di repository GitHub, lalu buka melalui Google Chrome / Samsung Internet dan pilih menu "Install app" (Instal aplikasi).',
+                        'Buka aplikasi melalui Google Chrome / Samsung Internet lalu pilih menu browser "Install app" (Instal aplikasi) agar terpasang sebagai aplikasi layar penuh di Home Screen.',
                         () => {}
                     );
                 }
@@ -1068,13 +1068,14 @@
                 sjm: {
                     id: 'sjm',
                     defaultJsonFile: 'data_sjm.json',
-                    logoCandidates: ['sjm1.1.jpg'],
+                    repoLogoFile: 'logo_sjm.png',
+                    logoCandidates: ['logo_sjm.png', 'sjm1.1.jpg'],
                     settings: {
                         compName: 'CV. SRIKANDI JAYA MANDIRI',
                         compTagline: 'Amanah dan Barokah',
-                        compAddress: 'Widyapura RT.001/RW.003, Singopuran, Kec. Kartasura, Kab. Sukoharjo, Jawa Tengah 57164',
-                        compContact: 'Telp: 0821-3838-6789 | Email: srikandi.jm21@gmail.com',
-                        compNpwp: 'NPWP: 96.733.327.9-532.000',
+                        compAddress: 'Dukuh Sayangan RT 001 RW 007, Kelurahan Pucangan, Kecamatan Kartasura, Kabupaten Sukoharjo, Jawa Tengah 57168',
+                        compContact: 'Telp: 0851 1765 7718 | Email: cv.srikandijayamandiri@gmail.com',
+                        compNpwp: 'NPWP: 1000 0000 0243 4437',
                         showNpwpDefault: true,
                         uiSkin: 'iphone',
                         invoiceTheme: 'slate',
@@ -1083,30 +1084,31 @@
                         issueCity: 'Sukoharjo',
                         signerName: 'Asih Ermataria',
                         signerRole: 'Direktur',
-                        defaultNotes: 'Pembayaran dapat ditransfer ke rekening resmi kami:\n• Bank BNI 46 No. Rek: 1207144926 a.n. CV. SRIKANDI JAYA MANDIRI\n• Bank BPD Jateng No. Rek: 1-031-01264-1 a.n. CV. SRIKANDI JAYA MANDIRI',
-                        logoBase64: ''
+                        logoBase64: '',
+                        defaultNotes: 'Pembayaran dapat ditransfer melalui:\n• Bank BNI 46 No. Rek: 1922536835 a.n. CV. SRIKANDI JAYA MANDIRI\n• Bank BPD Jateng No. Rek: 2028287181 a.n. CV. SRIKANDI JAYA MANDIRI\nMohon mencantumkan Nomor Invoice pada berita transfer.'
                     }
                 },
                 djm: {
                     id: 'djm',
                     defaultJsonFile: 'data_djm.json',
-                    logoCandidates: ['djm.png', 'djm.jpg', '1789605894732.png'],
+                    repoLogoFile: 'logo_djm.png',
+                    logoCandidates: ['logo_djm.png', 'djm.png', 'djm.jpg', '1789605894732.png'],
                     settings: {
                         compName: 'Digital Jaya Mandiri',
                         compTagline: 'Solusi belanja digital',
-                        compAddress: 'Perum puri permata A1, Gajah, Kec. Colomadu, Kab. Karanganyar, Jawa Tengah 57176',
+                        compAddress: 'Perum puri permata A1, Gajahan, Kec. Colomadu, Kab. Karanganyar, Prov. Jawa Tengah 57176',
                         compContact: 'Telp: 08551291055 | Email: digital.jm2k@gmail.com',
                         compNpwp: '',
                         showNpwpDefault: false,
                         uiSkin: 'iphone',
-                        invoiceTheme: 'oneui',
-                        customPrimaryHex: '#1259C3',
+                        invoiceTheme: 'iphone',
+                        customPrimaryHex: '#0055D4',
                         customAccentHex: '#38BDF8',
                         issueCity: 'Karanganyar',
-                        signerName: 'Pramudityo kuntoro',
-                        signerRole: 'Owner',
-                        defaultNotes: 'Pembayaran dapat ditransfer ke rekening resmi kami:\n• Bank BCA No. Rek: 2410025038 a.n. Pramudityo kuntoro',
-                        logoBase64: ''
+                        signerName: 'Pramudityo Kuntoro',
+                        signerRole: 'Pimpinan',
+                        logoBase64: '',
+                        defaultNotes: 'Pembayaran dapat ditransfer melalui:\n• Bank BCA No. Rek: 2410025038 a.n. Pramudityo kuntoro\nMohon mencantumkan Nomor Invoice pada berita transfer.'
                     }
                 }
             };
@@ -1114,259 +1116,122 @@
             const INVOICE_THEMES = {
                 slate: {
                     name: 'Navy Slate',
-                    primaryHex: '#0F172A',
-                    primaryRgb: [15, 23, 42],
-                    secondaryHex: '#64748B',
-                    secondaryRgb: [100, 116, 139],
-                    accentHex: '#2563EB',
-                    accentRgb: [37, 99, 235],
-                    gradientCss: 'linear-gradient(135deg, #0F172A 0%, #334155 55%, #64748B 100%)',
+                    primaryHex: '#0F172A', primaryRgb: [15, 23, 42],
+                    secondaryHex: '#64748B', secondaryRgb: [100, 116, 139],
+                    accentHex: '#475569', accentRgb: [71, 85, 105],
+                    gradientCss: 'linear-gradient(135deg, #0F172A 0%, #64748B 100%)',
                     softGradientCss: 'linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 100%)',
-                    softBgHex: '#F8FAFC',
-                    softBgRgb: [248, 250, 252],
-                    borderHex: '#CBD5E1',
-                    borderRgb: [203, 213, 225]
+                    softBgHex: '#F8FAFC', softBgRgb: [248, 250, 252],
+                    borderHex: '#CBD5E1', borderRgb: [203, 213, 225]
                 },
                 maroon: {
                     name: 'Merah Pink Abu',
-                    primaryHex: '#BE123C',
-                    primaryRgb: [190, 18, 60],
-                    secondaryHex: '#94A3B8',
-                    secondaryRgb: [148, 163, 184],
-                    accentHex: '#E11D48',
-                    accentRgb: [225, 29, 72],
-                    gradientCss: 'linear-gradient(135deg, #9F1239 0%, #E11D48 45%, #F472B6 78%, #94A3B8 100%)',
-                    softGradientCss: 'linear-gradient(135deg, #FFF1F2 0%, #FCE7F3 55%, #F1F5F9 100%)',
-                    softBgHex: '#FFF1F2',
-                    softBgRgb: [255, 241, 242],
-                    borderHex: '#FBCFE8',
-                    borderRgb: [251, 207, 232]
+                    primaryHex: '#BE123C', primaryRgb: [190, 18, 60],
+                    secondaryHex: '#94A3B8', secondaryRgb: [148, 163, 184],
+                    accentHex: '#EC4899', accentRgb: [236, 72, 153],
+                    gradientCss: 'linear-gradient(135deg, #BE123C 0%, #F472B6 52%, #94A3B8 100%)',
+                    softGradientCss: 'linear-gradient(135deg, #FFF1F2 0%, #FDF2F8 55%, #F1F5F9 100%)',
+                    softBgHex: '#FDF2F8', softBgRgb: [253, 242, 248],
+                    borderHex: '#FBCFE8', borderRgb: [251, 207, 232]
                 },
                 oneui: {
                     name: 'One UI Sky',
-                    primaryHex: '#1259C3',
-                    primaryRgb: [18, 89, 195],
-                    secondaryHex: '#38BDF8',
-                    secondaryRgb: [56, 189, 248],
-                    accentHex: '#0284C7',
-                    accentRgb: [2, 132, 199],
-                    gradientCss: 'linear-gradient(135deg, #1E3A8A 0%, #1259C3 50%, #38BDF8 100%)',
-                    softGradientCss: 'linear-gradient(135deg, #EFF6FF 0%, #E0F2FE 65%, #F8FAFC 100%)',
-                    softBgHex: '#F0F6FF',
-                    softBgRgb: [240, 246, 255],
-                    borderHex: '#BAE6FD',
-                    borderRgb: [186, 230, 253]
+                    primaryHex: '#0381FE', primaryRgb: [3, 129, 254],
+                    secondaryHex: '#7DD3FC', secondaryRgb: [125, 211, 252],
+                    accentHex: '#0284C7', accentRgb: [2, 132, 199],
+                    gradientCss: 'linear-gradient(135deg, #0381FE 0%, #38BDF8 65%, #BAE6FD 100%)',
+                    softGradientCss: 'linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%)',
+                    softBgHex: '#F0F9FF', softBgRgb: [240, 249, 255],
+                    borderHex: '#BAE6FD', borderRgb: [186, 230, 253]
                 },
                 iphone: {
                     name: 'iPhone Ocean',
-                    primaryHex: '#007AFF',
-                    primaryRgb: [0, 122, 255],
-                    secondaryHex: '#5AC8FA',
-                    secondaryRgb: [90, 200, 250],
-                    accentHex: '#5856D6',
-                    accentRgb: [88, 86, 214],
-                    gradientCss: 'linear-gradient(135deg, #0051D5 0%, #007AFF 50%, #5AC8FA 100%)',
-                    softGradientCss: 'linear-gradient(135deg, #F0F7FF 0%, #E0F2FE 60%, #F5F5F7 100%)',
-                    softBgHex: '#F2F7FF',
-                    softBgRgb: [242, 247, 255],
-                    borderHex: '#C7DFFF',
-                    borderRgb: [199, 223, 255]
+                    primaryHex: '#0055D4', primaryRgb: [0, 85, 212],
+                    secondaryHex: '#60A5FA', secondaryRgb: [96, 165, 250],
+                    accentHex: '#007AFF', accentRgb: [0, 122, 255],
+                    gradientCss: 'linear-gradient(135deg, #0040A8 0%, #007AFF 55%, #7CC4FA 100%)',
+                    softGradientCss: 'linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%)',
+                    softBgHex: '#EFF6FF', softBgRgb: [239, 246, 255],
+                    borderHex: '#BFDBFE', borderRgb: [191, 219, 254]
                 },
                 macos: {
                     name: 'macOS Sonoma',
-                    primaryHex: '#312E81',
-                    primaryRgb: [49, 46, 129],
-                    secondaryHex: '#C084FC',
-                    secondaryRgb: [192, 132, 252],
-                    accentHex: '#6366F1',
-                    accentRgb: [99, 102, 241],
-                    gradientCss: 'linear-gradient(135deg, #312E81 0%, #6366F1 52%, #C084FC 100%)',
-                    softGradientCss: 'linear-gradient(135deg, #EEF2FF 0%, #F3E8FF 65%, #F8FAFC 100%)',
-                    softBgHex: '#EEF2FF',
-                    softBgRgb: [238, 242, 255],
-                    borderHex: '#DDD6FE',
-                    borderRgb: [221, 214, 254]
+                    primaryHex: '#4338CA', primaryRgb: [67, 56, 202],
+                    secondaryHex: '#A78BFA', secondaryRgb: [167, 139, 250],
+                    accentHex: '#6366F1', accentRgb: [99, 102, 241],
+                    gradientCss: 'linear-gradient(135deg, #3730A3 0%, #6366F1 55%, #C4B5FD 100%)',
+                    softGradientCss: 'linear-gradient(135deg, #EEF2FF 0%, #F5F3FF 100%)',
+                    softBgHex: '#EEF2FF', softBgRgb: [238, 242, 255],
+                    borderHex: '#C7D2FE', borderRgb: [199, 210, 254]
                 },
                 linux: {
                     name: 'Ubuntu Sunset',
-                    primaryHex: '#77216F',
-                    primaryRgb: [119, 33, 111],
-                    secondaryHex: '#E95420',
-                    secondaryRgb: [233, 84, 32],
-                    accentHex: '#E95420',
-                    accentRgb: [233, 84, 32],
-                    gradientCss: 'linear-gradient(135deg, #5E2750 0%, #9E2A5B 48%, #E95420 100%)',
-                    softGradientCss: 'linear-gradient(135deg, #FDF2F8 0%, #FFF7ED 65%, #F8FAFC 100%)',
-                    softBgHex: '#FDF4F5',
-                    softBgRgb: [253, 244, 245],
-                    borderHex: '#FBCFE8',
-                    borderRgb: [251, 207, 232]
+                    primaryHex: '#77216F', primaryRgb: [119, 33, 111],
+                    secondaryHex: '#F97316', secondaryRgb: [249, 115, 22],
+                    accentHex: '#E95420', accentRgb: [233, 84, 32],
+                    gradientCss: 'linear-gradient(135deg, #5E2750 0%, #E95420 65%, #FDBA74 100%)',
+                    softGradientCss: 'linear-gradient(135deg, #FDF2F8 0%, #FFF7ED 100%)',
+                    softBgHex: '#FFF7ED', softBgRgb: [255, 247, 237],
+                    borderHex: '#FED7AA', borderRgb: [254, 215, 170]
                 },
                 emerald: {
                     name: 'Emerald Mint',
-                    primaryHex: '#065F46',
-                    primaryRgb: [6, 95, 70],
-                    secondaryHex: '#34D399',
-                    secondaryRgb: [52, 211, 153],
-                    accentHex: '#059669',
-                    accentRgb: [5, 150, 105],
-                    gradientCss: 'linear-gradient(135deg, #064E3B 0%, #059669 55%, #34D399 100%)',
-                    softGradientCss: 'linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 65%, #F8FAFC 100%)',
-                    softBgHex: '#ECFDF5',
-                    softBgRgb: [236, 253, 245],
-                    borderHex: '#A7F3D0',
-                    borderRgb: [167, 243, 208]
+                    primaryHex: '#065F46', primaryRgb: [6, 95, 70],
+                    secondaryHex: '#34D399', secondaryRgb: [52, 211, 153],
+                    accentHex: '#059669', accentRgb: [5, 150, 105],
+                    gradientCss: 'linear-gradient(135deg, #064E3B 0%, #10B981 60%, #A7F3D0 100%)',
+                    softGradientCss: 'linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%)',
+                    softBgHex: '#ECFDF5', softBgRgb: [236, 253, 245],
+                    borderHex: '#A7F3D0', borderRgb: [167, 243, 208]
                 },
                 gold: {
                     name: 'Amber Silver',
-                    primaryHex: '#92400E',
-                    primaryRgb: [146, 64, 14],
-                    secondaryHex: '#9CA3AF',
-                    secondaryRgb: [156, 163, 175],
-                    accentHex: '#D97706',
-                    accentRgb: [217, 119, 6],
-                    gradientCss: 'linear-gradient(135deg, #78350F 0%, #D97706 50%, #FBBF24 80%, #9CA3AF 100%)',
-                    softGradientCss: 'linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 60%, #F3F4F6 100%)',
-                    softBgHex: '#FFFBEB',
-                    softBgRgb: [255, 251, 235],
-                    borderHex: '#FDE68A',
-                    borderRgb: [253, 230, 138]
+                    primaryHex: '#92400E', primaryRgb: [146, 64, 14],
+                    secondaryHex: '#CBD5E1', secondaryRgb: [203, 213, 225],
+                    accentHex: '#D97706', accentRgb: [217, 119, 6],
+                    gradientCss: 'linear-gradient(135deg, #78350F 0%, #F59E0B 55%, #CBD5E1 100%)',
+                    softGradientCss: 'linear-gradient(135deg, #FFFBEB 0%, #F8FAFC 100%)',
+                    softBgHex: '#FFFBEB', softBgRgb: [255, 251, 235],
+                    borderHex: '#FDE68A', borderRgb: [253, 230, 138]
                 },
                 charcoal: {
                     name: 'Obsidian Silver',
-                    primaryHex: '#18181B',
-                    primaryRgb: [24, 24, 27],
-                    secondaryHex: '#A1A1AA',
-                    secondaryRgb: [161, 161, 170],
-                    accentHex: '#3F3F46',
-                    accentRgb: [63, 63, 70],
-                    gradientCss: 'linear-gradient(135deg, #18181B 0%, #52525B 55%, #A1A1AA 100%)',
-                    softGradientCss: 'linear-gradient(135deg, #FAFAFA 0%, #F4F4F5 65%, #E4E4E7 100%)',
-                    softBgHex: '#FAFAFA',
-                    softBgRgb: [250, 250, 250],
-                    borderHex: '#D4D4D8',
-                    borderRgb: [212, 212, 216]
+                    primaryHex: '#18181B', primaryRgb: [24, 24, 27],
+                    secondaryHex: '#A1A1AA', secondaryRgb: [161, 161, 170],
+                    accentHex: '#52525B', accentRgb: [82, 82, 91],
+                    gradientCss: 'linear-gradient(135deg, #18181B 0%, #52525B 55%, #D4D4D8 100%)',
+                    softGradientCss: 'linear-gradient(135deg, #FAFAFA 0%, #F4F4F5 100%)',
+                    softBgHex: '#FAFAFA', softBgRgb: [250, 250, 250],
+                    borderHex: '#E4E4E7', borderRgb: [228, 228, 231]
                 }
             };
 
-            function hexToRgb(hex) {
-                const clean = (hex || '#007AFF').replace('#', '');
-                const full = clean.length === 3
-                    ? clean.split('').map(c => c + c).join('')
-                    : clean.padEnd(6, '0').slice(0, 6);
-                const num = parseInt(full, 16);
-                return [(num >> 16) & 255, (num >> 8) & 255, num & 255];
-            }
-
-            function lightenHex(hex, amount = 0.85) {
-                const [r, g, b] = hexToRgb(hex);
-                const nr = Math.min(255, Math.round(r + (255 - r) * amount));
-                const ng = Math.min(255, Math.round(g + (255 - g) * amount));
-                const nb = Math.min(255, Math.round(b + (255 - b) * amount));
-                const toHex = (n) => n.toString(16).padStart(2, '0').toUpperCase();
-                return {
-                    hex: `#${toHex(nr)}${toHex(ng)}${toHex(nb)}`,
-                    rgb: [nr, ng, nb]
-                };
-            }
-
-            let activeCvId = 'sjm';
-            try {
-                const savedCv = localStorage.getItem(ACTIVE_CV_KEY);
-                if (savedCv && CV_PROFILES[savedCv]) {
-                    activeCvId = savedCv;
-                }
-            } catch (e) { /* ignore */ }
+            let activeCvId = localStorage.getItem(ACTIVE_CV_KEY) || 'sjm';
+            if (!CV_PROFILES[activeCvId]) activeCvId = 'sjm';
 
             let DEFAULT_SETTINGS = { ...CV_PROFILES[activeCvId].settings };
-
-            let ghToken = '';
-            try {
-                ghToken = localStorage.getItem(GH_TOKEN_STORAGE_KEY) || '';
-                if (!ghToken) {
-                    const legacyCfg = JSON.parse(localStorage.getItem('srikandi_invoice_gh_config_v1') || 'null');
-                    if (legacyCfg && legacyCfg.token) {
-                        ghToken = legacyCfg.token;
-                        localStorage.setItem(GH_TOKEN_STORAGE_KEY, ghToken);
-                    }
-                }
-            } catch (e) { /* ignore */ }
-
-            function getActiveCvJsonPath() {
-                return CV_PROFILES[activeCvId] ? CV_PROFILES[activeCvId].defaultJsonFile : 'data_sjm.json';
-            }
-
-            let lastKnownFileSha = '';
-            let lastKnownConsFileSha = '';
-            let isTokenUnlocked = false;
-
             let settings = { ...DEFAULT_SETTINGS };
             let clientsDb = [];
             let invoiceHistory = [];
-            let items = [
-                { id: 1, name: 'Pengadaan Barang & Jasa Operasional', qty: 1, unit: 'Paket', price: 1000000 }
-            ];
-            let currentZoomMode = 'auto';
-            let manualZoomScale = 0.65;
+            let items = [{ id: Date.now(), name: '', qty: 1, unit: 'Pcs', price: 0 }];
             let logoAspectType = 'square';
-            let confirmCallback = null;
+
+            let ghToken = localStorage.getItem(GH_TOKEN_STORAGE_KEY) || '';
+            let lastKnownFileSha = '';
+            let lastKnownConsFileSha = '';
+
             let currentPage = 'invoice';
             let hasUnsavedSettings = false;
+            let currentZoomMode = 'auto';
+            let manualZoomScale = 0.72;
+            let confirmCallback = null;
+            let toastTimer = null;
 
             const $ = (id) => document.getElementById(id);
 
-            function setTokenLockState(unlocked) {
-                isTokenUnlocked = Boolean(unlocked);
-                const lockBox = $('tokenLockBox');
-                const unlockBox = $('tokenUnlockedBox');
-                const pinInput = $('tokenPinInput');
-                if (lockBox) lockBox.classList.toggle('hidden', isTokenUnlocked);
-                if (unlockBox) unlockBox.classList.toggle('hidden', !isTokenUnlocked);
-                if (!isTokenUnlocked && pinInput) {
-                    pinInput.value = '';
-                }
-            }
-
-            function getCombinedFooterNotes() {
-                const paymentInfo = (settings.defaultNotes || '').trim();
-                const shortNote = ($('invNotes') ? $('invNotes').value : '').trim();
-                if (paymentInfo && shortNote) {
-                    return `${paymentInfo}\n\nCatatan: ${shortNote}`;
-                }
-                return paymentInfo || shortNote || '-';
-            }
-
-            function setUnsavedSettings(flag) {
-                hasUnsavedSettings = Boolean(flag);
-                const badge = $('settingsDirtyBadge');
-                const dotDesktop = $('unsavedSettingsDot');
-                const dotMob = $('mobUnsavedSettingsDot');
-                if (badge) badge.classList.toggle('hidden', !hasUnsavedSettings);
-                if (dotDesktop) dotDesktop.classList.toggle('hidden', !hasUnsavedSettings);
-                if (dotMob) dotMob.classList.toggle('hidden', !hasUnsavedSettings);
-            }
-
-            function revertUnsavedSettings() {
-                setUnsavedSettings(false);
-                applySettingsToUI();
-                updatePreview();
-            }
-
-            function guardUnsavedSettings(proceedFn) {
-                if (!hasUnsavedSettings) {
-                    proceedFn();
-                    return;
-                }
-                openConfirm(
-                    'Pengaturan Belum Disimpan',
-                    'Ada perubahan pada halaman Pengaturan yang belum disimpan. Abaikan perubahan dan lanjutkan?',
-                    () => {
-                        revertUnsavedSettings();
-                        proceedFn();
-                    }
-                );
-            }
-
+            // =========================================================================
+            // 2. UTILITY, COLOR, TERBILANG & GITHUB SYNC HELPERS
+            // =========================================================================
             function escapeHtml(str) {
                 return String(str || '')
                     .replace(/&/g, '&amp;')
@@ -1376,236 +1241,73 @@
                     .replace(/'/g, '&#39;');
             }
 
-            function formatRupiah(num) {
-                const n = Math.round(Number(num) || 0);
-                return 'Rp ' + n.toLocaleString('id-ID');
+            function formatNumber(val) {
+                const n = Math.round(Number(val) || 0);
+                return n.toLocaleString('id-ID');
             }
 
-            function formatNumber(num) {
-                const n = Math.round(Number(num) || 0);
-                return n.toLocaleString('id-ID');
+            function formatRupiah(val) {
+                return 'Rp ' + formatNumber(val);
             }
 
             function formatDateIndo(dateStr) {
                 if (!dateStr) return '-';
-                const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-                const parts = dateStr.split('-');
+                const parts = String(dateStr).split('-');
                 if (parts.length !== 3) return dateStr;
+                const months = [
+                    'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+                    'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+                ];
                 const y = parts[0];
-                const m = parseInt(parts[1], 10) - 1;
+                const mIdx = parseInt(parts[1], 10) - 1;
                 const d = parseInt(parts[2], 10);
-                return `${d} ${months[m] || ''} ${y}`;
+                if (isNaN(mIdx) || mIdx < 0 || mIdx > 11 || isNaN(d)) return dateStr;
+                return `${d} ${months[mIdx]} ${y}`;
             }
 
-            function terbilang(angka) {
-                const n = Math.abs(Math.round(Number(angka) || 0));
-                if (n === 0) return 'Nol Rupiah';
-                const satuan = ['', 'Satu', 'Dua', 'Tiga', 'Empat', 'Lima', 'Enam', 'Tujuh', 'Delapan', 'Sembilan', 'Sepuluh', 'Sebelas'];
-                function sebut(x) {
-                    x = Math.floor(x);
-                    if (x < 12) return satuan[x];
-                    if (x < 20) return sebut(x - 10) + ' Belas';
-                    if (x < 100) return sebut(x / 10) + ' Puluh ' + sebut(x % 10);
-                    if (x < 200) return 'Seratus ' + sebut(x - 100);
-                    if (x < 1000) return sebut(x / 100) + ' Ratus ' + sebut(x % 100);
-                    if (x < 2000) return 'Seribu ' + sebut(x - 1000);
-                    if (x < 1000000) return sebut(x / 1000) + ' Ribu ' + sebut(x % 1000);
-                    if (x < 1000000000) return sebut(x / 1000000) + ' Juta ' + sebut(x % 1000000);
-                    if (x < 1000000000000) return sebut(x / 1000000000) + ' Miliar ' + sebut(x % 1000000000);
-                    return sebut(x / 1000000000000) + ' Triliun ' + sebut(x % 1000000000000);
-                }
-                return sebut(n).replace(/\s+/g, ' ').trim() + ' Rupiah';
-            }
+            function terbilang(nilai) {
+                const angka = Math.floor(Math.abs(Number(nilai) || 0));
+                if (angka === 0) return 'Nol Rupiah';
+                const huruf = ['', 'Satu', 'Dua', 'Tiga', 'Empat', 'Lima', 'Enam', 'Tujuh', 'Delapan', 'Sembilan', 'Sepuluh', 'Sebelas'];
 
-            let toastTimer = null;
-            function showToast(msg) {
-                const banner = $('toastBanner');
-                const text = $('toastText');
-                if (!banner || !text) return;
-                text.textContent = msg;
-                banner.classList.remove('opacity-0', 'translate-y-3');
-                banner.classList.add('opacity-100', 'translate-y-0');
-                clearTimeout(toastTimer);
-                toastTimer = setTimeout(() => {
-                    banner.classList.add('opacity-0', 'translate-y-3');
-                    banner.classList.remove('opacity-100', 'translate-y-0');
-                }, 2800);
-            }
-
-            function openConfirm(title, message, onConfirm) {
-                $('confirmTitle').textContent = title;
-                $('confirmMessage').textContent = message;
-                confirmCallback = onConfirm;
-                $('confirmModal').classList.remove('hidden');
-            }
-
-            function closeConfirm() {
-                $('confirmModal').classList.add('hidden');
-                confirmCallback = null;
-            }
-
-            function loadRepoLogoFile(silent = true) {
-                const candidates = (CV_PROFILES[activeCvId] && CV_PROFILES[activeCvId].logoCandidates) || ['sjm1.1.jpg'];
-                return new Promise((resolve) => {
-                    let idx = 0;
-                    function tryNext() {
-                        if (idx >= candidates.length) {
-                            if (!silent) showToast(`File logo repo untuk ${settings.compName} belum ditemukan. Silakan Upload Logo.`);
-                            resolve(false);
-                            return;
-                        }
-                        const candidate = candidates[idx++];
-                        const img = new Image();
-                        img.crossOrigin = 'anonymous';
-                        img.onload = function () {
-                            try {
-                                const maxDim = 500;
-                                let w = img.naturalWidth || img.width;
-                                let h = img.naturalHeight || img.height;
-                                if (w > maxDim || h > maxDim) {
-                                    if (w > h) {
-                                        h = Math.round((h * maxDim) / w);
-                                        w = maxDim;
-                                    } else {
-                                        w = Math.round((w * maxDim) / h);
-                                        h = maxDim;
-                                    }
-                                }
-                                const canvas = document.createElement('canvas');
-                                canvas.width = w;
-                                canvas.height = h;
-                                const ctx = canvas.getContext('2d');
-                                ctx.drawImage(img, 0, 0, w, h);
-                                settings.logoBase64 = canvas.toDataURL('image/jpeg', 0.92);
-                                saveToLocalStorage();
-                                applySettingsToUI();
-                                updatePreview();
-                                if (!silent) showToast(`Logo (${candidate}) berhasil dimuat!`);
-                                resolve(true);
-                            } catch (e) {
-                                tryNext();
-                            }
-                        };
-                        img.onerror = tryNext;
-                        img.src = candidate + '?t=' + Date.now();
-                    }
-                    tryNext();
-                });
-            }
-
-            function updateSyncStatusUI(status, text) {
-                const dot = $('cloudStatusDot');
-                const badge = $('cloudSyncBadge');
-                const subEl = $('headerCompanySub');
-                if (subEl) {
-                    subEl.textContent = settings.compTagline || settings.compName || '';
-                }
-                if (status === 'synced') {
-                    if (dot) dot.className = 'w-2 h-2 rounded-full bg-[#34C759] shrink-0 ml-0.5';
-                    if (badge) {
-                        badge.className = 'px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-bold shrink-0';
-                        badge.textContent = text || 'Tersimpan di GitHub';
-                    }
-                } else if (status === 'syncing') {
-                    if (dot) dot.className = 'w-2 h-2 rounded-full bg-[#007AFF] animate-pulse shrink-0 ml-0.5';
-                    if (badge) {
-                        badge.className = 'px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 text-[10px] font-bold shrink-0';
-                        badge.textContent = text || 'Menyinkronkan...';
-                    }
-                } else {
-                    if (dot) dot.className = 'w-2 h-2 rounded-full bg-amber-400 shrink-0 ml-0.5';
-                    if (badge) {
-                        badge.className = 'px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 text-[10px] font-bold shrink-0';
-                        badge.textContent = text || 'Lokal';
-                    }
-                }
-            }
-
-            function saveToLocalStorage() {
-                try {
-                    const cvPayload = {
-                        cvId: activeCvId,
-                        settings,
-                        invoiceHistory,
-                        updatedAt: new Date().toISOString()
-                    };
-                    localStorage.setItem(LOCAL_STORAGE_PREFIX + activeCvId, JSON.stringify(cvPayload));
-                    localStorage.setItem(SHARED_CLIENTS_STORAGE_KEY, JSON.stringify({
-                        clientsDb,
-                        updatedAt: new Date().toISOString()
-                    }));
-                } catch (e) { /* ignore */ }
-            }
-
-            function loadFromLocalStorage() {
-                try {
-                    const raw = localStorage.getItem(LOCAL_STORAGE_PREFIX + activeCvId);
-                    if (!raw) {
-                        settings = { ...DEFAULT_SETTINGS };
-                        invoiceHistory = [];
-                    } else {
-                        const data = JSON.parse(raw);
-                        settings = data.settings ? { ...DEFAULT_SETTINGS, ...data.settings } : { ...DEFAULT_SETTINGS };
-                        invoiceHistory = Array.isArray(data.invoiceHistory) ? data.invoiceHistory : [];
-                    }
-                } catch (e) {
-                    settings = { ...DEFAULT_SETTINGS };
-                    invoiceHistory = [];
+                function baca(n) {
+                    if (n < 12) return huruf[n];
+                    if (n < 20) return baca(n - 10) + ' Belas';
+                    if (n < 100) return baca(Math.floor(n / 10)) + ' Puluh' + (n % 10 > 0 ? ' ' + baca(n % 10) : '');
+                    if (n < 200) return 'Seratus' + (n - 100 > 0 ? ' ' + baca(n - 100) : '');
+                    if (n < 1000) return baca(Math.floor(n / 100)) + ' Ratus' + (n % 100 > 0 ? ' ' + baca(n % 100) : '');
+                    if (n < 2000) return 'Seribu' + (n - 1000 > 0 ? ' ' + baca(n - 1000) : '');
+                    if (n < 1000000) return baca(Math.floor(n / 1000)) + ' Ribu' + (n % 1000 > 0 ? ' ' + baca(n % 1000) : '');
+                    if (n < 1000000000) return baca(Math.floor(n / 1000000)) + ' Juta' + (n % 1000000 > 0 ? ' ' + baca(n % 1000000) : '');
+                    if (n < 1000000000000) return baca(Math.floor(n / 1000000000)) + ' Miliar' + (n % 1000000000 > 0 ? ' ' + baca(n % 1000000000) : '');
+                    return baca(Math.floor(n / 1000000000000)) + ' Triliun' + (n % 1000000000000 > 0 ? ' ' + baca(n % 1000000000000) : '');
                 }
 
-                try {
-                    const sharedRaw = localStorage.getItem(SHARED_CLIENTS_STORAGE_KEY);
-                    if (sharedRaw) {
-                        const sharedData = JSON.parse(sharedRaw);
-                        clientsDb = Array.isArray(sharedData.clientsDb) ? sharedData.clientsDb : [];
-                    } else {
-                        clientsDb = [];
-                    }
-                } catch (e) {
-                    clientsDb = [];
-                }
+                const prefix = Number(nilai) < 0 ? 'Minus ' : '';
+                return prefix + baca(angka).replace(/\s+/g, ' ').trim() + ' Rupiah';
             }
 
-            async function switchCvProfile(targetCvId) {
-                if (!CV_PROFILES[targetCvId]) return;
-                setUnsavedSettings(false);
-                saveToLocalStorage();
-
-                activeCvId = targetCvId;
-                try {
-                    localStorage.setItem(ACTIVE_CV_KEY, activeCvId);
-                } catch (e) { /* ignore */ }
-
-                DEFAULT_SETTINGS = { ...CV_PROFILES[activeCvId].settings };
-                lastKnownFileSha = '';
-
-                loadFromLocalStorage();
-                applySettingsToUI();
-                renderClientsList();
-                renderHistoryList();
-
-                $('invNumber').value = generateAutoInvoiceNumber();
-                $('invNotes').value = '';
-                items = [{ id: Date.now(), name: '', qty: 1, unit: 'Pcs', price: 0 }];
-                renderItemRows();
-                updatePreview();
-                updateSyncStatusUI('local', 'Lokal');
-
-                if (!settings.logoBase64) {
-                    await loadRepoLogoFile(true);
-                }
-                const pulled = await pullFromGithub(true);
-                if (pulled) {
-                    $('invNumber').value = generateAutoInvoiceNumber();
-                    updatePreview();
-                }
-
-                showToast(`Beralih ke ${settings.compName}`);
+            function hexToRgb(hex) {
+                const clean = String(hex || '#0F172A').replace('#', '');
+                const full = clean.length === 3
+                    ? clean.split('').map(c => c + c).join('')
+                    : clean.padEnd(6, '0');
+                const num = parseInt(full, 16);
+                return [(num >> 16) & 255, (num >> 8) & 255, num & 255];
             }
 
-            // =========================================================================
-            // 2. GITHUB REST API SYNC (PER-CV JSON & SHARED CLIENTS JSON)
-            // =========================================================================
+            function lightenHex(hex, amount) {
+                const [r, g, b] = hexToRgb(hex);
+                const nr = Math.round(r + (255 - r) * amount);
+                const ng = Math.round(g + (255 - g) * amount);
+                const nb = Math.round(b + (255 - b) * amount);
+                const toHex = (v) => v.toString(16).padStart(2, '0');
+                return {
+                    hex: `#${toHex(nr)}${toHex(ng)}${toHex(nb)}`,
+                    rgb: [nr, ng, nb]
+                };
+            }
+
             function utf8ToBase64(str) {
                 const bytes = new TextEncoder().encode(str);
                 let binary = '';
@@ -1624,6 +1326,224 @@
                 return new TextDecoder().decode(bytes);
             }
 
+            function showToast(msg) {
+                const banner = $('toastBanner');
+                const textEl = $('toastText');
+                if (!banner || !textEl) return;
+                textEl.textContent = msg;
+                banner.classList.remove('opacity-0', 'translate-y-3');
+                clearTimeout(toastTimer);
+                toastTimer = setTimeout(() => {
+                    banner.classList.add('opacity-0', 'translate-y-3');
+                }, 2800);
+            }
+
+            function openConfirm(title, message, onConfirm) {
+                const modal = $('confirmModal');
+                if (!modal) return;
+                $('confirmTitle').textContent = title || 'Konfirmasi';
+                $('confirmMessage').textContent = message || 'Apakah Anda yakin?';
+                confirmCallback = onConfirm;
+                modal.classList.remove('hidden');
+            }
+
+            function closeConfirm() {
+                const modal = $('confirmModal');
+                if (modal) modal.classList.add('hidden');
+                confirmCallback = null;
+            }
+
+            function getActiveCvJsonPath() {
+                return CV_PROFILES[activeCvId] ? CV_PROFILES[activeCvId].defaultJsonFile : 'data_sjm.json';
+            }
+
+            function getCombinedFooterNotes() {
+                const paymentNotes = (settings.defaultNotes || '').trim();
+                const shortNotes = ($('invNotes') ? $('invNotes').value : '').trim();
+                if (paymentNotes && shortNotes) {
+                    return `${paymentNotes}\n\nCatatan: ${shortNotes}`;
+                }
+                return paymentNotes || shortNotes || '-';
+            }
+
+            function setUnsavedSettings(flag) {
+                hasUnsavedSettings = Boolean(flag);
+                const dot1 = $('unsavedSettingsDot');
+                const dot2 = $('mobUnsavedSettingsDot');
+                const badge = $('settingsDirtyBadge');
+                if (dot1) dot1.classList.toggle('hidden', !hasUnsavedSettings);
+                if (dot2) dot2.classList.toggle('hidden', !hasUnsavedSettings);
+                if (badge) badge.classList.toggle('hidden', !hasUnsavedSettings);
+            }
+
+            function guardUnsavedSettings(proceedCallback) {
+                if (currentPage === 'settings' && hasUnsavedSettings) {
+                    openConfirm(
+                        'Pengaturan Belum Disimpan',
+                        'Ada perubahan pada halaman Pengaturan yang belum disimpan. Tetap pindah dan abaikan perubahan?',
+                        () => {
+                            setUnsavedSettings(false);
+                            applySettingsToUI();
+                            updatePreview();
+                            if (typeof proceedCallback === 'function') proceedCallback();
+                        }
+                    );
+                    return;
+                }
+                if (typeof proceedCallback === 'function') proceedCallback();
+            }
+
+            function setTokenLockState(isUnlocked) {
+                const lockBox = $('tokenLockBox');
+                const unlockedBox = $('tokenUnlockedBox');
+                const pinInput = $('tokenPinInput');
+                if (!lockBox || !unlockedBox) return;
+                if (isUnlocked) {
+                    lockBox.classList.add('hidden');
+                    unlockedBox.classList.remove('hidden');
+                    if ($('ghTokenInput')) $('ghTokenInput').value = ghToken || '';
+                } else {
+                    unlockedBox.classList.add('hidden');
+                    lockBox.classList.remove('hidden');
+                    if (pinInput) pinInput.value = '';
+                }
+            }
+
+            function updateSyncStatusUI(state, label) {
+                const dot = $('cloudStatusDot');
+                const badge = $('cloudSyncBadge');
+                if (dot) {
+                    dot.className = 'w-2 h-2 rounded-full shrink-0 ml-0.5 ' + (
+                        state === 'synced' ? 'bg-emerald-500' :
+                        state === 'syncing' ? 'bg-blue-500 animate-pulse' :
+                        'bg-amber-400'
+                    );
+                }
+                if (badge) {
+                    badge.textContent = label || 'Lokal';
+                    badge.className = 'px-2.5 py-1 rounded-full text-[10px] font-bold shrink-0 ' + (
+                        state === 'synced' ? 'bg-emerald-50 text-emerald-700' :
+                        state === 'syncing' ? 'bg-blue-50 text-blue-700' :
+                        'bg-amber-50 text-amber-700'
+                    );
+                }
+            }
+
+            function saveToLocalStorage() {
+                try {
+                    const cvKey = LOCAL_STORAGE_PREFIX + activeCvId;
+                    localStorage.setItem(cvKey, JSON.stringify({
+                        cvId: activeCvId,
+                        settings,
+                        invoiceHistory,
+                        updatedAt: new Date().toISOString()
+                    }));
+                    localStorage.setItem(SHARED_CLIENTS_STORAGE_KEY, JSON.stringify(clientsDb));
+                    localStorage.setItem(ACTIVE_CV_KEY, activeCvId);
+                } catch (e) { /* ignore quota error */ }
+            }
+
+            function loadFromLocalStorage() {
+                DEFAULT_SETTINGS = { ...CV_PROFILES[activeCvId].settings };
+                settings = { ...DEFAULT_SETTINGS };
+                invoiceHistory = [];
+
+                try {
+                    const rawSharedClients = localStorage.getItem(SHARED_CLIENTS_STORAGE_KEY);
+                    if (rawSharedClients) {
+                        const parsedClients = JSON.parse(rawSharedClients);
+                        if (Array.isArray(parsedClients)) clientsDb = parsedClients;
+                    }
+                } catch (e) { /* ignore */ }
+
+                try {
+                    const rawCv = localStorage.getItem(LOCAL_STORAGE_PREFIX + activeCvId);
+                    if (rawCv) {
+                        const parsed = JSON.parse(rawCv);
+                        if (parsed.settings) settings = { ...DEFAULT_SETTINGS, ...parsed.settings };
+                        if (Array.isArray(parsed.invoiceHistory)) invoiceHistory = parsed.invoiceHistory;
+                        if (clientsDb.length === 0 && Array.isArray(parsed.clientsDb)) {
+                            clientsDb = parsed.clientsDb;
+                        }
+                    }
+                } catch (e) { /* ignore */ }
+            }
+
+            function loadRepoLogoFile(silent = true) {
+                return new Promise((resolve) => {
+                    const profile = CV_PROFILES[activeCvId];
+                    const candidates = (profile && profile.logoCandidates) ? profile.logoCandidates : ['logo_sjm.png'];
+                    let idx = 0;
+
+                    function tryNext() {
+                        if (idx >= candidates.length) {
+                            if (!silent) showToast('File logo tidak ditemukan di repository');
+                            resolve(false);
+                            return;
+                        }
+                        const fileName = candidates[idx++];
+                        const img = new Image();
+                        img.crossOrigin = 'anonymous';
+                        img.onload = function () {
+                            try {
+                                const canvas = document.createElement('canvas');
+                                canvas.width = img.naturalWidth || img.width || 300;
+                                canvas.height = img.naturalHeight || img.height || 300;
+                                const ctx = canvas.getContext('2d');
+                                ctx.drawImage(img, 0, 0);
+                                settings.logoBase64 = canvas.toDataURL('image/png');
+                                saveToLocalStorage();
+                                applySettingsToUI();
+                                updatePreview();
+                                if (!silent) showToast(`Logo "${fileName}" berhasil dimuat!`);
+                                resolve(true);
+                            } catch (e) {
+                                tryNext();
+                            }
+                        };
+                        img.onerror = tryNext;
+                        img.src = `./${fileName}?t=${Date.now()}`;
+                    }
+
+                    tryNext();
+                });
+            }
+
+            async function switchCvProfile(targetCvId) {
+                if (!CV_PROFILES[targetCvId] || targetCvId === activeCvId) return;
+                saveToLocalStorage();
+
+                activeCvId = targetCvId;
+                lastKnownFileSha = '';
+                localStorage.setItem(ACTIVE_CV_KEY, activeCvId);
+
+                loadFromLocalStorage();
+                setUnsavedSettings(false);
+                applySettingsToUI();
+
+                $('invDate').value = getTodayStr();
+                $('invDueDate').value = getFutureDateStr(14);
+                $('invNumber').value = generateAutoInvoiceNumber($('invDate').value);
+                $('invNotes').value = '';
+                $('selectClientDb').value = '';
+                setSelectedInvoiceClient(null);
+                items = [{ id: Date.now(), name: '', qty: 1, unit: 'Pcs', price: 0 }];
+
+                renderClientsList();
+                renderHistoryList();
+                renderItemRows();
+                updatePreview();
+
+                if (!settings.logoBase64) {
+                    await loadRepoLogoFile(true);
+                }
+
+                await pullFromGithub(true);
+                $('invNumber').value = generateAutoInvoiceNumber($('invDate').value);
+                updatePreview();
+                showToast(`Beralih ke ${settings.compName}`);
+            }
+
             async function pullFromGithub(silent = false) {
                 const cvPath = getActiveCvJsonPath();
                 const token = (ghToken || '').trim();
@@ -1632,40 +1552,32 @@
 
                 updateSyncStatusUI('syncing', 'Memuat...');
                 try {
-                    const cvApiUrl = `https://api.github.com/repos/${FIXED_GH_OWNER}/${FIXED_GH_REPO}/contents/${cvPath}?ref=${FIXED_GH_BRANCH}&t=${Date.now()}`;
-                    const cvRes = await fetch(cvApiUrl, { headers });
-
-                    if (cvRes.status === 404) {
-                        lastKnownFileSha = '';
-                        updateSyncStatusUI('local', 'File Baru');
-                    } else if (!cvRes.ok) {
+                    const cvUrl = `https://api.github.com/repos/${FIXED_GH_OWNER}/${FIXED_GH_REPO}/contents/${cvPath}?ref=${FIXED_GH_BRANCH}&t=${Date.now()}`;
+                    const cvRes = await fetch(cvUrl, { headers });
+                    if (cvRes.ok) {
+                        const cvMeta = await cvRes.json();
+                        lastKnownFileSha = cvMeta.sha || '';
+                        if (cvMeta.content) {
+                            const decoded = JSON.parse(base64ToUtf8(cvMeta.content));
+                            if (decoded.settings) settings = { ...DEFAULT_SETTINGS, ...decoded.settings };
+                            if (Array.isArray(decoded.invoiceHistory)) invoiceHistory = decoded.invoiceHistory;
+                        }
+                    } else if (cvRes.status !== 404) {
                         throw new Error(`HTTP ${cvRes.status}`);
-                    } else {
-                        const fileData = await cvRes.json();
-                        lastKnownFileSha = fileData.sha || '';
-                        const decodedStr = base64ToUtf8(fileData.content || '');
-                        const parsed = JSON.parse(decodedStr);
-
-                        if (parsed.settings) settings = { ...DEFAULT_SETTINGS, ...parsed.settings };
-                        if (Array.isArray(parsed.invoiceHistory)) invoiceHistory = parsed.invoiceHistory;
                     }
 
-                    // Pull shared clients database (data_cons.json)
-                    try {
-                        const consApiUrl = `https://api.github.com/repos/${FIXED_GH_OWNER}/${FIXED_GH_REPO}/contents/${FIXED_CONS_PATH}?ref=${FIXED_GH_BRANCH}&t=${Date.now()}`;
-                        const consRes = await fetch(consApiUrl, { headers });
-                        if (consRes.ok) {
-                            const consFileData = await consRes.json();
-                            lastKnownConsFileSha = consFileData.sha || '';
-                            const consDecoded = base64ToUtf8(consFileData.content || '');
-                            const consParsed = JSON.parse(consDecoded);
-                            if (Array.isArray(consParsed.clientsDb)) {
-                                clientsDb = consParsed.clientsDb;
+                    const consUrl = `https://api.github.com/repos/${FIXED_GH_OWNER}/${FIXED_GH_REPO}/contents/${FIXED_CONS_PATH}?ref=${FIXED_GH_BRANCH}&t=${Date.now()}`;
+                    const consRes = await fetch(consUrl, { headers });
+                    if (consRes.ok) {
+                        const consMeta = await consRes.json();
+                        lastKnownConsFileSha = consMeta.sha || '';
+                        if (consMeta.content) {
+                            const decodedCons = JSON.parse(base64ToUtf8(consMeta.content));
+                            if (Array.isArray(decodedCons.clientsDb)) {
+                                clientsDb = decodedCons.clientsDb;
                             }
-                        } else if (consRes.status === 404) {
-                            lastKnownConsFileSha = '';
                         }
-                    } catch (e) { /* ignore shared clients error if offline */ }
+                    }
 
                     saveToLocalStorage();
                     setUnsavedSettings(false);
@@ -1673,14 +1585,105 @@
                     renderClientsList();
                     renderHistoryList();
                     updatePreview();
-                    updateSyncStatusUI('synced', 'Tersimpan di GitHub');
-                    if (!silent) showToast(`Data berhasil dimuat dari GitHub!`);
+                    updateSyncStatusUI('synced', token ? 'Tersimpan di GitHub' : 'Terhubung (Read-Only)');
+                    if (!silent) showToast('Database berhasil dimuat dari GitHub!');
                     return true;
                 } catch (err) {
                     updateSyncStatusUI('local', 'Lokal');
                     if (!silent) showToast(`Gagal memuat dari GitHub (${err.message})`);
                     return false;
                 }
+            }
+
+            async function pushBinaryBase64ToGithub(filePath, rawBase64, token, commitMsg) {
+                const apiUrl = `https://api.github.com/repos/${FIXED_GH_OWNER}/${FIXED_GH_REPO}/contents/${filePath}`;
+                let shaToUse = '';
+                const checkRes = await fetch(`${apiUrl}?ref=${FIXED_GH_BRANCH}&t=${Date.now()}`, {
+                    headers: {
+                        'Accept': 'application/vnd.github+json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                if (checkRes.ok) {
+                    const existing = await checkRes.json();
+                    shaToUse = existing.sha || '';
+                }
+
+                const bodyPayload = {
+                    message: commitMsg,
+                    content: rawBase64,
+                    branch: FIXED_GH_BRANCH
+                };
+                if (shaToUse) bodyPayload.sha = shaToUse;
+
+                const putRes = await fetch(apiUrl, {
+                    method: 'PUT',
+                    headers: {
+                        'Accept': 'application/vnd.github+json',
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(bodyPayload)
+                });
+
+                if (!putRes.ok) {
+                    const errJson = await putRes.json().catch(() => ({}));
+                    throw new Error(errJson.message || `HTTP ${putRes.status}`);
+                }
+                return true;
+            }
+
+            function renderSquarePwaIconBase64(sourceImg, size) {
+                const canvas = document.createElement('canvas');
+                canvas.width = size;
+                canvas.height = size;
+                const ctx = canvas.getContext('2d');
+                ctx.fillStyle = '#FFFFFF';
+                ctx.fillRect(0, 0, size, size);
+
+                const pad = Math.round(size * 0.1);
+                const maxArea = size - pad * 2;
+                const iw = sourceImg.naturalWidth || sourceImg.width || size;
+                const ih = sourceImg.naturalHeight || sourceImg.height || size;
+                const ratio = Math.min(maxArea / iw, maxArea / ih);
+                const drawW = Math.round(iw * ratio);
+                const drawH = Math.round(ih * ratio);
+                const dx = Math.round((size - drawW) / 2);
+                const dy = Math.round((size - drawH) / 2);
+                ctx.drawImage(sourceImg, dx, dy, drawW, drawH);
+
+                return canvas.toDataURL('image/png').split(',')[1];
+            }
+
+            async function uploadLogoAndPwaIconsToGithub(imgObj, logoPngDataUrl) {
+                const token = (ghToken || '').trim();
+                if (!token) return false;
+
+                const profile = CV_PROFILES[activeCvId];
+                const repoLogoFile = (profile && profile.repoLogoFile) ? profile.repoLogoFile : `logo_${activeCvId}.png`;
+                const logoRawB64 = logoPngDataUrl.split(',')[1];
+                const icon192B64 = renderSquarePwaIconBase64(imgObj, 192);
+                const icon512B64 = renderSquarePwaIconBase64(imgObj, 512);
+
+                await pushBinaryBase64ToGithub(
+                    repoLogoFile,
+                    logoRawB64,
+                    token,
+                    `Upload logo ${repoLogoFile} (${settings.compName})`
+                );
+                await pushBinaryBase64ToGithub(
+                    'icon-192.png',
+                    icon192B64,
+                    token,
+                    `Update PWA icon-192.png (${settings.compName})`
+                );
+                await pushBinaryBase64ToGithub(
+                    'icon-512.png',
+                    icon512B64,
+                    token,
+                    `Update PWA icon-512.png (${settings.compName})`
+                );
+                return true;
             }
 
             async function pushSingleFileToGithub(filePath, payloadObj, knownSha, token, commitMsg) {
@@ -1837,8 +1840,8 @@
                 if (subEl) subEl.textContent = settings.compTagline || settings.compName || '';
                 if (badgeEl) badgeEl.textContent = settings.compName || 'CV. SRIKANDI JAYA MANDIRI';
                 if (repoHintEl) {
-                    const cands = (CV_PROFILES[activeCvId] && CV_PROFILES[activeCvId].logoCandidates) || ['sjm1.1.jpg'];
-                    repoHintEl.textContent = cands[0];
+                    const profile = CV_PROFILES[activeCvId];
+                    repoHintEl.textContent = (profile && profile.repoLogoFile) ? profile.repoLogoFile : 'logo_sjm.png';
                 }
 
                 document.querySelectorAll('[data-cv-check]').forEach(el => {
@@ -3787,7 +3790,7 @@
                     const reader = new FileReader();
                     reader.onload = function (ev) {
                         const img = new Image();
-                        img.onload = function () {
+                        img.onload = async function () {
                             const maxDim = 480;
                             let w = img.width;
                             let h = img.height;
@@ -3804,18 +3807,41 @@
                             canvas.width = w;
                             canvas.height = h;
                             const ctx = canvas.getContext('2d');
-                            ctx.fillStyle = '#FFFFFF';
-                            ctx.fillRect(0, 0, w, h);
+                            ctx.clearRect(0, 0, w, h);
                             ctx.drawImage(img, 0, 0, w, h);
-                            settings.logoBase64 = canvas.toDataURL('image/jpeg', 0.92);
+                            const pngDataUrl = canvas.toDataURL('image/png');
+                            settings.logoBase64 = pngDataUrl;
+
+                            const appleIconEl = $('pwaAppleIconLink');
+                            const faviconEl = $('pwaFaviconLink');
+                            const icon192Preview = 'data:image/png;base64,' + renderSquarePwaIconBase64(img, 192);
+                            if (appleIconEl) appleIconEl.href = icon192Preview;
+                            if (faviconEl) faviconEl.href = icon192Preview;
+
                             applySettingsToUI();
                             updatePreview();
-                            pushToGithub(true, 'cv');
-                            showToast('Logo berhasil diunggah & disimpan');
+
+                            const token = (ghToken || '').trim();
+                            if (token) {
+                                updateSyncStatusUI('syncing', 'Mengunggah Logo...');
+                                try {
+                                    await uploadLogoAndPwaIconsToGithub(img, pngDataUrl);
+                                    await pushToGithub(true, 'cv');
+                                    const repoFile = (CV_PROFILES[activeCvId] && CV_PROFILES[activeCvId].repoLogoFile) || 'logo.png';
+                                    showToast(`Logo (${repoFile}) & ikon PWA otomatis tersimpan ke GitHub!`);
+                                } catch (err) {
+                                    await pushToGithub(true, 'cv');
+                                    showToast(`Logo tersimpan ke JSON (gagal upload file PNG: ${err.message})`);
+                                }
+                            } else {
+                                saveToLocalStorage();
+                                showToast('Logo disimpan lokal. Buka kunci Token GitHub agar otomatis tersimpan ke repo.');
+                            }
                         };
                         img.src = ev.target.result;
                     };
                     reader.readAsDataURL(file);
+                    e.target.value = '';
                 });
 
                 $('btnResetDefaultLogo').addEventListener('click', async () => {
