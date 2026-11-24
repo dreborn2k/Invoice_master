@@ -18,6 +18,7 @@
     <link id="pwaFaviconLink" rel="icon" type="image/png" href="">
 
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -252,44 +253,44 @@
     <header class="no-print sticky pwa-top-bar z-30 bg-white/85 backdrop-blur-xl border-b border-black/[0.06]">
         <div class="max-w-[1440px] mx-auto px-3 sm:px-6 h-16 flex items-center justify-between gap-2">
             <!-- Brand Identity & Multi-CV Switcher -->
-            <div class="flex items-center gap-2.5 min-w-0 relative">
+            <div class="flex items-center gap-2 sm:gap-2.5 flex-1 min-w-0 relative pr-1">
                 <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-[#007AFF] to-[#5856D6] flex items-center justify-center text-white font-bold shadow-sm shrink-0">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                     </svg>
                 </div>
-                <div class="min-w-0">
-                    <button type="button" id="btnCompanySwitcher" class="flex items-center gap-1 text-left group focus:outline-none">
-                        <h1 id="headerCompanyName" class="text-xs sm:text-sm font-bold text-[#1C1C1E] group-hover:text-[#007AFF] transition truncate max-w-[135px] sm:max-w-[220px]">CV. SRIKANDI JAYA MANDIRI</h1>
+                <div class="min-w-0 flex-1">
+                    <button type="button" id="btnCompanySwitcher" class="w-full flex items-center gap-1 text-left group focus:outline-none">
+                        <h1 id="headerCompanyName" class="text-xs sm:text-sm font-bold text-[#1C1C1E] group-hover:text-[#007AFF] transition truncate">CV. SRIKANDI JAYA MANDIRI</h1>
                         <svg class="w-3.5 h-3.5 text-[#8E8E93] group-hover:text-[#007AFF] transition shrink-0" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
                         </svg>
                         <span id="cloudStatusDot" title="Status Sinkronisasi" class="w-2 h-2 rounded-full bg-amber-400 shrink-0 ml-0.5"></span>
                     </button>
-                    <p id="headerCompanySub" class="text-[10px] sm:text-[11px] text-[#8E8E93] font-medium truncate">File: data_sjm.json &bull; Konsumen: data_cons.json</p>
+                    <p id="headerCompanySub" class="text-[10px] sm:text-[11px] text-[#8E8E93] font-medium truncate">Amanah dan Barokah</p>
                 </div>
 
                 <!-- Dropdown Switcher 2 CV -->
-                <div id="companyDropdownMenu" class="hidden absolute top-12 left-0 w-72 bg-white rounded-2xl shadow-xl border border-black/10 p-1.5 z-50 space-y-1">
+                <div id="companyDropdownMenu" class="hidden absolute top-12 left-0 w-72 max-w-[85vw] bg-white rounded-2xl shadow-xl border border-black/10 p-1.5 z-50 space-y-1">
                     <button type="button" data-switch-cv="sjm" class="cv-switch-item w-full text-left px-3 py-2.5 rounded-xl hover:bg-[#F2F2F7] transition flex items-center justify-between gap-2">
                         <div class="min-w-0">
                             <p class="text-xs font-bold text-[#1C1C1E] truncate">CV. SRIKANDI JAYA MANDIRI</p>
-                            <p class="text-[10px] text-[#8E8E93] font-mono">JSON: data_sjm.json</p>
+                            <p class="text-[10px] text-[#8E8E93] truncate">Amanah dan Barokah</p>
                         </div>
-                        <span data-cv-check="sjm" class="text-xs font-bold text-[#007AFF]">&#10003;</span>
+                        <span data-cv-check="sjm" class="text-xs font-bold text-[#007AFF] shrink-0">&#10003;</span>
                     </button>
                     <button type="button" data-switch-cv="djm" class="cv-switch-item w-full text-left px-3 py-2.5 rounded-xl hover:bg-[#F2F2F7] transition flex items-center justify-between gap-2">
                         <div class="min-w-0">
                             <p class="text-xs font-bold text-[#1C1C1E] truncate">Digital Jaya Mandiri</p>
-                            <p class="text-[10px] text-[#8E8E93] font-mono">JSON: data_djm.json</p>
+                            <p class="text-[10px] text-[#8E8E93] truncate">Solusi belanja digital</p>
                         </div>
-                        <span data-cv-check="djm" class="hidden text-xs font-bold text-[#007AFF]">&#10003;</span>
+                        <span data-cv-check="djm" class="hidden text-xs font-bold text-[#007AFF] shrink-0">&#10003;</span>
                     </button>
                 </div>
             </div>
 
             <!-- Desktop Segmented Control Navigation -->
-            <nav class="hidden md:flex items-center bg-[#E5E5EA]/75 p-1 rounded-full">
+            <nav class="hidden md:flex items-center bg-[#E5E5EA]/75 p-1 rounded-full shrink-0">
                 <button type="button" data-nav="invoice" class="nav-tab px-4 py-1.5 rounded-full text-xs font-semibold transition-all bg-white text-[#1C1C1E] shadow-sm">
                     Buat Invoice
                 </button>
@@ -309,10 +310,6 @@
 
             <!-- Primary Action Buttons -->
             <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
-                <button type="button" id="btnInstallPwa" title="Install Aplikasi Full Screen" class="hidden px-2.5 sm:px-3 py-2 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-semibold transition items-center gap-1 shadow-sm">
-                    <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
-                    <span class="hidden sm:inline">Install App</span>
-                </button>
                 <button type="button" id="btnNewInvoice" title="Buat Invoice Baru" class="p-2 sm:px-3 sm:py-2 rounded-full bg-[#F2F2F7] hover:bg-[#E5E5EA] text-[#1C1C1E] text-xs font-semibold transition flex items-center gap-1">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
                     <span class="hidden lg:inline">Baru</span>
@@ -562,7 +559,6 @@
         <section id="page-clients" class="page-section hidden max-w-5xl mx-auto">
             <div class="mb-5">
                 <h2 class="text-xl font-bold text-[#1C1C1E]">Database Konsumen Bersama</h2>
-                <p class="text-xs text-[#8E8E93] mt-0.5">Tersimpan di <code class="font-mono text-[#007AFF]">data_cons.json</code> dan dapat digunakan oleh kedua CV</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
@@ -612,7 +608,6 @@
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
                 <div>
                     <h2 class="text-xl font-bold text-[#1C1C1E]">Riwayat Invoice</h2>
-                    <p class="text-xs text-[#8E8E93] mt-0.5">Daftar invoice tersimpan untuk CV aktif (<span id="historyActiveCvLabel" class="font-semibold text-[#007AFF]">CV. SRIKANDI JAYA MANDIRI</span>)</p>
                 </div>
                 <div class="flex flex-wrap items-center gap-2">
                     <label class="cursor-pointer px-3.5 py-2 rounded-full bg-[#007AFF] hover:bg-[#0062CC] text-white text-xs font-semibold transition flex items-center gap-1.5 shadow-sm shrink-0">
@@ -669,7 +664,7 @@
                         </div>
                         <div class="space-y-2 text-center sm:text-left">
                             <p class="text-xs text-[#636366] leading-relaxed">
-                                Mendukung logo persegi (1:1) maupun memanjang (landscape). Unggah file logo asli Anda atau simpan file logo di repository GitHub (<code id="settingsRepoLogoHint" class="font-mono text-[#1C1C1E]">sjm1.1.jpg</code>).
+                                Mendukung logo persegi (1:1) maupun memanjang (landscape). Unggah file logo asli Anda atau muat logo bawaan dari repository (<code id="settingsRepoLogoHint" class="font-mono text-[#1C1C1E]">sjm1.1.jpg</code>).
                             </p>
                             <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-1">
                                 <label class="cursor-pointer px-4 py-2 rounded-full bg-[#007AFF] hover:bg-[#0062CC] text-white text-xs font-semibold transition shadow-sm">
@@ -801,61 +796,56 @@
                     </div>
                 </div>
 
-                <!-- GitHub Repository Database Card -->
+                <!-- GitHub Repository Database Card (PIN Protected) -->
                 <div class="mac-card p-6 space-y-4">
                     <div class="flex items-center justify-between gap-2">
-                        <div>
-                            <h3 class="text-sm font-bold text-[#1C1C1E]">Database File GitHub</h3>
-                            <p class="text-[11px] text-[#8E8E93] mt-0.5">Setting &amp; riwayat terpisah per CV (<code class="font-mono">data_sjm.json</code> / <code class="font-mono">data_djm.json</code>), konsumen bersama (<code class="font-mono">data_cons.json</code>)</p>
-                        </div>
+                        <h3 class="text-sm font-bold text-[#1C1C1E]">Database File GitHub</h3>
                         <span id="cloudSyncBadge" class="px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 text-[10px] font-bold shrink-0">Lokal</span>
                     </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <div>
-                            <label class="block text-[11px] font-bold text-[#3A3A3C] mb-1">Username GitHub (Owner)</label>
-                            <input type="text" id="ghOwnerInput" class="mac-input w-full px-3 py-2 text-xs font-mono" placeholder="contoh: dreborn2k">
+                    <!-- PIN Unlock Screen -->
+                    <div id="tokenLockBox" class="p-4 rounded-2xl bg-[#F2F2F7] space-y-3">
+                        <div class="flex items-center gap-2 text-xs font-semibold text-[#3A3A3C]">
+                            <svg class="w-4 h-4 text-[#007AFF] shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                            </svg>
+                            <span>Masukkan Password / PIN untuk mengatur Token</span>
                         </div>
-                        <div>
-                            <label class="block text-[11px] font-bold text-[#3A3A3C] mb-1">Nama Repository</label>
-                            <input type="text" id="ghRepoInput" class="mac-input w-full px-3 py-2 text-xs font-mono" placeholder="contoh: Invoice_master">
-                        </div>
-                        <div>
-                            <label class="block text-[11px] font-bold text-[#3A3A3C] mb-1">File Setting &amp; Riwayat CV</label>
-                            <input type="text" id="ghPathInput" class="mac-input w-full px-3 py-2 text-xs font-mono" value="data_sjm.json" placeholder="data_sjm.json">
-                        </div>
-                        <div>
-                            <label class="block text-[11px] font-bold text-[#3A3A3C] mb-1">File Konsumen Bersama</label>
-                            <input type="text" id="ghConsPathInput" class="mac-input w-full px-3 py-2 text-xs font-mono" value="data_cons.json" placeholder="data_cons.json">
-                        </div>
-                        <div class="sm:col-span-2">
-                            <label class="block text-[11px] font-bold text-[#3A3A3C] mb-1">Branch</label>
-                            <input type="text" id="ghBranchInput" class="mac-input w-full px-3 py-2 text-xs font-mono" value="main" placeholder="main">
+                        <div class="flex gap-2">
+                            <input type="password" id="tokenPinInput" class="flex-1 bg-white rounded-xl px-3.5 py-2 text-xs font-mono border border-black/10 focus:outline-none focus:border-[#007AFF]" placeholder="Masukkan Password / PIN...">
+                            <button type="button" id="btnUnlockToken" class="px-4 py-2 rounded-xl bg-[#1C1C1E] hover:bg-black text-white text-xs font-semibold transition shrink-0">
+                                Buka Kunci
+                            </button>
                         </div>
                     </div>
 
-                    <div>
-                        <label class="block text-[11px] font-bold text-[#3A3A3C] mb-1">GitHub Personal Access Token (Fine-grained / Classic)</label>
-                        <input type="password" id="ghTokenInput" class="mac-input w-full px-3 py-2 text-xs font-mono" placeholder="github_pat_... atau ghp_...">
-                        <p class="text-[10.5px] text-[#8E8E93] mt-1 leading-relaxed">
-                            Token disimpan di browser ini agar aplikasi dapat menulis otomatis ke file JSON di GitHub setiap kali Anda klik Simpan atau Upload Logo.
-                        </p>
-                    </div>
+                    <!-- Unlocked Token Controls -->
+                    <div id="tokenUnlockedBox" class="hidden space-y-4">
+                        <div>
+                            <div class="flex items-center justify-between mb-1">
+                                <label class="text-[11px] font-bold text-[#3A3A3C]">GitHub Personal Access Token</label>
+                                <button type="button" id="btnLockToken" class="text-[11px] font-semibold text-rose-600 hover:underline">
+                                    Kunci Kembali
+                                </button>
+                            </div>
+                            <input type="password" id="ghTokenInput" class="mac-input w-full px-3 py-2.5 text-xs font-mono" placeholder="github_pat_... atau ghp_...">
+                        </div>
 
-                    <div class="flex flex-wrap items-center gap-2 pt-1">
-                        <button type="button" id="btnConnectGithub" class="px-4 py-2 rounded-xl bg-[#1C1C1E] hover:bg-black text-white text-xs font-semibold transition">
-                            Hubungkan &amp; Muat dari GitHub
-                        </button>
-                        <button type="button" id="btnPushGithubNow" class="px-4 py-2 rounded-xl bg-[#007AFF]/10 hover:bg-[#007AFF]/20 text-[#007AFF] text-xs font-bold transition">
-                            Paksa Sinkron ke GitHub
-                        </button>
-                        <button type="button" id="btnExportBackupJson" class="px-4 py-2 rounded-xl bg-[#F2F2F7] hover:bg-[#E5E5EA] text-[#1C1C1E] text-xs font-semibold transition">
-                            Export JSON
-                        </button>
-                        <label class="cursor-pointer px-4 py-2 rounded-xl bg-[#F2F2F7] hover:bg-[#E5E5EA] text-[#1C1C1E] text-xs font-semibold transition">
-                            <span>Import JSON</span>
-                            <input type="file" id="importBackupInput" accept=".json,application/json" class="hidden">
-                        </label>
+                        <div class="flex flex-wrap items-center gap-2 pt-1">
+                            <button type="button" id="btnConnectGithub" class="px-4 py-2 rounded-xl bg-[#1C1C1E] hover:bg-black text-white text-xs font-semibold transition">
+                                Hubungkan &amp; Muat dari GitHub
+                            </button>
+                            <button type="button" id="btnPushGithubNow" class="px-4 py-2 rounded-xl bg-[#007AFF]/10 hover:bg-[#007AFF]/20 text-[#007AFF] text-xs font-bold transition">
+                                Paksa Sinkron ke GitHub
+                            </button>
+                            <button type="button" id="btnExportBackupJson" class="px-4 py-2 rounded-xl bg-[#F2F2F7] hover:bg-[#E5E5EA] text-[#1C1C1E] text-xs font-semibold transition">
+                                Export JSON
+                            </button>
+                            <label class="cursor-pointer px-4 py-2 rounded-xl bg-[#F2F2F7] hover:bg-[#E5E5EA] text-[#1C1C1E] text-xs font-semibold transition">
+                                <span>Import JSON</span>
+                                <input type="file" id="importBackupInput" accept=".json,application/json" class="hidden">
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1044,7 +1034,6 @@
                 const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
                 const badge = document.getElementById('pwaModeBadge');
                 const hint = document.getElementById('pwaInstallHintText');
-                const btnTop = document.getElementById('btnInstallPwa');
                 const btnSet = document.getElementById('btnSettingsInstallPwa');
 
                 if (isStandalone) {
@@ -1055,15 +1044,9 @@
                     if (hint) {
                         hint.textContent = 'Aplikasi sedang berjalan dalam mode layar penuh (PWA Standalone) tanpa header browser.';
                     }
-                    if (btnTop) btnTop.classList.add('hidden');
                     if (btnSet) {
                         btnSet.textContent = 'Terpasang (Full Screen)';
                         btnSet.className = 'px-4 py-2.5 rounded-xl bg-emerald-50 text-emerald-700 text-xs font-bold shrink-0 cursor-default';
-                    }
-                } else {
-                    if (btnTop && deferredInstallPrompt) {
-                        btnTop.classList.remove('hidden');
-                        btnTop.classList.add('flex');
                     }
                 }
             }
@@ -1115,12 +1098,18 @@
             initPwaSupport();
 
             // =========================================================================
-            // 1. MULTI-CV PROFILES & PERSISTENT STORAGE KEYS
+            // 1. MULTI-CV PROFILES, FIXED GITHUB REPO & PIN PROTECTION
             // =========================================================================
             const ACTIVE_CV_KEY = 'invoice_active_cv_v1';
             const LOCAL_STORAGE_PREFIX = 'invoice_cv_data_v1_';
             const SHARED_CLIENTS_STORAGE_KEY = 'invoice_shared_clients_v1';
-            const GH_CONFIG_KEY = 'srikandi_invoice_gh_config_v1';
+            const GH_TOKEN_STORAGE_KEY = 'srikandi_invoice_gh_token_v1';
+            const TOKEN_ACCESS_PIN = 'chello2205';
+
+            const FIXED_GH_OWNER = 'dreborn2k';
+            const FIXED_GH_REPO = 'Invoice_master';
+            const FIXED_GH_BRANCH = 'main';
+            const FIXED_CONS_PATH = 'data_cons.json';
 
             const CV_PROFILES = {
                 sjm: {
@@ -1338,45 +1327,25 @@
 
             let DEFAULT_SETTINGS = { ...CV_PROFILES[activeCvId].settings };
 
-            let ghConfig = {
-                owner: '',
-                repo: '',
-                path: CV_PROFILES[activeCvId].defaultJsonFile,
-                consPath: 'data_cons.json',
-                branch: 'main',
-                token: '',
-                pathsByCv: {
-                    sjm: 'data_sjm.json',
-                    djm: 'data_djm.json'
+            let ghToken = '';
+            try {
+                ghToken = localStorage.getItem(GH_TOKEN_STORAGE_KEY) || '';
+                if (!ghToken) {
+                    const legacyCfg = JSON.parse(localStorage.getItem('srikandi_invoice_gh_config_v1') || 'null');
+                    if (legacyCfg && legacyCfg.token) {
+                        ghToken = legacyCfg.token;
+                        localStorage.setItem(GH_TOKEN_STORAGE_KEY, ghToken);
+                    }
                 }
-            };
+            } catch (e) { /* ignore */ }
+
+            function getActiveCvJsonPath() {
+                return CV_PROFILES[activeCvId] ? CV_PROFILES[activeCvId].defaultJsonFile : 'data_sjm.json';
+            }
+
             let lastKnownFileSha = '';
             let lastKnownConsFileSha = '';
-
-            try {
-                const host = window.location.hostname || '';
-                const pathParts = (window.location.pathname || '').split('/').filter(Boolean);
-                if (host.endsWith('.github.io')) {
-                    ghConfig.owner = host.replace('.github.io', '');
-                    ghConfig.repo = pathParts.length > 0 ? pathParts[0] : host;
-                }
-            } catch (e) { /* ignore */ }
-
-            try {
-                const savedGh = JSON.parse(localStorage.getItem(GH_CONFIG_KEY) || 'null');
-                if (savedGh) {
-                    ghConfig = {
-                        ...ghConfig,
-                        ...savedGh,
-                        consPath: savedGh.consPath || 'data_cons.json',
-                        pathsByCv: {
-                            sjm: (savedGh.pathsByCv && savedGh.pathsByCv.sjm) || 'data_sjm.json',
-                            djm: (savedGh.pathsByCv && savedGh.pathsByCv.djm) || 'data_djm.json'
-                        }
-                    };
-                    ghConfig.path = ghConfig.pathsByCv[activeCvId] || CV_PROFILES[activeCvId].defaultJsonFile;
-                }
-            } catch (e) { /* ignore */ }
+            let isTokenUnlocked = false;
 
             let settings = { ...DEFAULT_SETTINGS };
             let clientsDb = [];
@@ -1392,6 +1361,18 @@
             let hasUnsavedSettings = false;
 
             const $ = (id) => document.getElementById(id);
+
+            function setTokenLockState(unlocked) {
+                isTokenUnlocked = Boolean(unlocked);
+                const lockBox = $('tokenLockBox');
+                const unlockBox = $('tokenUnlockedBox');
+                const pinInput = $('tokenPinInput');
+                if (lockBox) lockBox.classList.toggle('hidden', isTokenUnlocked);
+                if (unlockBox) unlockBox.classList.toggle('hidden', !isTokenUnlocked);
+                if (!isTokenUnlocked && pinInput) {
+                    pinInput.value = '';
+                }
+            }
 
             function getCombinedFooterNotes() {
                 const paymentInfo = (settings.defaultNotes || '').trim();
@@ -1563,16 +1544,14 @@
                 const dot = $('cloudStatusDot');
                 const badge = $('cloudSyncBadge');
                 const subEl = $('headerCompanySub');
-                const jsonName = ghConfig.path || (CV_PROFILES[activeCvId] ? CV_PROFILES[activeCvId].defaultJsonFile : 'data_sjm.json');
-                const consName = ghConfig.consPath || 'data_cons.json';
                 if (subEl) {
-                    subEl.textContent = `File: ${jsonName} • Konsumen: ${consName}`;
+                    subEl.textContent = settings.compTagline || settings.compName || '';
                 }
                 if (status === 'synced') {
                     if (dot) dot.className = 'w-2 h-2 rounded-full bg-[#34C759] shrink-0 ml-0.5';
                     if (badge) {
                         badge.className = 'px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-bold shrink-0';
-                        badge.textContent = text || `Tersimpan (${jsonName} & ${consName})`;
+                        badge.textContent = text || 'Tersimpan di GitHub';
                     }
                 } else if (status === 'syncing') {
                     if (dot) dot.className = 'w-2 h-2 rounded-full bg-[#007AFF] animate-pulse shrink-0 ml-0.5';
@@ -1638,11 +1617,6 @@
                 if (!CV_PROFILES[targetCvId]) return;
                 setUnsavedSettings(false);
                 saveToLocalStorage();
-                try {
-                    ghConfig.pathsByCv[activeCvId] = ($('ghPathInput') ? $('ghPathInput').value.trim() : '') || ghConfig.path || CV_PROFILES[activeCvId].defaultJsonFile;
-                    ghConfig.consPath = ($('ghConsPathInput') ? $('ghConsPathInput').value.trim() : '') || ghConfig.consPath || 'data_cons.json';
-                    localStorage.setItem(GH_CONFIG_KEY, JSON.stringify(ghConfig));
-                } catch (e) { /* ignore */ }
 
                 activeCvId = targetCvId;
                 try {
@@ -1650,7 +1624,6 @@
                 } catch (e) { /* ignore */ }
 
                 DEFAULT_SETTINGS = { ...CV_PROFILES[activeCvId].settings };
-                ghConfig.path = (ghConfig.pathsByCv && ghConfig.pathsByCv[activeCvId]) || CV_PROFILES[activeCvId].defaultJsonFile;
                 lastKnownFileSha = '';
 
                 loadFromLocalStorage();
@@ -1668,72 +1641,78 @@
                 if (!settings.logoBase64) {
                     await loadRepoLogoFile(true);
                 }
-                if (ghConfig.owner && ghConfig.repo) {
-                    await pullFromGithub(true);
+                const pulled = await pullFromGithub(true);
+                if (pulled) {
+                    $('invNumber').value = generateAutoInvoiceNumber();
+                    updatePreview();
                 }
 
-                showToast(`Beralih ke ${settings.compName} (${ghConfig.path})`);
+                showToast(`Beralih ke ${settings.compName}`);
             }
 
-            function encodeBase64Unicode(str) {
-                return btoa(unescape(encodeURIComponent(str)));
+            // =========================================================================
+            // 2. GITHUB REST API SYNC (PER-CV JSON & SHARED CLIENTS JSON)
+            // =========================================================================
+            function utf8ToBase64(str) {
+                const bytes = new TextEncoder().encode(str);
+                let binary = '';
+                for (let i = 0; i < bytes.length; i++) {
+                    binary += String.fromCharCode(bytes[i]);
+                }
+                return btoa(binary);
             }
 
-            function decodeBase64Unicode(b64) {
-                return decodeURIComponent(escape(atob(b64.replace(/\n/g, ''))));
+            function base64ToUtf8(b64) {
+                const binary = atob(b64.replace(/\s/g, ''));
+                const bytes = new Uint8Array(binary.length);
+                for (let i = 0; i < binary.length; i++) {
+                    bytes[i] = binary.charCodeAt(i);
+                }
+                return new TextDecoder().decode(bytes);
             }
 
             async function pullFromGithub(silent = false) {
-                if (!ghConfig.owner || !ghConfig.repo) return false;
-                const filePath = ghConfig.path || (CV_PROFILES[activeCvId] ? CV_PROFILES[activeCvId].defaultJsonFile : 'data_sjm.json');
-                const consPath = ghConfig.consPath || 'data_cons.json';
-                const branch = encodeURIComponent(ghConfig.branch || 'main');
-                updateSyncStatusUI('syncing', 'Memuat...');
+                const cvPath = getActiveCvJsonPath();
+                const token = (ghToken || '').trim();
                 const headers = { 'Accept': 'application/vnd.github+json' };
-                if (ghConfig.token) {
-                    headers['Authorization'] = `Bearer ${ghConfig.token}`;
-                }
+                if (token) headers['Authorization'] = `Bearer ${token}`;
 
-                const cvApiUrl = `https://api.github.com/repos/${encodeURIComponent(ghConfig.owner)}/${encodeURIComponent(ghConfig.repo)}/contents/${filePath}?ref=${branch}&t=${Date.now()}`;
-                const consApiUrl = `https://api.github.com/repos/${encodeURIComponent(ghConfig.owner)}/${encodeURIComponent(ghConfig.repo)}/contents/${consPath}?ref=${branch}&t=${Date.now()}`;
-
+                updateSyncStatusUI('syncing', 'Memuat...');
                 try {
-                    const [cvRes, consRes] = await Promise.all([
-                        fetch(cvApiUrl, { headers }),
-                        fetch(consApiUrl, { headers })
-                    ]);
+                    const cvApiUrl = `https://api.github.com/repos/${FIXED_GH_OWNER}/${FIXED_GH_REPO}/contents/${cvPath}?ref=${FIXED_GH_BRANCH}&t=${Date.now()}`;
+                    const cvRes = await fetch(cvApiUrl, { headers });
 
-                    let loadedAny = false;
+                    if (cvRes.status === 404) {
+                        lastKnownFileSha = '';
+                        updateSyncStatusUI('local', 'File Baru');
+                    } else if (!cvRes.ok) {
+                        throw new Error(`HTTP ${cvRes.status}`);
+                    } else {
+                        const fileData = await cvRes.json();
+                        lastKnownFileSha = fileData.sha || '';
+                        const decodedStr = base64ToUtf8(fileData.content || '');
+                        const parsed = JSON.parse(decodedStr);
 
-                    if (cvRes.ok) {
-                        const cvJson = await cvRes.json();
-                        lastKnownFileSha = cvJson.sha || '';
-                        if (cvJson.content) {
-                            const decodedCv = JSON.parse(decodeBase64Unicode(cvJson.content));
-                            if (decodedCv.settings) settings = { ...DEFAULT_SETTINGS, ...decodedCv.settings };
-                            if (Array.isArray(decodedCv.invoiceHistory)) invoiceHistory = decodedCv.invoiceHistory;
-                            if (!consRes.ok && Array.isArray(decodedCv.clientsDb) && decodedCv.clientsDb.length > 0 && clientsDb.length === 0) {
-                                clientsDb = decodedCv.clientsDb;
-                            }
-                            loadedAny = true;
-                        }
-                    } else if (cvRes.status !== 404) {
-                        throw new Error('HTTP ' + cvRes.status);
+                        if (parsed.settings) settings = { ...DEFAULT_SETTINGS, ...parsed.settings };
+                        if (Array.isArray(parsed.invoiceHistory)) invoiceHistory = parsed.invoiceHistory;
                     }
 
-                    if (consRes.ok) {
-                        const consJson = await consRes.json();
-                        lastKnownConsFileSha = consJson.sha || '';
-                        if (consJson.content) {
-                            const decodedCons = JSON.parse(decodeBase64Unicode(consJson.content));
-                            if (Array.isArray(decodedCons.clientsDb)) {
-                                clientsDb = decodedCons.clientsDb;
+                    // Pull shared clients database (data_cons.json)
+                    try {
+                        const consApiUrl = `https://api.github.com/repos/${FIXED_GH_OWNER}/${FIXED_GH_REPO}/contents/${FIXED_CONS_PATH}?ref=${FIXED_GH_BRANCH}&t=${Date.now()}`;
+                        const consRes = await fetch(consApiUrl, { headers });
+                        if (consRes.ok) {
+                            const consFileData = await consRes.json();
+                            lastKnownConsFileSha = consFileData.sha || '';
+                            const consDecoded = base64ToUtf8(consFileData.content || '');
+                            const consParsed = JSON.parse(consDecoded);
+                            if (Array.isArray(consParsed.clientsDb)) {
+                                clientsDb = consParsed.clientsDb;
                             }
-                            loadedAny = true;
+                        } else if (consRes.status === 404) {
+                            lastKnownConsFileSha = '';
                         }
-                    } else if (consRes.status !== 404) {
-                        throw new Error('HTTP ' + consRes.status);
-                    }
+                    } catch (e) { /* ignore shared clients error if offline */ }
 
                     saveToLocalStorage();
                     setUnsavedSettings(false);
@@ -1741,273 +1720,182 @@
                     renderClientsList();
                     renderHistoryList();
                     updatePreview();
-
-                    if (!loadedAny) {
-                        updateSyncStatusUI('local', `Belum ada ${filePath}`);
-                        if (!silent) showToast(`File ${filePath} & ${consPath} belum ada di repo, siap dibuat saat simpan.`);
-                        return false;
-                    }
-
-                    updateSyncStatusUI('synced', `Tersimpan (${filePath} & ${consPath})`);
-                    if (!silent) showToast(`Data dimuat dari ${filePath} & ${consPath}!`);
+                    updateSyncStatusUI('synced', 'Tersimpan di GitHub');
+                    if (!silent) showToast(`Data berhasil dimuat dari GitHub!`);
                     return true;
                 } catch (err) {
-                    updateSyncStatusUI('local', 'Offline / Token Salah');
-                    if (!silent) showToast('Gagal memuat dari GitHub: ' + err.message);
+                    updateSyncStatusUI('local', 'Lokal');
+                    if (!silent) showToast(`Gagal memuat dari GitHub (${err.message})`);
                     return false;
                 }
             }
 
-            async function putGithubJsonFile(filePath, payloadObj, currentSha, headers, branch) {
-                const apiUrl = `https://api.github.com/repos/${encodeURIComponent(ghConfig.owner)}/${encodeURIComponent(ghConfig.repo)}/contents/${filePath}`;
-                let shaToUse = currentSha;
-
+            async function pushSingleFileToGithub(filePath, payloadObj, knownSha, token, commitMsg) {
+                const apiUrl = `https://api.github.com/repos/${FIXED_GH_OWNER}/${FIXED_GH_REPO}/contents/${filePath}`;
+                let shaToUse = knownSha;
                 if (!shaToUse) {
-                    const getRes = await fetch(`${apiUrl}?ref=${encodeURIComponent(branch)}&t=${Date.now()}`, { headers });
-                    if (getRes.ok) {
-                        const existing = await getRes.json();
+                    const checkRes = await fetch(`${apiUrl}?ref=${FIXED_GH_BRANCH}&t=${Date.now()}`, {
+                        headers: {
+                            'Accept': 'application/vnd.github+json',
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    if (checkRes.ok) {
+                        const existing = await checkRes.json();
                         shaToUse = existing.sha || '';
                     }
                 }
 
-                const body = {
-                    message: `Update ${filePath} (${new Date().toLocaleString('id-ID')})`,
-                    content: encodeBase64Unicode(JSON.stringify(payloadObj, null, 2)),
-                    branch
+                const bodyPayload = {
+                    message: commitMsg,
+                    content: utf8ToBase64(JSON.stringify(payloadObj, null, 2)),
+                    branch: FIXED_GH_BRANCH
                 };
-                if (shaToUse) {
-                    body.sha = shaToUse;
-                }
+                if (shaToUse) bodyPayload.sha = shaToUse;
 
                 const putRes = await fetch(apiUrl, {
                     method: 'PUT',
-                    headers,
-                    body: JSON.stringify(body)
+                    headers: {
+                        'Accept': 'application/vnd.github+json',
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(bodyPayload)
                 });
 
                 if (!putRes.ok) {
-                    const errData = await putRes.json().catch(() => ({}));
-                    throw new Error(`${filePath}: ` + (errData.message || ('HTTP ' + putRes.status)));
+                    const errJson = await putRes.json().catch(() => ({}));
+                    throw new Error(errJson.message || `HTTP ${putRes.status}`);
                 }
 
-                const putJson = await putRes.json();
-                return (putJson.content && putJson.content.sha) || shaToUse;
+                const result = await putRes.json();
+                return (result.content && result.content.sha) ? result.content.sha : shaToUse;
             }
 
-            async function pushToGithub(silent = true, scope = 'all') {
+            async function pushToGithub(silent = false, targetScope = 'all') {
                 saveToLocalStorage();
-                const filePath = ghConfig.path || (CV_PROFILES[activeCvId] ? CV_PROFILES[activeCvId].defaultJsonFile : 'data_sjm.json');
-                const consPath = ghConfig.consPath || 'data_cons.json';
-
-                if (!ghConfig.owner || !ghConfig.repo || !ghConfig.token) {
-                    updateSyncStatusUI('local', 'Lokal (Token belum diisi)');
+                const token = (ghToken || '').trim();
+                if (!token) {
+                    updateSyncStatusUI('local', 'Tersimpan Lokal');
+                    if (!silent) showToast('Token GitHub belum diatur. Tersimpan di browser lokal.');
                     return false;
                 }
 
-                updateSyncStatusUI('syncing', 'Menyimpan ke GitHub...');
-                const branch = ghConfig.branch || 'main';
-                const headers = {
-                    'Accept': 'application/vnd.github+json',
-                    'Authorization': `Bearer ${ghConfig.token}`,
-                    'Content-Type': 'application/json'
-                };
-
+                updateSyncStatusUI('syncing', 'Menyimpan...');
                 try {
-                    if (scope === 'all' || scope === 'cv') {
-                        const cvPayloadObj = {
-                            app: `${settings.compName} Invoice System`,
+                    if (targetScope === 'all' || targetScope === 'cv') {
+                        const cvPath = getActiveCvJsonPath();
+                        const cvPayload = {
                             cvId: activeCvId,
-                            updatedAt: new Date().toISOString(),
                             settings,
-                            invoiceHistory
+                            invoiceHistory,
+                            updatedAt: new Date().toISOString()
                         };
-                        lastKnownFileSha = await putGithubJsonFile(filePath, cvPayloadObj, lastKnownFileSha, headers, branch);
+                        lastKnownFileSha = await pushSingleFileToGithub(
+                            cvPath,
+                            cvPayload,
+                            lastKnownFileSha,
+                            token,
+                            `Update ${cvPath} (${settings.compName})`
+                        );
                     }
 
-                    if (scope === 'all' || scope === 'cons') {
-                        const consPayloadObj = {
-                            app: 'Shared Customer Database (Multi-CV)',
-                            updatedAt: new Date().toISOString(),
-                            clientsDb
+                    if (targetScope === 'all' || targetScope === 'cons') {
+                        const consPayload = {
+                            clientsDb,
+                            updatedAt: new Date().toISOString()
                         };
-                        lastKnownConsFileSha = await putGithubJsonFile(consPath, consPayloadObj, lastKnownConsFileSha, headers, branch);
+                        lastKnownConsFileSha = await pushSingleFileToGithub(
+                            FIXED_CONS_PATH,
+                            consPayload,
+                            lastKnownConsFileSha,
+                            token,
+                            `Update ${FIXED_CONS_PATH} (Database Konsumen Bersama)`
+                        );
                     }
 
-                    updateSyncStatusUI('synced', `Tersimpan (${filePath} & ${consPath})`);
-                    if (!silent) showToast(`Berhasil sinkron ke ${filePath} & ${consPath}!`);
+                    updateSyncStatusUI('synced', 'Tersimpan di GitHub');
+                    if (!silent) showToast('Data tersinkronisasi ke GitHub!');
                     return true;
                 } catch (err) {
-                    updateSyncStatusUI('local', 'Gagal Sync GitHub');
-                    if (!silent) showToast('Gagal sync GitHub: ' + err.message);
+                    updateSyncStatusUI('local', 'Gagal Sinkron');
+                    if (!silent) showToast(`Gagal simpan ke GitHub: ${err.message}`);
                     return false;
                 }
             }
 
-            function switchPage(pageName) {
-                currentPage = pageName;
-                document.querySelectorAll('.page-section').forEach(sec => sec.classList.add('hidden'));
-                const target = $('page-' + pageName);
-                if (target) target.classList.remove('hidden');
-
-                document.querySelectorAll('.nav-tab').forEach(btn => {
-                    const active = btn.getAttribute('data-nav') === pageName;
-                    if (active) {
-                        btn.classList.add('bg-white', 'text-[#1C1C1E]', 'shadow-sm');
-                        btn.classList.remove('text-[#636366]');
-                    } else {
-                        btn.classList.remove('bg-white', 'text-[#1C1C1E]', 'shadow-sm');
-                        btn.classList.add('text-[#636366]');
-                    }
-                });
-
-                document.querySelectorAll('.mob-nav-btn').forEach(btn => {
-                    const active = btn.getAttribute('data-nav') === pageName;
-                    btn.classList.toggle('text-[#007AFF]', active);
-                    btn.classList.toggle('text-[#8E8E93]', !active);
-                });
-
-                if (pageName === 'invoice') {
-                    setTimeout(applyA4Zoom, 50);
-                }
+            // =========================================================================
+            // 3. UI SKIN, THEME HELPERS & SETTINGS SYNC
+            // =========================================================================
+            function applyUiSkin(skinName) {
+                const skin = skinName || 'iphone';
+                document.body.classList.remove('ui-oneui', 'ui-macos', 'ui-linux');
+                if (skin === 'oneui') document.body.classList.add('ui-oneui');
+                else if (skin === 'macos') document.body.classList.add('ui-macos');
+                else if (skin === 'linux') document.body.classList.add('ui-linux');
             }
 
-            function switchMobileInvoiceView(view) {
-                const editorCol = $('editorColumn');
-                const previewCol = $('previewColumn');
-                const tabForm = $('mobTabForm');
-                const tabPrev = $('mobTabPreview');
-
-                if (view === 'preview') {
-                    editorCol.classList.add('hidden');
-                    previewCol.classList.remove('hidden');
-                    tabPrev.classList.add('bg-white', 'text-[#1C1C1E]', 'shadow-sm');
-                    tabPrev.classList.remove('text-[#636366]');
-                    tabForm.classList.remove('bg-white', 'text-[#1C1C1E]', 'shadow-sm');
-                    tabForm.classList.add('text-[#636366]');
-                    setTimeout(applyA4Zoom, 40);
-                } else {
-                    previewCol.classList.add('hidden');
-                    editorCol.classList.remove('hidden');
-                    tabForm.classList.add('bg-white', 'text-[#1C1C1E]', 'shadow-sm');
-                    tabForm.classList.remove('text-[#636366]');
-                    tabPrev.classList.remove('bg-white', 'text-[#1C1C1E]', 'shadow-sm');
-                    tabPrev.classList.add('text-[#636366]');
-                }
-            }
-
-            function applyA4Zoom() {
-                const wrapper = $('previewScrollWrapper');
-                const scaleBox = $('a4ScaleBox');
-                const stack = $('invoicePagesStack');
-                const label = $('zoomLevelLabel');
-                if (!wrapper || !scaleBox || !stack) return;
-
-                const firstPaper = stack.querySelector('.a4-paper');
-                const stackWidthPx = (firstPaper && firstPaper.offsetWidth) || stack.offsetWidth || 794;
-                const stackHeightPx = stack.offsetHeight || 1123;
-                const availableWidth = Math.max(260, wrapper.clientWidth - 32);
-
-                let scale = 1;
-                if (currentZoomMode === 'auto') {
-                    scale = Math.min(1, availableWidth / stackWidthPx);
-                    manualZoomScale = scale;
-                    if (label) label.textContent = 'Auto';
-                } else {
-                    scale = manualZoomScale;
-                    if (label) label.textContent = Math.round(scale * 100) + '%';
-                }
-
-                stack.style.transform = `scale(${scale})`;
-                scaleBox.style.width = `${stackWidthPx * scale}px`;
-                scaleBox.style.height = `${stackHeightPx * scale}px`;
-            }
-
-            function detectLogoOrientation(src) {
-                if (!src) {
-                    logoAspectType = 'square';
-                    updatePreview();
-                    return;
-                }
-                const img = new Image();
-                img.onload = function () {
-                    const ratio = (img.naturalWidth || 1) / (img.naturalHeight || 1);
-                    logoAspectType = ratio > 1.35 ? 'landscape' : 'square';
-                    updatePreview();
-                };
-                img.src = src;
-            }
-
-            function applyUiSkin(skinKey) {
-                document.body.classList.remove('ui-iphone', 'ui-oneui', 'ui-macos', 'ui-linux');
-                document.body.classList.add('ui-' + (skinKey || 'iphone'));
-                const uiSelect = $('setUiSkinSelect');
-                if (uiSelect && uiSelect.value !== (skinKey || 'iphone')) {
-                    uiSelect.value = skinKey || 'iphone';
-                }
-            }
-
-            function getActiveTheme(overrideThemeKey) {
-                const themeKey = overrideThemeKey || ($('setInvoiceThemeSelect') ? $('setInvoiceThemeSelect').value : settings.invoiceTheme) || 'slate';
-                if (themeKey === 'custom') {
-                    const pHex = ($('customPrimaryColor') ? $('customPrimaryColor').value : settings.customPrimaryHex) || '#BE123C';
-                    const aHex = ($('customAccentColor') ? $('customAccentColor').value : settings.customAccentHex) || '#F472B6';
-                    const softStart = lightenHex(pHex, 0.93);
-                    const softEnd = lightenHex(aHex, 0.90);
-                    const border = lightenHex(pHex, 0.78);
+            function getActiveTheme() {
+                const selectEl = $('setInvoiceThemeSelect');
+                const key = (selectEl && selectEl.value) ? selectEl.value : (settings.invoiceTheme || 'slate');
+                if (key === 'custom') {
+                    const pHex = ($('customPrimaryColor') ? $('customPrimaryColor').value : '') || settings.customPrimaryHex || '#BE123C';
+                    const aHex = ($('customAccentColor') ? $('customAccentColor').value : '') || settings.customAccentHex || '#F472B6';
+                    const soft = lightenHex(pHex, 0.90);
+                    const soft2 = lightenHex(aHex, 0.92);
+                    const border = lightenHex(pHex, 0.72);
                     return {
                         name: 'Custom Gradasi',
                         primaryHex: pHex,
                         primaryRgb: hexToRgb(pHex),
                         secondaryHex: aHex,
                         secondaryRgb: hexToRgb(aHex),
-                        accentHex: pHex,
-                        accentRgb: hexToRgb(pHex),
-                        gradientCss: `linear-gradient(135deg, ${pHex} 0%, ${aHex} 78%, #94A3B8 100%)`,
-                        softGradientCss: `linear-gradient(135deg, ${softStart.hex} 0%, ${softEnd.hex} 65%, #F1F5F9 100%)`,
-                        softBgHex: softStart.hex,
-                        softBgRgb: softStart.rgb,
+                        accentHex: aHex,
+                        accentRgb: hexToRgb(aHex),
+                        gradientCss: `linear-gradient(135deg, ${pHex} 0%, ${aHex} 100%)`,
+                        softGradientCss: `linear-gradient(135deg, ${soft.hex} 0%, ${soft2.hex} 100%)`,
+                        softBgHex: soft.hex,
+                        softBgRgb: soft.rgb,
                         borderHex: border.hex,
                         borderRgb: border.rgb
                     };
                 }
-                return INVOICE_THEMES[themeKey] || INVOICE_THEMES.slate;
+                return INVOICE_THEMES[key] || INVOICE_THEMES.slate;
             }
 
-            function updateThemeSelectorUI(selectedKey) {
-                const themeSelect = $('setInvoiceThemeSelect');
-                if (themeSelect && themeSelect.value !== selectedKey) {
-                    themeSelect.value = selectedKey;
-                }
-                const pickerRow = $('customThemePickerRow');
-                if (pickerRow) {
-                    pickerRow.classList.toggle('hidden', selectedKey !== 'custom');
-                }
+            function updateThemeSelectorUI(themeKey) {
+                const selectEl = $('setInvoiceThemeSelect');
+                const customRow = $('customThemePickerRow');
                 const swatch = $('themePreviewSwatch');
-                if (swatch) {
-                    const themeObj = getActiveTheme(selectedKey);
-                    swatch.style.background = themeObj.gradientCss;
-                }
+                const key = themeKey || 'slate';
+                if (selectEl) selectEl.value = key;
+                if (customRow) customRow.classList.toggle('hidden', key !== 'custom');
+                const t = getActiveTheme();
+                if (swatch) swatch.style.background = t.gradientCss;
             }
 
-            function applySettingsToUI() {
-                const currentCompName = settings.compName || (CV_PROFILES[activeCvId] ? CV_PROFILES[activeCvId].settings.compName : 'CV. SRIKANDI JAYA MANDIRI');
-                $('headerCompanyName').textContent = currentCompName;
-                if ($('settingsActiveCvBadge')) {
-                    $('settingsActiveCvBadge').textContent = currentCompName;
-                }
-                if ($('historyActiveCvLabel')) {
-                    $('historyActiveCvLabel').textContent = currentCompName;
+            function updateHeaderCvSwitcherUI() {
+                const nameEl = $('headerCompanyName');
+                const subEl = $('headerCompanySub');
+                const badgeEl = $('settingsActiveCvBadge');
+                const repoHintEl = $('settingsRepoLogoHint');
+
+                if (nameEl) nameEl.textContent = settings.compName || 'CV. SRIKANDI JAYA MANDIRI';
+                if (subEl) subEl.textContent = settings.compTagline || settings.compName || '';
+                if (badgeEl) badgeEl.textContent = settings.compName || 'CV. SRIKANDI JAYA MANDIRI';
+                if (repoHintEl) {
+                    const cands = (CV_PROFILES[activeCvId] && CV_PROFILES[activeCvId].logoCandidates) || ['sjm1.1.jpg'];
+                    repoHintEl.textContent = cands[0];
                 }
 
                 document.querySelectorAll('[data-cv-check]').forEach(el => {
-                    const isActive = el.getAttribute('data-cv-check') === activeCvId;
-                    el.classList.toggle('hidden', !isActive);
+                    const isMatch = el.getAttribute('data-cv-check') === activeCvId;
+                    el.classList.toggle('hidden', !isMatch);
                 });
+            }
 
-                const logoHint = $('settingsRepoLogoHint');
-                if (logoHint && CV_PROFILES[activeCvId]) {
-                    logoHint.textContent = CV_PROFILES[activeCvId].logoCandidates[0];
-                }
+            function applySettingsToUI() {
+                updateHeaderCvSwitcherUI();
 
                 $('setCompName').value = settings.compName || '';
                 $('setCompTagline').value = settings.compTagline || '';
@@ -2021,78 +1909,76 @@
                 $('setSignerRole').value = settings.signerRole || '';
                 $('setDefaultNotes').value = settings.defaultNotes || '';
 
-                $('customPrimaryColor').value = settings.customPrimaryHex || '#BE123C';
-                $('customAccentColor').value = settings.customAccentHex || '#F472B6';
+                if ($('ghTokenInput')) $('ghTokenInput').value = ghToken || '';
+                setTokenLockState(false);
 
-                applyUiSkin(settings.uiSkin || 'iphone');
-                updateThemeSelectorUI(settings.invoiceTheme || 'slate');
+                const skinVal = settings.uiSkin || 'iphone';
+                if ($('setUiSkinSelect')) $('setUiSkinSelect').value = skinVal;
+                applyUiSkin(skinVal);
 
-                const prevImg = $('settingsLogoPreview');
-                const placeholder = $('settingsLogoPlaceholder');
-                const btnRemove = $('btnRemoveLogo');
+                const themeVal = settings.invoiceTheme || 'slate';
+                if ($('customPrimaryColor')) $('customPrimaryColor').value = settings.customPrimaryHex || '#BE123C';
+                if ($('customAccentColor')) $('customAccentColor').value = settings.customAccentHex || '#F472B6';
+                updateThemeSelectorUI(themeVal);
+
+                const setImg = $('settingsLogoPreview');
+                const setPlaceholder = $('settingsLogoPlaceholder');
+                const removeBtn = $('btnRemoveLogo');
+
                 if (settings.logoBase64) {
-                    prevImg.src = settings.logoBase64;
-                    prevImg.classList.remove('hidden');
-                    placeholder.classList.add('hidden');
-                    btnRemove.classList.remove('hidden');
+                    setImg.src = settings.logoBase64;
+                    setImg.classList.remove('hidden');
+                    setPlaceholder.classList.add('hidden');
+                    removeBtn.classList.remove('hidden');
+
+                    const probe = new Image();
+                    probe.onload = function () {
+                        const ratio = (probe.naturalWidth || 1) / (probe.naturalHeight || 1);
+                        logoAspectType = ratio > 1.35 ? 'landscape' : 'square';
+                        updatePreview();
+                    };
+                    probe.src = settings.logoBase64;
                 } else {
-                    prevImg.src = '';
-                    prevImg.classList.add('hidden');
-                    placeholder.classList.remove('hidden');
-                    btnRemove.classList.add('hidden');
+                    setImg.src = '';
+                    setImg.classList.add('hidden');
+                    setPlaceholder.classList.remove('hidden');
+                    removeBtn.classList.add('hidden');
                 }
-
-                $('ghOwnerInput').value = ghConfig.owner || '';
-                $('ghRepoInput').value = ghConfig.repo || '';
-                $('ghPathInput').value = ghConfig.path || (CV_PROFILES[activeCvId] ? CV_PROFILES[activeCvId].defaultJsonFile : 'data_sjm.json');
-                if ($('ghConsPathInput')) {
-                    $('ghConsPathInput').value = ghConfig.consPath || 'data_cons.json';
-                }
-                $('ghBranchInput').value = ghConfig.branch || 'main';
-                $('ghTokenInput').value = ghConfig.token || '';
-
-                updateSyncStatusUI('local');
-                detectLogoOrientation(settings.logoBase64);
             }
 
+            // =========================================================================
+            // 4. LINE ITEMS & TAX CALCULATIONS
+            // =========================================================================
             function getTaxRates() {
                 const taxPriceMode = $('taxPriceMode') ? $('taxPriceMode').value : 'exclude';
                 const enablePpn = $('enablePpn') ? $('enablePpn').checked : false;
                 const ppnRate = enablePpn ? (parseFloat($('ppnRate').value) || 0) : 0;
                 const enablePph = $('enablePph') ? $('enablePph').checked : false;
                 const pphRate = enablePph ? (parseFloat($('pphRate').value) || 0) : 0;
-                const pphLabel = ($('pphLabel') && $('pphLabel').value.trim()) || 'PPh Pasal 23';
+                const pphLabel = ($('pphLabel') && $('pphLabel').value.trim()) ? $('pphLabel').value.trim() : 'PPh';
                 const pphMode = $('pphMode') ? $('pphMode').value : 'deduct';
 
                 let divisor = 1;
                 if (taxPriceMode === 'include') {
-                    const ppnFactor = enablePpn ? (ppnRate / 100) : 0;
-                    const pphFactor = enablePph ? (pphMode === 'deduct' ? -(pphRate / 100) : (pphRate / 100)) : 0;
-                    const totalFactor = 1 + ppnFactor + pphFactor;
-                    divisor = totalFactor > 0 ? totalFactor : 1;
+                    divisor += (ppnRate / 100);
+                    if (pphMode === 'add') divisor += (pphRate / 100);
+                    else if (pphMode === 'deduct') divisor -= (pphRate / 100);
+                    if (divisor <= 0.05) divisor = 1;
                 }
 
-                return {
-                    taxPriceMode,
-                    enablePpn,
-                    ppnRate,
-                    enablePph,
-                    pphRate,
-                    pphLabel,
-                    pphMode,
-                    divisor
-                };
+                return { taxPriceMode, enablePpn, ppnRate, enablePph, pphRate, pphLabel, pphMode, divisor };
             }
 
             function calculateInvoiceTotals() {
                 const rates = getTaxRates();
-                let subtotalNet = 0;
+                const isInclusive = rates.taxPriceMode === 'include';
 
+                let subtotalNet = 0;
                 const computedItems = items.map((item) => {
-                    const qty = Math.max(0, Number(item.qty) || 0);
-                    const inputPrice = Math.max(0, Number(item.price) || 0);
-                    const netUnitPrice = rates.taxPriceMode === 'include' ? (inputPrice / rates.divisor) : inputPrice;
-                    const netLineTotal = netUnitPrice * qty;
+                    const qty = Number(item.qty) || 0;
+                    const inputPrice = Number(item.price) || 0;
+                    const netUnitPrice = isInclusive ? (inputPrice / rates.divisor) : inputPrice;
+                    const netLineTotal = qty * netUnitPrice;
                     subtotalNet += netLineTotal;
                     return {
                         ...item,
@@ -2103,9 +1989,14 @@
                     };
                 });
 
-                const ppnAmount = rates.enablePpn ? subtotalNet * (rates.ppnRate / 100) : 0;
-                const pphAmount = rates.enablePph ? subtotalNet * (rates.pphRate / 100) : 0;
-                const grandTotal = subtotalNet + ppnAmount + (rates.enablePph ? (rates.pphMode === 'deduct' ? -pphAmount : pphAmount) : 0);
+                const ppnAmount = rates.enablePpn ? (subtotalNet * (rates.ppnRate / 100)) : 0;
+                const pphAmount = rates.enablePph ? (subtotalNet * (rates.pphRate / 100)) : 0;
+
+                let grandTotal = subtotalNet + ppnAmount;
+                if (rates.enablePph) {
+                    if (rates.pphMode === 'deduct') grandTotal -= pphAmount;
+                    else grandTotal += pphAmount;
+                }
 
                 return {
                     ...rates,
@@ -2113,79 +2004,76 @@
                     subtotalNet,
                     ppnAmount,
                     pphAmount,
-                    grandTotal: Math.max(0, grandTotal)
+                    grandTotal
                 };
             }
 
             function renderItemRows() {
                 const container = $('itemsContainer');
-                const hintEl = $('taxPriceModeHint');
-                const countChip = $('itemsCountChip');
+                const chip = $('itemsCountChip');
+                if (!container) return;
+
+                if (chip) {
+                    chip.textContent = `${items.length} item`;
+                }
+
                 const rates = getTaxRates();
                 const isInclusive = rates.taxPriceMode === 'include';
 
-                if (countChip) {
-                    countChip.textContent = `${items.length} item`;
-                }
-
+                const hintEl = $('taxPriceModeHint');
                 if (hintEl) {
                     hintEl.textContent = isInclusive
-                        ? 'Harga satuan sudah mencakup pajak aktif; sistem otomatis menampilkan Harga Netto (DPP) per item.'
+                        ? 'Harga satuan yang Anda masukkan sudah termasuk pajak; sistem otomatis menghitung Harga Netto (DPP) per item.'
                         : 'Harga satuan merupakan harga dasar; pajak ditambahkan di akhir perhitungan.';
                 }
 
-                container.innerHTML = '';
-                items.forEach((item, idx) => {
-                    const qty = Math.max(0, Number(item.qty) || 0);
-                    const price = Math.max(0, Number(item.price) || 0);
-                    const netUnit = isInclusive ? (price / rates.divisor) : price;
-                    const lineTotal = netUnit * qty;
+                container.innerHTML = items.map((item, idx) => {
+                    const qty = Number(item.qty) || 0;
+                    const inputPrice = Number(item.price) || 0;
+                    const netUnitPrice = isInclusive ? (inputPrice / rates.divisor) : inputPrice;
+                    const lineTotal = qty * netUnitPrice;
 
-                    const card = document.createElement('div');
-                    card.setAttribute('data-item-card', String(idx));
-                    card.className = 'p-3.5 rounded-2xl bg-[#F2F2F7] space-y-2.5 border border-black/[0.04] transition-all';
-                    card.innerHTML = `
-                        <div class="flex items-center justify-between gap-2">
-                            <span class="text-[11px] font-bold text-[#8E8E93]">Item #${idx + 1}</span>
-                            <div class="flex items-center gap-1.5">
-                                <button type="button" data-edit-idx="${idx}" title="Edit Item #${idx + 1}" class="px-2 py-0.5 rounded-lg bg-white hover:bg-[#007AFF]/10 text-[#007AFF] text-[11px] font-semibold border border-black/5 transition flex items-center gap-1">
-                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                                    <span>Edit</span>
-                                </button>
-                                <button type="button" data-dup-idx="${idx}" title="Duplikat Item #${idx + 1}" class="px-2 py-0.5 rounded-lg bg-white hover:bg-black/5 text-[#3A3A3C] text-[11px] font-semibold border border-black/5 transition">
-                                    Duplikat
-                                </button>
-                                <button type="button" data-remove-idx="${idx}" title="${items.length > 1 ? 'Hapus Item' : 'Kosongkan Item'}" class="px-2 py-0.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-600 text-[11px] font-semibold transition flex items-center gap-1">
-                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                                    <span>${items.length > 1 ? 'Delete' : 'Reset'}</span>
-                                </button>
+                    return `
+                        <div data-item-card="${idx}" class="p-3.5 rounded-2xl bg-[#F2F2F7] space-y-2.5 border border-black/[0.04] transition-all">
+                            <div class="flex items-center justify-between gap-2">
+                                <span class="text-[11px] font-bold text-[#8E8E93]">Item #${idx + 1}</span>
+                                <div class="flex items-center gap-1">
+                                    <button type="button" data-edit-item="${idx}" title="Edit Item" class="px-2 py-0.5 rounded-lg bg-white hover:bg-blue-50 text-[#007AFF] text-[10px] font-semibold border border-black/5 transition">
+                                        Edit
+                                    </button>
+                                    <button type="button" data-dup-item="${idx}" title="Duplikat Item" class="px-2 py-0.5 rounded-lg bg-white hover:bg-slate-100 text-[#3A3A3C] text-[10px] font-semibold border border-black/5 transition">
+                                        Duplikat
+                                    </button>
+                                    <button type="button" data-del-item="${idx}" title="Hapus Item" class="px-2 py-0.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-600 text-[10px] font-semibold transition">
+                                        Delete
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-                        <input type="text" data-field="name" data-idx="${idx}" value="${escapeHtml(item.name)}" placeholder="Nama barang atau jasa..." class="w-full bg-white rounded-xl px-3 py-2 text-xs sm:text-sm font-medium border border-black/10 focus:outline-none focus:border-[#007AFF]">
-                        <div class="grid grid-cols-12 gap-2">
-                            <div class="col-span-3">
-                                <label class="block text-[10px] font-semibold text-[#636366] mb-0.5">Qty</label>
-                                <input type="number" min="0" step="any" data-field="qty" data-idx="${idx}" value="${item.qty}" class="w-full bg-white rounded-xl px-2.5 py-1.5 text-xs font-bold text-center border border-black/10 focus:outline-none focus:border-[#007AFF]">
+                            <input type="text" data-idx="${idx}" data-field="name" value="${escapeHtml(item.name)}" class="item-field w-full bg-white rounded-xl px-3 py-2 text-xs sm:text-sm font-medium border border-black/10 focus:outline-none focus:border-[#007AFF]" placeholder="Nama barang atau jasa...">
+                            <div class="grid grid-cols-12 gap-2">
+                                <div class="col-span-3">
+                                    <label class="block text-[10px] font-semibold text-[#8E8E93] mb-0.5">Qty</label>
+                                    <input type="number" data-idx="${idx}" data-field="qty" value="${item.qty}" min="0" step="any" class="item-field w-full bg-white rounded-xl px-2.5 py-1.5 text-xs font-bold text-center border border-black/10 focus:outline-none focus:border-[#007AFF]">
+                                </div>
+                                <div class="col-span-3">
+                                    <label class="block text-[10px] font-semibold text-[#8E8E93] mb-0.5">Satuan</label>
+                                    <input type="text" data-idx="${idx}" data-field="unit" value="${escapeHtml(item.unit)}" class="item-field w-full bg-white rounded-xl px-2.5 py-1.5 text-xs font-medium text-center border border-black/10 focus:outline-none focus:border-[#007AFF]" placeholder="Pcs">
+                                </div>
+                                <div class="col-span-6">
+                                    <label class="block text-[10px] font-semibold text-[#8E8E93] mb-0.5">${isInclusive ? 'Harga Bruto (Inc. Pajak)' : 'Harga Satuan (Rp)'}</label>
+                                    <input type="number" data-idx="${idx}" data-field="price" value="${item.price}" min="0" step="any" class="item-field w-full bg-white rounded-xl px-2.5 py-1.5 text-xs font-bold text-right border border-black/10 focus:outline-none focus:border-[#007AFF]">
+                                </div>
                             </div>
-                            <div class="col-span-4">
-                                <label class="block text-[10px] font-semibold text-[#636366] mb-0.5">Satuan</label>
-                                <input type="text" data-field="unit" data-idx="${idx}" value="${escapeHtml(item.unit)}" placeholder="Pcs/Unit" class="w-full bg-white rounded-xl px-2.5 py-1.5 text-xs font-medium text-center border border-black/10 focus:outline-none focus:border-[#007AFF]">
+                            <div class="flex items-center justify-between pt-1 text-[11px] text-[#636366]">
+                                <span>${isInclusive ? `Harga Netto: <strong class="text-[#007AFF]">${formatRupiah(netUnitPrice)}</strong>` : 'Subtotal Item'}</span>
+                                <span data-item-subtotal="${idx}" class="font-bold text-[#1C1C1E]">${formatRupiah(lineTotal)}</span>
                             </div>
-                            <div class="col-span-5">
-                                <label class="block text-[10px] font-semibold text-[#636366] mb-0.5">${isInclusive ? 'Harga Bruto (Rp)' : 'Harga Satuan (Rp)'}</label>
-                                <input type="number" min="0" step="any" data-field="price" data-idx="${idx}" value="${item.price}" class="w-full bg-white rounded-xl px-2.5 py-1.5 text-xs font-bold text-right border border-black/10 focus:outline-none focus:border-[#007AFF]">
-                            </div>
-                        </div>
-                        <div class="flex items-center justify-between pt-1 border-t border-black/[0.05] text-[11px]">
-                            <span class="text-[#636366]">${isInclusive ? `Harga Netto: <strong class="text-[#007AFF]" data-net-display="${idx}">${formatRupiah(netUnit)}</strong>` : 'Jumlah'}</span>
-                            <span class="font-bold text-[#1C1C1E]" data-line-total="${idx}">${formatRupiah(lineTotal)}</span>
                         </div>
                     `;
-                    container.appendChild(card);
-                });
+                }).join('');
 
-                container.querySelectorAll('input[data-field]').forEach((inp) => {
-                    inp.addEventListener('input', (e) => {
+                container.querySelectorAll('.item-field').forEach((input) => {
+                    input.addEventListener('input', (e) => {
                         const i = parseInt(e.target.getAttribute('data-idx'), 10);
                         const field = e.target.getAttribute('data-field');
                         if (!items[i]) return;
@@ -2194,342 +2082,169 @@
                         } else {
                             items[i][field] = e.target.value;
                         }
+                        const r = getTaxRates();
+                        const inc = r.taxPriceMode === 'include';
+                        const netP = inc ? ((Number(items[i].price) || 0) / r.divisor) : (Number(items[i].price) || 0);
+                        const subEl = container.querySelector(`[data-item-subtotal="${i}"]`);
+                        if (subEl) subEl.textContent = formatRupiah((Number(items[i].qty) || 0) * netP);
                         updatePreview();
                     });
                 });
 
-                container.querySelectorAll('button[data-edit-idx]').forEach((btn) => {
-                    btn.addEventListener('click', (e) => {
-                        const i = parseInt(e.currentTarget.getAttribute('data-edit-idx'), 10);
-                        const cardEl = container.querySelector(`[data-item-card="${i}"]`);
-                        const nameInput = container.querySelector(`input[data-field="name"][data-idx="${i}"]`);
-                        if (cardEl) {
-                            cardEl.classList.add('ring-2', 'ring-[#007AFF]', 'bg-blue-50/40');
+                container.querySelectorAll('[data-edit-item]').forEach((btn) => {
+                    btn.addEventListener('click', () => {
+                        const i = parseInt(btn.getAttribute('data-edit-item'), 10);
+                        const card = container.querySelector(`[data-item-card="${i}"]`);
+                        if (card) {
+                            card.classList.add('ring-2', 'ring-[#007AFF]', 'bg-blue-50/40');
                             setTimeout(() => {
-                                cardEl.classList.remove('ring-2', 'ring-[#007AFF]', 'bg-blue-50/40');
-                            }, 1200);
+                                card.classList.remove('ring-2', 'ring-[#007AFF]', 'bg-blue-50/40');
+                            }, 1300);
                         }
+                        const nameInput = container.querySelector(`input[data-idx="${i}"][data-field="name"]`);
                         if (nameInput) {
                             nameInput.focus();
                             nameInput.select();
                         }
-                        showToast(`Mengedit Item #${i + 1}`);
                     });
                 });
 
-                container.querySelectorAll('button[data-dup-idx]').forEach((btn) => {
-                    btn.addEventListener('click', (e) => {
-                        const i = parseInt(e.currentTarget.getAttribute('data-dup-idx'), 10);
-                        const srcItem = items[i];
-                        if (!srcItem) return;
-                        items.splice(i + 1, 0, {
-                            id: Date.now() + Math.floor(Math.random() * 1000),
-                            name: srcItem.name,
-                            qty: srcItem.qty,
-                            unit: srcItem.unit,
-                            price: srcItem.price
-                        });
+                container.querySelectorAll('[data-dup-item]').forEach((btn) => {
+                    btn.addEventListener('click', () => {
+                        const i = parseInt(btn.getAttribute('data-dup-item'), 10);
+                        if (!items[i]) return;
+                        const copy = { ...items[i], id: Date.now() + Math.random() };
+                        items.splice(i + 1, 0, copy);
                         renderItemRows();
                         updatePreview();
-                        showToast(`Item #${i + 1} diduplikasi`);
+                        showToast('Item berhasil diduplikat');
                     });
                 });
 
-                container.querySelectorAll('button[data-remove-idx]').forEach((btn) => {
-                    btn.addEventListener('click', (e) => {
-                        const i = parseInt(e.currentTarget.getAttribute('data-remove-idx'), 10);
-                        if (items.length > 1) {
-                            items.splice(i, 1);
-                            renderItemRows();
-                            updatePreview();
-                            showToast(`Item #${i + 1} dihapus`);
-                        } else {
+                container.querySelectorAll('[data-del-item]').forEach((btn) => {
+                    btn.addEventListener('click', () => {
+                        const i = parseInt(btn.getAttribute('data-del-item'), 10);
+                        if (items.length <= 1) {
                             items[0] = { id: Date.now(), name: '', qty: 1, unit: 'Pcs', price: 0 };
                             renderItemRows();
                             updatePreview();
-                            showToast('Item #1 dikosongkan');
+                            showToast('Item dikosongkan');
+                            return;
                         }
+                        items.splice(i, 1);
+                        renderItemRows();
+                        updatePreview();
+                        showToast('Item dihapus');
                     });
                 });
             }
 
-            function paginateInvoiceItems(computedItems, isLastPageExtrasLarge) {
-                const FIRST_PAGE_SINGLE_CAPACITY = 11;
-                const FIRST_PAGE_MULTI_CAPACITY = 19;
-                const NEXT_PAGE_MID_CAPACITY = 26;
-                const NEXT_PAGE_FINAL_CAPACITY = 16;
+            // =========================================================================
+            // 5. MULTI-PAGE A4 PREVIEW RENDERING & AUTO-FIT ZOOM
+            // =========================================================================
+            function paginateItemsForA4(computedItems) {
+                const list = computedItems.length > 0
+                    ? computedItems
+                    : [{ name: '-', qty: 0, unit: '-', inputPrice: 0, netUnitPrice: 0, netLineTotal: 0 }];
 
-                const enriched = computedItems.map((ci, idx) => {
+                function estimateItemUnits(ci) {
                     const descLen = (ci.name || '').length;
-                    const rowUnits = Math.max(1, Math.ceil(descLen / (isLastPageExtrasLarge ? 38 : 48)));
-                    return { ...ci, rowNo: idx + 1, rowUnits };
-                });
+                    const extraLines = Math.floor(descLen / 44);
+                    return 1 + extraLines * 0.48;
+                }
 
-                const totalUnits = enriched.reduce((sum, r) => sum + r.rowUnits, 0);
+                const singlePageMaxUnits = 11.5;
+                const firstPageMaxUnits = 14.5;
+                const midPageMaxUnits = 21.5;
+                const lastPageMaxUnits = 13.0;
 
-                if (totalUnits <= FIRST_PAGE_SINGLE_CAPACITY) {
-                    return [enriched];
+                const totalUnits = list.reduce((acc, it) => acc + estimateItemUnits(it), 0);
+                if (totalUnits <= singlePageMaxUnits) {
+                    return [list.map((it, idx) => ({ ...it, globalIndex: idx + 1 }))];
                 }
 
                 const pages = [];
-                let cursor = 0;
+                let currentBucket = [];
+                let currentUnits = 0;
 
-                const page1Rows = [];
-                let p1Used = 0;
-                while (cursor < enriched.length && p1Used + enriched[cursor].rowUnits <= FIRST_PAGE_MULTI_CAPACITY) {
-                    p1Used += enriched[cursor].rowUnits;
-                    page1Rows.push(enriched[cursor]);
-                    cursor++;
-                }
-                if (page1Rows.length === 0 && cursor < enriched.length) {
-                    page1Rows.push(enriched[cursor++]);
-                }
-                pages.push(page1Rows);
+                list.forEach((it, idx) => {
+                    const u = estimateItemUnits(it);
+                    const limit = pages.length === 0 ? firstPageMaxUnits : midPageMaxUnits;
+                    if (currentBucket.length > 0 && (currentUnits + u) > limit) {
+                        pages.push(currentBucket);
+                        currentBucket = [];
+                        currentUnits = 0;
+                    }
+                    currentBucket.push({ ...it, globalIndex: idx + 1 });
+                    currentUnits += u;
+                });
 
-                while (cursor < enriched.length) {
-                    let remainingUnits = 0;
-                    for (let k = cursor; k < enriched.length; k++) {
-                        remainingUnits += enriched[k].rowUnits;
-                    }
-
-                    if (remainingUnits <= NEXT_PAGE_FINAL_CAPACITY) {
-                        const finalRows = [];
-                        while (cursor < enriched.length) {
-                            finalRows.push(enriched[cursor++]);
-                        }
-                        pages.push(finalRows);
-                        break;
-                    }
-
-                    const midRows = [];
-                    let midUsed = 0;
-                    while (cursor < enriched.length && midUsed + enriched[cursor].rowUnits <= NEXT_PAGE_MID_CAPACITY) {
-                        midUsed += enriched[cursor].rowUnits;
-                        midRows.push(enriched[cursor]);
-                        cursor++;
-                    }
-                    if (midRows.length === 0 && cursor < enriched.length) {
-                        midRows.push(enriched[cursor++]);
-                    }
-                    pages.push(midRows);
+                if (currentBucket.length > 0) {
+                    pages.push(currentBucket);
                 }
 
-                const lastPage = pages[pages.length - 1];
-                const lastPageUnits = lastPage.reduce((s, r) => s + r.rowUnits, 0);
-                if (lastPageUnits > NEXT_PAGE_FINAL_CAPACITY) {
-                    const overflowRows = [];
-                    while (lastPage.length > 1 && lastPage.reduce((s, r) => s + r.rowUnits, 0) > NEXT_PAGE_FINAL_CAPACITY) {
-                        overflowRows.unshift(lastPage.pop());
-                    }
-                    pages.push(overflowRows);
+                // Pastikan halaman terakhir masih cukup ruang untuk kotak Terbilang + Total + Tanda Tangan
+                const lastPageUnits = pages[pages.length - 1].reduce((acc, it) => acc + estimateItemUnits(it), 0);
+                if (lastPageUnits > lastPageMaxUnits) {
+                    pages.push([]);
                 }
 
                 return pages;
             }
 
-            function buildA4PageHtml(pageIndex, totalPages, pageRows, ctxData) {
-                const {
-                    calc,
-                    theme,
-                    isInclusive,
-                    compName,
-                    compTagline,
-                    compAddress,
-                    compContact,
-                    compNpwp,
-                    showNpwp,
-                    invNo,
-                    invDateStr,
-                    invDueStr,
-                    clientName,
-                    clientAddress,
-                    cContact,
-                    cNpwp,
-                    notesText,
-                    issueCity,
-                    signerName,
-                    signerRole
-                } = ctxData;
-
-                const isFirstPage = pageIndex === 0;
-                const isLastPage = pageIndex === totalPages - 1;
-                const pageNum = pageIndex + 1;
-
-                let logoHtml = '';
-                if (settings.logoBase64) {
-                    if (logoAspectType === 'landscape') {
-                        logoHtml = `<div class="shrink-0"><img src="${settings.logoBase64}" alt="Logo" class="h-13 max-w-[220px] object-contain mb-1"></div>`;
-                    } else {
-                        logoHtml = `<div class="shrink-0"><img src="${settings.logoBase64}" alt="Logo" class="w-16 h-16 object-contain"></div>`;
-                    }
+            function buildTableHeaderHtml(theme, isInclusive) {
+                if (isInclusive) {
+                    return `
+                        <tr style="background: ${theme.gradientCss};">
+                            <th style="padding: 8px 6px; text-align: center; width: 32px; font-weight: 700;" class="gradient-text-outline">No</th>
+                            <th style="padding: 8px 8px; text-align: left; font-weight: 700;" class="gradient-text-outline">Deskripsi Barang / Jasa</th>
+                            <th style="padding: 8px 6px; text-align: center; width: 44px; font-weight: 700;" class="gradient-text-outline">Qty</th>
+                            <th style="padding: 8px 6px; text-align: center; width: 48px; font-weight: 700;" class="gradient-text-outline">Sat</th>
+                            <th style="padding: 8px 8px; text-align: right; width: 88px; font-weight: 700;" class="gradient-text-outline">Harga Bruto</th>
+                            <th style="padding: 8px 8px; text-align: right; width: 88px; font-weight: 700;" class="gradient-text-outline">Harga Netto</th>
+                            <th style="padding: 8px 8px; text-align: right; width: 98px; font-weight: 700;" class="gradient-text-outline">Jumlah</th>
+                        </tr>
+                    `;
                 }
-                const brandFlexClass = (settings.logoBase64 && logoAspectType === 'landscape')
-                    ? 'flex flex-col items-start flex-1'
-                    : 'flex flex-row items-start gap-4 flex-1';
-
-                const headerSectionHtml = isFirstPage ? `
-                    <div class="flex justify-between items-start gap-5 pb-4" style="border-bottom: 2px solid transparent; border-image: ${theme.gradientCss} 1;">
-                        <div class="${brandFlexClass}">
-                            ${logoHtml}
-                            <div>
-                                <h1 class="text-xl font-extrabold tracking-tight uppercase" style="color: ${theme.primaryHex};">${escapeHtml(compName)}</h1>
-                                ${compTagline ? `<p class="text-xs font-semibold mt-0.5" style="color: ${theme.accentHex};">${escapeHtml(compTagline)}</p>` : ''}
-                                <p class="text-[11px] text-slate-600 mt-1.5 leading-relaxed">${escapeHtml(compAddress)}</p>
-                                <p class="text-[11px] text-slate-600 mt-0.5">${escapeHtml(compContact)}</p>
-                                ${showNpwp ? `<p class="text-[11px] font-semibold text-slate-700 mt-0.5">${escapeHtml(compNpwp)}</p>` : ''}
-                            </div>
-                        </div>
-
-                        <div class="text-right shrink-0">
-                            <div class="gradient-text-outline inline-block text-white px-3.5 py-1 rounded-md text-lg font-extrabold tracking-widest uppercase" style="background: ${theme.gradientCss};">
-                                INVOICE
-                            </div>
-                            <table class="mt-2 ml-auto text-xs">
-                                <tr>
-                                    <td class="text-slate-500 pr-2.5 py-0.5">No. Invoice</td>
-                                    <td class="font-bold text-slate-900 py-0.5">${escapeHtml(invNo)}</td>
-                                </tr>
-                                <tr>
-                                    <td class="text-slate-500 pr-2.5 py-0.5">Tanggal</td>
-                                    <td class="font-semibold text-slate-800 py-0.5">${escapeHtml(invDateStr)}</td>
-                                </tr>
-                                <tr>
-                                    <td class="text-slate-500 pr-2.5 py-0.5">Jatuh Tempo</td>
-                                    <td class="font-semibold text-slate-800 py-0.5">${escapeHtml(invDueStr)}</td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div class="mt-4 mb-4 flex justify-between gap-6">
-                        <div class="rounded-xl p-3.5 w-full max-w-md border" style="background: ${theme.softGradientCss || theme.softBgHex}; border-color: ${theme.borderHex};">
-                            <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Kepada Yth / Ditagihkan Kepada:</p>
-                            <p class="text-sm font-bold text-slate-900 mt-1">${escapeHtml(clientName)}</p>
-                            <p class="text-xs text-slate-600 mt-1 leading-relaxed whitespace-pre-line">${escapeHtml(clientAddress)}</p>
-                            ${cContact ? `<p class="text-xs text-slate-600 mt-1">UP / Telp: ${escapeHtml(cContact)}</p>` : ''}
-                            ${cNpwp ? `<p class="text-xs font-semibold text-slate-700 mt-0.5">NPWP: ${escapeHtml(cNpwp)}</p>` : ''}
-                        </div>
-                    </div>
-                ` : `
-                    <div class="flex justify-between items-center gap-4 pb-3 mb-4" style="border-bottom: 2px solid transparent; border-image: ${theme.gradientCss} 1;">
-                        <div>
-                            <p class="text-sm font-extrabold uppercase tracking-tight" style="color: ${theme.primaryHex};">${escapeHtml(compName)}</p>
-                            <p class="text-[10.5px] text-slate-500">Kepada: <strong class="text-slate-800">${escapeHtml(clientName)}</strong></p>
-                        </div>
-                        <div class="text-right">
-                            <span class="gradient-text-outline inline-block px-2.5 py-0.5 rounded text-[11px] font-extrabold tracking-wider uppercase" style="background: ${theme.gradientCss};">
-                                LAMPIRAN INVOICE
-                            </span>
-                            <p class="text-[11px] font-bold text-slate-800 mt-1">No: ${escapeHtml(invNo)} &bull; Tgl: ${escapeHtml(invDateStr)}</p>
-                        </div>
-                    </div>
-                `;
-
-                const rowsHtml = pageRows.map((ci, idx) => `
-                    <tr class="${idx % 2 === 1 ? 'bg-slate-50/60' : 'bg-white'}">
-                        <td class="py-1.5 px-2.5 text-center text-slate-500 font-medium">${ci.rowNo}</td>
-                        <td class="py-1.5 px-2.5 text-slate-900 font-medium">${escapeHtml(ci.name) || '<span class="text-slate-400 italic">Item belum diisi</span>'}</td>
-                        <td class="py-1.5 px-2 text-center text-slate-800">${ci.qty}</td>
-                        <td class="py-1.5 px-2 text-center text-slate-600">${escapeHtml(ci.unit) || '-'}</td>
-                        <td class="py-1.5 px-2.5 text-right text-slate-800">${formatNumber(ci.inputPrice)}</td>
-                        ${isInclusive ? `<td class="py-1.5 px-2.5 text-right font-semibold" style="color:${theme.accentHex}">${formatNumber(ci.netUnitPrice)}</td>` : ''}
-                        <td class="py-1.5 px-2.5 text-right font-bold text-slate-900">${formatNumber(ci.netLineTotal)}</td>
-                    </tr>
-                `).join('');
-
-                const tableSectionHtml = `
-                    <div class="overflow-hidden rounded-lg border" style="border-color: ${theme.borderHex};">
-                        <table class="w-full text-left border-collapse">
-                            <thead>
-                                <tr class="gradient-text-outline text-white text-[10.5px] uppercase tracking-wider" style="background: ${theme.gradientCss};">
-                                    <th class="py-2 px-2.5 text-center w-9">No</th>
-                                    <th class="py-2 px-2.5">Deskripsi Barang / Jasa</th>
-                                    <th class="py-2 px-2 text-center w-14">Qty</th>
-                                    <th class="py-2 px-2 text-center w-14">Sat</th>
-                                    <th class="py-2 px-2.5 text-right w-28">${isInclusive ? 'Harga Bruto' : 'Harga Satuan'}</th>
-                                    ${isInclusive ? `<th class="py-2 px-2.5 text-right w-28">Harga Netto</th>` : ''}
-                                    <th class="py-2 px-2.5 text-right w-32">Jumlah</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-200 text-xs">
-                                ${rowsHtml}
-                            </tbody>
-                        </table>
-                    </div>
-                `;
-
-                const bottomSectionHtml = isLastPage ? `
-                    <div class="mt-4 grid grid-cols-12 gap-5 items-start">
-                        <div class="col-span-7 space-y-2.5">
-                            <div class="rounded-lg p-2.5 border" style="background: ${theme.softGradientCss || theme.softBgHex}; border-color: ${theme.borderHex};">
-                                <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Terbilang:</p>
-                                <p class="text-xs font-bold italic text-slate-800 mt-0.5">${escapeHtml(terbilang(calc.grandTotal))}</p>
-                            </div>
-                            <div>
-                                <p class="text-[11px] font-bold text-slate-700 mb-0.5">Keterangan &amp; Pembayaran:</p>
-                                <p class="text-[10px] text-slate-600 leading-relaxed whitespace-pre-line">${escapeHtml(notesText)}</p>
-                            </div>
-                        </div>
-
-                        <div class="col-span-5 space-y-1 text-xs">
-                            <div class="flex justify-between py-1 px-2">
-                                <span class="text-slate-600">${isInclusive ? 'Subtotal Netto (DPP)' : 'Subtotal'}</span>
-                                <span class="font-bold text-slate-900">${formatRupiah(calc.subtotalNet)}</span>
-                            </div>
-                            ${calc.enablePpn ? `
-                                <div class="flex justify-between py-1 px-2">
-                                    <span class="text-slate-600">PPN (${calc.ppnRate}%)</span>
-                                    <span class="font-bold text-slate-900">${formatRupiah(calc.ppnAmount)}</span>
-                                </div>
-                            ` : ''}
-                            ${calc.enablePph ? `
-                                <div class="flex justify-between py-1 px-2">
-                                    <span class="text-slate-600">${escapeHtml(calc.pphLabel)} (${calc.pphRate}%)</span>
-                                    <span class="font-bold text-rose-600">${(calc.pphMode === 'deduct' ? '- ' : '+ ') + formatRupiah(calc.pphAmount)}</span>
-                                </div>
-                            ` : ''}
-                            <div class="gradient-text-outline flex justify-between items-center py-2 px-3 rounded-lg text-white mt-1" style="background: ${theme.gradientCss};">
-                                <span class="text-xs font-bold uppercase tracking-wide">Total Tagihan</span>
-                                <span class="text-sm font-extrabold">${formatRupiah(calc.grandTotal)}</span>
-                            </div>
-                        </div>
-                    </div>
-                ` : `
-                    <div class="mt-3 flex justify-end">
-                        <p class="text-[11px] italic text-slate-500">Bersambung ke Halaman ${pageNum + 1} dari ${totalPages} &rarr;</p>
-                    </div>
-                `;
-
-                const footerHtml = `
-                    <div>
-                        ${isLastPage ? `
-                            <div class="flex justify-end mb-3">
-                                <div class="text-center w-52">
-                                    <p class="text-xs text-slate-700">${escapeHtml(issueCity)}, ${escapeHtml(invDateStr)}</p>
-                                    <p class="text-xs font-bold text-slate-900 mt-0.5">${escapeHtml(compName)}</p>
-                                    <div class="h-14"></div>
-                                    <p class="text-xs font-bold text-slate-900 underline underline-offset-4">${escapeHtml(signerName)}</p>
-                                    <p class="text-[11px] text-slate-500 mt-0.5">${escapeHtml(signerRole)}</p>
-                                </div>
-                            </div>
-                        ` : ''}
-                        <div class="pt-2.5 border-t border-slate-200 flex justify-between items-center text-[10px] text-slate-500">
-                            <p>Dokumen sah diterbitkan oleh <span class="font-semibold text-slate-700">${escapeHtml(compName)}</span> &bull; No: <span class="font-semibold">${escapeHtml(invNo)}</span></p>
-                            <p class="font-bold text-slate-700">Halaman ${pageNum} dari ${totalPages}</p>
-                        </div>
-                    </div>
-                `;
-
                 return `
-                    <div class="a4-paper">
-                        <div>
-                            ${headerSectionHtml}
-                            ${tableSectionHtml}
-                            ${bottomSectionHtml}
-                        </div>
-                        ${footerHtml}
-                    </div>
+                    <tr style="background: ${theme.gradientCss};">
+                        <th style="padding: 8px 6px; text-align: center; width: 36px; font-weight: 700;" class="gradient-text-outline">No</th>
+                        <th style="padding: 8px 10px; text-align: left; font-weight: 700;" class="gradient-text-outline">Deskripsi Barang / Jasa</th>
+                        <th style="padding: 8px 6px; text-align: center; width: 48px; font-weight: 700;" class="gradient-text-outline">Qty</th>
+                        <th style="padding: 8px 6px; text-align: center; width: 54px; font-weight: 700;" class="gradient-text-outline">Sat</th>
+                        <th style="padding: 8px 10px; text-align: right; width: 105px; font-weight: 700;" class="gradient-text-outline">Harga Satuan</th>
+                        <th style="padding: 8px 10px; text-align: right; width: 112px; font-weight: 700;" class="gradient-text-outline">Jumlah</th>
+                    </tr>
                 `;
+            }
+
+            function buildTableRowsHtml(pageItems, theme, isInclusive) {
+                return pageItems.map((ci, localIdx) => {
+                    const rowBg = localIdx % 2 === 1 ? theme.softBgHex : '#FFFFFF';
+                    if (isInclusive) {
+                        return `
+                            <tr style="background-color: ${rowBg}; border-bottom: 1px solid ${theme.borderHex};">
+                                <td style="padding: 6.5px 6px; text-align: center; color: #475569; font-weight: 600;">${ci.globalIndex}</td>
+                                <td style="padding: 6.5px 8px; color: #0F172A; font-weight: 500; word-break: break-word;">${escapeHtml(ci.name || '-')}</td>
+                                <td style="padding: 6.5px 6px; text-align: center; color: #0F172A;">${ci.qty}</td>
+                                <td style="padding: 6.5px 6px; text-align: center; color: #475569;">${escapeHtml(ci.unit || '-')}</td>
+                                <td style="padding: 6.5px 8px; text-align: right; color: #64748B;">${formatNumber(ci.inputPrice)}</td>
+                                <td style="padding: 6.5px 8px; text-align: right; color: ${theme.accentHex}; font-weight: 600;">${formatNumber(ci.netUnitPrice)}</td>
+                                <td style="padding: 6.5px 8px; text-align: right; color: #0F172A; font-weight: 700;">${formatNumber(ci.netLineTotal)}</td>
+                            </tr>
+                        `;
+                    }
+                    return `
+                        <tr style="background-color: ${rowBg}; border-bottom: 1px solid ${theme.borderHex};">
+                            <td style="padding: 7px 6px; text-align: center; color: #475569; font-weight: 600;">${ci.globalIndex}</td>
+                            <td style="padding: 7px 10px; color: #0F172A; font-weight: 500; word-break: break-word;">${escapeHtml(ci.name || '-')}</td>
+                            <td style="padding: 7px 6px; text-align: center; color: #0F172A;">${ci.qty}</td>
+                            <td style="padding: 7px 6px; text-align: center; color: #475569;">${escapeHtml(ci.unit || '-')}</td>
+                            <td style="padding: 7px 10px; text-align: right; color: #0F172A;">${formatNumber(ci.inputPrice)}</td>
+                            <td style="padding: 7px 10px; text-align: right; color: #0F172A; font-weight: 700;">${formatNumber(ci.netLineTotal)}</td>
+                        </tr>
+                    `;
+                }).join('');
             }
 
             function updatePreview() {
@@ -2537,60 +2252,308 @@
                 const theme = getActiveTheme();
                 const isInclusive = calc.taxPriceMode === 'include';
 
-                calc.computedItems.forEach((ci, idx) => {
-                    const lineEl = document.querySelector(`[data-line-total="${idx}"]`);
-                    if (lineEl) lineEl.textContent = formatRupiah(ci.netLineTotal);
-                    const netEl = document.querySelector(`[data-net-display="${idx}"]`);
-                    if (netEl) netEl.textContent = formatRupiah(ci.netUnitPrice);
-                });
-
                 $('formSubtotalDisplay').textContent = formatRupiah(calc.subtotalNet);
-                $('formPpnRow').classList.toggle('hidden', !calc.enablePpn);
                 $('formPpnLabel').textContent = `PPN (${calc.ppnRate}%)`;
                 $('formPpnDisplay').textContent = formatRupiah(calc.ppnAmount);
+                $('formPpnRow').classList.toggle('hidden', !calc.enablePpn);
 
-                $('formPphRow').classList.toggle('hidden', !calc.enablePph);
                 $('formPphLabel').textContent = `${calc.pphLabel} (${calc.pphRate}%)`;
                 $('formPphDisplay').textContent = (calc.pphMode === 'deduct' ? '- ' : '+ ') + formatRupiah(calc.pphAmount);
+                $('formPphRow').classList.toggle('hidden', !calc.enablePph);
+                $('formPphDisplay').className = calc.pphMode === 'deduct' ? 'font-semibold text-rose-600' : 'font-semibold text-emerald-600';
                 $('formGrandTotalDisplay').textContent = formatRupiah(calc.grandTotal);
 
-                const pages = paginateInvoiceItems(calc.computedItems, isInclusive);
-                const totalPages = pages.length;
+                const invNo = $('invNumber').value.trim() || '-';
+                const invDateStr = formatDateIndo($('invDate').value);
+                const invDueStr = formatDateIndo($('invDueDate').value);
+                const compNameUpper = (settings.compName || 'CV. SRIKANDI JAYA MANDIRI').toUpperCase();
+                const showNpwp = $('showCompNpwp').checked && Boolean((settings.compNpwp || '').trim());
 
-                const pageBadge = $('previewTotalPagesBadge');
-                if (pageBadge) pageBadge.textContent = `${totalPages} Halaman`;
-                const mobBadge = $('mobPageCountBadge');
-                if (mobBadge) mobBadge.textContent = `${totalPages} Hal`;
+                const cName = $('clientName').value.trim() || 'Nama Perusahaan / Klien';
+                const cAddr = $('clientAddress').value.trim() || '-';
+                const cContact = $('clientContact').value.trim();
+                const cNpwp = $('clientNpwp').value.trim();
 
-                const ctxData = {
-                    calc,
-                    theme,
-                    isInclusive,
-                    compName: settings.compName || 'CV. SRIKANDI JAYA MANDIRI',
-                    compTagline: settings.compTagline || '',
-                    compAddress: settings.compAddress || '',
-                    compContact: settings.compContact || '',
-                    compNpwp: settings.compNpwp || '',
-                    showNpwp: $('showCompNpwp').checked && Boolean(settings.compNpwp),
-                    invNo: $('invNumber').value.trim() || '-',
-                    invDateStr: formatDateIndo($('invDate').value),
-                    invDueStr: formatDateIndo($('invDueDate').value),
-                    clientName: $('clientName').value.trim() || 'Nama Klien / Perusahaan',
-                    clientAddress: $('clientAddress').value.trim() || '-',
-                    cContact: $('clientContact').value.trim(),
-                    cNpwp: $('clientNpwp').value.trim(),
-                    notesText: getCombinedFooterNotes(),
-                    issueCity: settings.issueCity || 'Sukoharjo',
-                    signerName: settings.signerName || 'Asih Ermataria',
-                    signerRole: settings.signerRole || 'Direktur'
-                };
-
-                const stack = $('invoicePagesStack');
-                if (stack) {
-                    stack.innerHTML = pages.map((pageRows, idx) => buildA4PageHtml(idx, totalPages, pageRows, ctxData)).join('');
+                const hasLogo = Boolean(settings.logoBase64);
+                let logoBlockHtml = '';
+                if (hasLogo) {
+                    if (logoAspectType === 'landscape') {
+                        logoBlockHtml = `<div style="margin-bottom: 6px;"><img src="${settings.logoBase64}" alt="Logo" style="height: 44px; max-width: 210px; object-fit: contain;"></div>`;
+                    } else {
+                        logoBlockHtml = `<img src="${settings.logoBase64}" alt="Logo" style="width: 58px; height: 58px; object-fit: contain; border-radius: 6px; flex-shrink: 0;">`;
+                    }
                 }
 
+                const firstPageHeaderHtml = `
+                    <div style="padding-bottom: 10px; margin-bottom: 12px; position: relative;">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px;">
+                            <div style="flex: 1; min-width: 0;">
+                                ${hasLogo && logoAspectType === 'landscape' ? logoBlockHtml : ''}
+                                <div style="display: flex; align-items: flex-start; gap: 12px;">
+                                    ${hasLogo && logoAspectType !== 'landscape' ? logoBlockHtml : ''}
+                                    <div style="min-width: 0;">
+                                        <div style="font-size: 16.5px; font-weight: 800; color: ${theme.primaryHex}; letter-spacing: -0.01em; line-height: 1.2;">${escapeHtml(compNameUpper)}</div>
+                                        ${settings.compTagline ? `<div style="font-size: 10.5px; font-weight: 700; color: ${theme.accentHex}; margin-top: 2px;">${escapeHtml(settings.compTagline)}</div>` : ''}
+                                        <div style="font-size: 9.8px; color: #475569; margin-top: 3px; line-height: 1.38;">${escapeHtml(settings.compAddress || '')}</div>
+                                        ${settings.compContact ? `<div style="font-size: 9.8px; color: #475569; margin-top: 1.5px;">${escapeHtml(settings.compContact)}</div>` : ''}
+                                        ${showNpwp ? `<div style="font-size: 9.8px; font-weight: 700; color: #334155; margin-top: 1.5px;">${escapeHtml(settings.compNpwp)}</div>` : ''}
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="text-align: right; flex-shrink: 0;">
+                                <div style="display: inline-block; background: ${theme.gradientCss}; padding: 5px 16px; border-radius: 6px; font-size: 14px; font-weight: 800; letter-spacing: 0.1em;" class="gradient-text-outline">
+                                    INVOICE
+                                </div>
+                                <table style="margin-top: 8px; margin-left: auto; font-size: 10px; border-collapse: collapse;">
+                                    <tr>
+                                        <td style="color: #64748B; padding: 1.5px 8px 1.5px 0; text-align: right;">No. Invoice:</td>
+                                        <td style="font-weight: 700; color: #0F172A; padding: 1.5px 0; text-align: right;">${escapeHtml(invNo)}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="color: #64748B; padding: 1.5px 8px 1.5px 0; text-align: right;">Tanggal:</td>
+                                        <td style="font-weight: 500; color: #0F172A; padding: 1.5px 0; text-align: right;">${escapeHtml(invDateStr)}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="color: #64748B; padding: 1.5px 8px 1.5px 0; text-align: right;">Jatuh Tempo:</td>
+                                        <td style="font-weight: 500; color: #0F172A; padding: 1.5px 0; text-align: right;">${escapeHtml(invDueStr)}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div style="height: 2.5px; background: ${theme.gradientCss}; border-radius: 99px; margin-top: 10px;"></div>
+                    </div>
+
+                    <div style="margin-bottom: 12px;">
+                        <div style="background: ${theme.softGradientCss}; border: 1px solid ${theme.borderHex}; border-radius: 8px; padding: 9px 13px; max-width: 64%;">
+                            <div style="font-size: 8.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #64748B; margin-bottom: 2px;">Kepada Yth / Ditagihkan Kepada:</div>
+                            <div style="font-size: 12px; font-weight: 700; color: #0F172A;">${escapeHtml(cName)}</div>
+                            <div style="font-size: 10px; color: #475569; margin-top: 2px; line-height: 1.38; white-space: pre-line;">${escapeHtml(cAddr)}</div>
+                            ${cContact ? `<div style="font-size: 10px; color: #475569; margin-top: 2px;">UP / Telp: ${escapeHtml(cContact)}</div>` : ''}
+                            ${cNpwp ? `<div style="font-size: 10px; font-weight: 600; color: #334155; margin-top: 2px;">NPWP: ${escapeHtml(cNpwp)}</div>` : ''}
+                        </div>
+                    </div>
+                `;
+
+                const continuationHeaderHtml = `
+                    <div style="padding-bottom: 8px; margin-bottom: 10px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px;">
+                            <div>
+                                <div style="font-size: 12.5px; font-weight: 800; color: ${theme.primaryHex};">${escapeHtml(compNameUpper)}</div>
+                                <div style="font-size: 9.5px; color: #64748B; margin-top: 1px;">Kepada: <strong style="color: #334155;">${escapeHtml(cName)}</strong></div>
+                            </div>
+                            <div style="text-align: right;">
+                                <span style="display: inline-block; background: ${theme.gradientCss}; padding: 2.5px 10px; border-radius: 4px; font-size: 9.5px; font-weight: 800; letter-spacing: 0.06em;" class="gradient-text-outline">
+                                    LAMPIRAN INVOICE
+                                </span>
+                                <div style="font-size: 9.5px; font-weight: 700; color: #0F172A; margin-top: 3px;">No: ${escapeHtml(invNo)} &bull; Tgl: ${escapeHtml(invDateStr)}</div>
+                            </div>
+                        </div>
+                        <div style="height: 2px; background: ${theme.gradientCss}; border-radius: 99px; margin-top: 7px;"></div>
+                    </div>
+                `;
+
+                const summaryAndSignatureHtml = `
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 18px; margin-top: 10px;">
+                        <div style="flex: 1;">
+                            <div style="background: ${theme.softGradientCss}; border: 1px solid ${theme.borderHex}; border-radius: 7px; padding: 7px 11px;">
+                                <div style="font-size: 8.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: #64748B;">Terbilang:</div>
+                                <div style="font-size: 10.2px; font-weight: 700; font-style: italic; color: #1E293B; margin-top: 2px;">${escapeHtml(terbilang(calc.grandTotal))}</div>
+                            </div>
+                            <div style="margin-top: 9px;">
+                                <div style="font-size: 9.5px; font-weight: 700; color: #1E293B; margin-bottom: 2px;">Keterangan &amp; Pembayaran:</div>
+                                <div style="font-size: 9.2px; color: #475569; white-space: pre-line; line-height: 1.4;">${escapeHtml(getCombinedFooterNotes())}</div>
+                            </div>
+                        </div>
+
+                        <div style="width: 245px; flex-shrink: 0;">
+                            <table style="width: 100%; border-collapse: collapse; font-size: 10.2px;">
+                                <tr>
+                                    <td style="padding: 3.5px 4px; color: #475569;">${isInclusive ? 'Subtotal Netto (DPP)' : 'Subtotal'}</td>
+                                    <td style="padding: 3.5px 4px; text-align: right; font-weight: 700; color: #0F172A;">${formatRupiah(calc.subtotalNet)}</td>
+                                </tr>
+                                ${calc.enablePpn ? `
+                                <tr>
+                                    <td style="padding: 3.5px 4px; color: #475569;">PPN (${calc.ppnRate}%)</td>
+                                    <td style="padding: 3.5px 4px; text-align: right; font-weight: 700; color: #0F172A;">${formatRupiah(calc.ppnAmount)}</td>
+                                </tr>` : ''}
+                                ${calc.enablePph ? `
+                                <tr>
+                                    <td style="padding: 3.5px 4px; color: #475569;">${escapeHtml(calc.pphLabel)} (${calc.pphRate}%)</td>
+                                    <td style="padding: 3.5px 4px; text-align: right; font-weight: 700; color: ${calc.pphMode === 'deduct' ? '#BE123C' : '#047857'};">${calc.pphMode === 'deduct' ? '- ' : '+ '}${formatRupiah(calc.pphAmount)}</td>
+                                </tr>` : ''}
+                            </table>
+                            <div style="margin-top: 5px; background: ${theme.gradientCss}; padding: 8px 11px; border-radius: 7px; display: flex; justify-content: space-between; align-items: center;">
+                                <span style="font-size: 10px; font-weight: 800; letter-spacing: 0.04em;" class="gradient-text-outline">TOTAL TAGIHAN</span>
+                                <span style="font-size: 12.5px; font-weight: 800;" class="gradient-text-outline">${formatRupiah(calc.grandTotal)}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; justify-content: flex-end; margin-top: 14px; padding-right: 10px;">
+                        <div style="text-align: center; min-width: 185px;">
+                            <div style="font-size: 10px; color: #334155;">${escapeHtml(settings.issueCity || 'Sukoharjo')}, ${escapeHtml(invDateStr)}</div>
+                            <div style="font-size: 10px; font-weight: 700; color: #0F172A; margin-top: 2px;">${escapeHtml(settings.compName || 'CV. SRIKANDI JAYA MANDIRI')}</div>
+                            <div style="height: 46px;"></div>
+                            <div style="font-size: 10.5px; font-weight: 700; color: #0F172A; text-decoration: underline;">${escapeHtml(settings.signerName || 'Asih Ermataria')}</div>
+                            <div style="font-size: 9.5px; color: #64748B; margin-top: 1px;">${escapeHtml(settings.signerRole || 'Direktur')}</div>
+                        </div>
+                    </div>
+                `;
+
+                const pages = paginateItemsForA4(calc.computedItems);
+                const totalPages = pages.length;
+
+                const pagesBadge = $('previewTotalPagesBadge');
+                const mobBadge = $('mobPageCountBadge');
+                if (pagesBadge) pagesBadge.textContent = `${totalPages} Halaman`;
+                if (mobBadge) mobBadge.textContent = `${totalPages} Hal`;
+
+                const stackEl = $('invoicePagesStack');
+                if (!stackEl) return;
+
+                stackEl.innerHTML = pages.map((pageItems, pageIdx) => {
+                    const pageNum = pageIdx + 1;
+                    const isFirst = pageIdx === 0;
+                    const isLast = pageIdx === totalPages - 1;
+
+                    const tableHtml = pageItems.length > 0 ? `
+                        <table style="width: 100%; border-collapse: collapse; font-size: ${isInclusive ? '9.3px' : '10px'};">
+                            <thead>${buildTableHeaderHtml(theme, isInclusive)}</thead>
+                            <tbody>${buildTableRowsHtml(pageItems, theme, isInclusive)}</tbody>
+                        </table>
+                    ` : '';
+
+                    const footerHtml = `
+                        <div style="border-top: 1px solid #E2E8F0; padding-top: 6px; margin-top: 8px; display: flex; justify-content: space-between; align-items: center; font-size: 8.8px; color: #64748B;">
+                            <span>Dokumen sah diterbitkan oleh ${escapeHtml(settings.compName || 'CV. SRIKANDI JAYA MANDIRI')} &bull; No: ${escapeHtml(invNo)}</span>
+                            <span style="font-weight: 700; color: #334155;">Halaman ${pageNum} dari ${totalPages}</span>
+                        </div>
+                    `;
+
+                    return `
+                        <div class="a4-paper">
+                            <div>
+                                ${isFirst ? firstPageHeaderHtml : continuationHeaderHtml}
+                                ${tableHtml}
+                                ${isLast ? summaryAndSignatureHtml : ''}
+                            </div>
+                            ${footerHtml}
+                        </div>
+                    `;
+                }).join('');
+
                 applyA4Zoom();
+            }
+
+            function applyA4Zoom() {
+                const wrapper = $('previewScrollWrapper');
+                const scaleBox = $('a4ScaleBox');
+                const stack = $('invoicePagesStack');
+                if (!wrapper || !scaleBox || !stack) return;
+
+                const a4WidthPx = 794;
+                let scale = manualZoomScale;
+
+                if (currentZoomMode === 'auto') {
+                    const availableW = Math.max(260, wrapper.clientWidth - 28);
+                    scale = Math.min(1, availableW / a4WidthPx);
+                }
+
+                stack.style.transform = `scale(${scale})`;
+                const unscaledH = stack.offsetHeight || 1123;
+                scaleBox.style.width = `${Math.round(a4WidthPx * scale)}px`;
+                scaleBox.style.height = `${Math.round(unscaledH * scale)}px`;
+
+                const label = $('zoomLevelLabel');
+                if (label) {
+                    label.textContent = currentZoomMode === 'auto'
+                        ? `Auto (${Math.round(scale * 100)}%)`
+                        : `${Math.round(scale * 100)}%`;
+                }
+            }
+
+            // =========================================================================
+            // 6. CLIENTS DATABASE & INVOICE HISTORY RENDERING
+            // =========================================================================
+            function setSelectedInvoiceClient(clientObj) {
+                const nameEl = $('clientName');
+                const contactEl = $('clientContact');
+                const npwpEl = $('clientNpwp');
+                const addressEl = $('clientAddress');
+
+                const sumName = $('summaryClientName');
+                const sumContact = $('summaryClientContact');
+                const sumNpwp = $('summaryClientNpwp');
+                const sumAddr = $('summaryClientAddress');
+
+                if (!clientObj || !clientObj.name) {
+                    if (nameEl) nameEl.value = '';
+                    if (contactEl) contactEl.value = '';
+                    if (npwpEl) npwpEl.value = '';
+                    if (addressEl) addressEl.value = '';
+
+                    if (sumName) {
+                        sumName.textContent = 'Belum ada konsumen dipilih';
+                        sumName.className = 'text-xs sm:text-sm font-bold text-[#8E8E93]';
+                    }
+                    if (sumContact) sumContact.classList.add('hidden');
+                    if (sumNpwp) sumNpwp.classList.add('hidden');
+                    if (sumAddr) {
+                        sumAddr.textContent = 'Pilih konsumen dari dropdown di atas, atau tambah data baru di tab Data Konsumen.';
+                        sumAddr.className = 'text-[11px] text-[#8E8E93] leading-relaxed';
+                    }
+                    return;
+                }
+
+                if (nameEl) nameEl.value = clientObj.name || '';
+                if (contactEl) contactEl.value = clientObj.contact || '';
+                if (npwpEl) npwpEl.value = clientObj.npwp || '';
+                if (addressEl) addressEl.value = clientObj.address || '';
+
+                if (sumName) {
+                    sumName.textContent = clientObj.name;
+                    sumName.className = 'text-xs sm:text-sm font-bold text-[#1C1C1E]';
+                }
+                if (sumContact) {
+                    if (clientObj.contact) {
+                        sumContact.textContent = `UP / Kontak: ${clientObj.contact}`;
+                        sumContact.classList.remove('hidden');
+                    } else {
+                        sumContact.classList.add('hidden');
+                    }
+                }
+                if (sumNpwp) {
+                    if (clientObj.npwp) {
+                        sumNpwp.textContent = `NPWP: ${clientObj.npwp}`;
+                        sumNpwp.classList.remove('hidden');
+                    } else {
+                        sumNpwp.classList.add('hidden');
+                    }
+                }
+                if (sumAddr) {
+                    sumAddr.textContent = clientObj.address || 'Alamat belum diisi';
+                    sumAddr.className = 'text-[11.5px] text-[#3A3A3C] leading-relaxed';
+                }
+            }
+
+            function renderClientsDropdown() {
+                const select = $('selectClientDb');
+                if (!select) return;
+                const currentVal = select.value;
+                select.innerHTML = `<option value="">-- Pilih Konsumen dari Database (${clientsDb.length}) --</option>` +
+                    clientsDb.map(c => `<option value="${escapeHtml(c.id)}">${escapeHtml(c.name)}</option>`).join('');
+                if (currentVal && clientsDb.some(c => c.id === currentVal)) {
+                    select.value = currentVal;
+                } else {
+                    const currentName = ($('clientName') ? $('clientName').value : '').trim();
+                    if (currentName) {
+                        const matched = clientsDb.find(c => c.name.toLowerCase() === currentName.toLowerCase());
+                        if (matched) {
+                            select.value = matched.id;
+                            setSelectedInvoiceClient(matched);
+                        }
+                    }
+                }
             }
 
             function resetClientForm() {
@@ -2603,70 +2566,14 @@
                 $('btnCancelClientEdit').classList.add('hidden');
             }
 
-            function setSelectedInvoiceClient(clientObj) {
-                const nameVal = clientObj ? (clientObj.name || '') : '';
-                const contactVal = clientObj ? (clientObj.contact || '') : '';
-                const npwpVal = clientObj ? (clientObj.npwp || '') : '';
-                const addressVal = clientObj ? (clientObj.address || '') : '';
-
-                $('clientName').value = nameVal;
-                $('clientContact').value = contactVal;
-                $('clientNpwp').value = npwpVal;
-                $('clientAddress').value = addressVal;
-
-                const sumName = $('summaryClientName');
-                const sumContact = $('summaryClientContact');
-                const sumNpwp = $('summaryClientNpwp');
-                const sumAddr = $('summaryClientAddress');
-
-                if (sumName) {
-                    if (nameVal) {
-                        sumName.textContent = nameVal;
-                        sumName.classList.remove('text-[#8E8E93]');
-                        sumName.classList.add('text-[#1C1C1E]');
-                    } else {
-                        sumName.textContent = 'Belum ada konsumen dipilih';
-                        sumName.classList.add('text-[#8E8E93]');
-                        sumName.classList.remove('text-[#1C1C1E]');
-                    }
-                }
-                if (sumContact) {
-                    sumContact.textContent = contactVal ? `UP / Telp: ${contactVal}` : '';
-                    sumContact.classList.toggle('hidden', !contactVal);
-                }
-                if (sumNpwp) {
-                    sumNpwp.textContent = npwpVal ? `NPWP: ${npwpVal}` : '';
-                    sumNpwp.classList.toggle('hidden', !npwpVal);
-                }
-                if (sumAddr) {
-                    sumAddr.textContent = addressVal || (nameVal ? '-' : 'Pilih konsumen dari dropdown di atas, atau tambah data baru di tab Data Konsumen.');
-                }
-            }
-
             function renderClientsList() {
+                const container = $('clientsListContainer');
                 const badge = $('badgeClientsCount');
                 if (badge) badge.textContent = String(clientsDb.length);
+                renderClientsDropdown();
 
-                const selectEl = $('selectClientDb');
-                if (selectEl) {
-                    const prevVal = selectEl.value;
-                    selectEl.innerHTML = '<option value="">-- Pilih Konsumen dari Database --</option>';
-                    clientsDb.forEach((c) => {
-                        const opt = document.createElement('option');
-                        opt.value = c.id;
-                        opt.textContent = c.name + (c.contact ? ` (${c.contact})` : '');
-                        selectEl.appendChild(opt);
-                    });
-                    selectEl.value = prevVal;
-                    if (selectEl.value) {
-                        const activeClient = clientsDb.find(c => c.id === selectEl.value);
-                        if (activeClient) setSelectedInvoiceClient(activeClient);
-                    }
-                }
-
-                const container = $('clientsListContainer');
                 if (!container) return;
-                const q = ($('searchClientsInput') ? $('searchClientsInput').value : '').toLowerCase().trim();
+                const q = ($('searchClientsInput') ? $('searchClientsInput').value : '').trim().toLowerCase();
                 const filtered = clientsDb.filter(c =>
                     (c.name || '').toLowerCase().includes(q) ||
                     (c.contact || '').toLowerCase().includes(q) ||
@@ -2676,49 +2583,44 @@
                 if (filtered.length === 0) {
                     container.innerHTML = `
                         <div class="text-center py-10 text-xs text-[#8E8E93]">
-                            ${clientsDb.length === 0 ? 'Belum ada data konsumen tersimpan.' : 'Tidak ada konsumen yang cocok dengan pencarian.'}
+                            Belum ada data konsumen yang cocok.
                         </div>
                     `;
                     return;
                 }
 
-                container.innerHTML = '';
-                filtered.forEach((client) => {
-                    const div = document.createElement('div');
-                    div.className = 'p-4 rounded-2xl bg-[#F2F2F7] flex flex-col sm:flex-row sm:items-center justify-between gap-3';
-                    div.innerHTML = `
-                        <div class="min-w-0 space-y-0.5">
-                            <p class="text-sm font-bold text-[#1C1C1E] truncate">${escapeHtml(client.name)}</p>
-                            ${client.contact ? `<p class="text-xs text-[#636366]">${escapeHtml(client.contact)}</p>` : ''}
-                            ${client.npwp ? `<p class="text-[11px] font-semibold text-[#007AFF]">NPWP: ${escapeHtml(client.npwp)}</p>` : ''}
-                            ${client.address ? `<p class="text-[11px] text-[#8E8E93] line-clamp-2">${escapeHtml(client.address)}</p>` : ''}
+                container.innerHTML = filtered.map(c => `
+                    <div class="p-4 rounded-2xl bg-[#F2F2F7] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div class="space-y-0.5 min-w-0">
+                            <p class="text-sm font-bold text-[#1C1C1E] truncate">${escapeHtml(c.name)}</p>
+                            ${c.contact ? `<p class="text-xs text-[#636366]">${escapeHtml(c.contact)}</p>` : ''}
+                            ${c.npwp ? `<p class="text-[11px] font-semibold text-[#007AFF]">NPWP: ${escapeHtml(c.npwp)}</p>` : ''}
+                            ${c.address ? `<p class="text-xs text-[#8E8E93] line-clamp-2">${escapeHtml(c.address)}</p>` : ''}
                         </div>
                         <div class="flex items-center gap-1.5 shrink-0">
-                            <button type="button" data-use-client="${client.id}" class="px-3 py-1.5 rounded-xl bg-[#007AFF] hover:bg-[#0062CC] text-white text-xs font-semibold transition">
-                                Gunakan
+                            <button type="button" data-use-client="${escapeHtml(c.id)}" class="px-3 py-1.5 rounded-full bg-[#007AFF] text-white text-xs font-semibold hover:bg-[#0062CC] transition">
+                                Pakai
                             </button>
-                            <button type="button" data-edit-client="${client.id}" class="px-2.5 py-1.5 rounded-xl bg-white hover:bg-black/5 text-[#1C1C1E] text-xs font-semibold border border-black/10 transition">
+                            <button type="button" data-edit-client="${escapeHtml(c.id)}" class="px-3 py-1.5 rounded-full bg-white text-[#1C1C1E] text-xs font-semibold hover:bg-black/5 transition border border-black/10">
                                 Edit
                             </button>
-                            <button type="button" data-del-client="${client.id}" class="px-2.5 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs font-semibold transition">
+                            <button type="button" data-del-client="${escapeHtml(c.id)}" class="px-2.5 py-1.5 rounded-full bg-rose-50 text-rose-600 text-xs font-semibold hover:bg-rose-100 transition">
                                 Hapus
                             </button>
                         </div>
-                    `;
-                    container.appendChild(div);
-                });
+                    </div>
+                `).join('');
 
                 container.querySelectorAll('[data-use-client]').forEach(btn => {
                     btn.addEventListener('click', () => {
                         const id = btn.getAttribute('data-use-client');
                         const found = clientsDb.find(c => c.id === id);
-                        if (found) {
-                            setSelectedInvoiceClient(found);
-                            $('selectClientDb').value = found.id;
-                            updatePreview();
-                            switchPage('invoice');
-                            showToast('Data konsumen dimuat ke invoice');
-                        }
+                        if (!found) return;
+                        $('selectClientDb').value = found.id;
+                        setSelectedInvoiceClient(found);
+                        updatePreview();
+                        switchPage('invoice');
+                        showToast(`Konsumen "${found.name}" dipilih`);
                     });
                 });
 
@@ -2726,25 +2628,23 @@
                     btn.addEventListener('click', () => {
                         const id = btn.getAttribute('data-edit-client');
                         const found = clientsDb.find(c => c.id === id);
-                        if (found) {
-                            $('editClientId').value = found.id;
-                            $('dbClientName').value = found.name || '';
-                            $('dbClientContact').value = found.contact || '';
-                            $('dbClientNpwp').value = found.npwp || '';
-                            $('dbClientAddress').value = found.address || '';
-                            $('clientFormHeading').textContent = 'Edit Data Konsumen';
-                            $('btnCancelClientEdit').classList.remove('hidden');
-                        }
+                        if (!found) return;
+                        $('editClientId').value = found.id;
+                        $('dbClientName').value = found.name || '';
+                        $('dbClientContact').value = found.contact || '';
+                        $('dbClientNpwp').value = found.npwp || '';
+                        $('dbClientAddress').value = found.address || '';
+                        $('clientFormHeading').textContent = 'Edit Data Konsumen';
+                        $('btnCancelClientEdit').classList.remove('hidden');
                     });
                 });
 
                 container.querySelectorAll('[data-del-client]').forEach(btn => {
                     btn.addEventListener('click', () => {
                         const id = btn.getAttribute('data-del-client');
-                        const found = clientsDb.find(c => c.id === id);
-                        openConfirm('Hapus Konsumen', `Hapus "${found ? found.name : 'konsumen ini'}" dari database?`, () => {
+                        openConfirm('Hapus Konsumen', 'Hapus data konsumen ini dari database bersama?', () => {
                             clientsDb = clientsDb.filter(c => c.id !== id);
-                            if ($('selectClientDb') && $('selectClientDb').value === id) {
+                            if ($('selectClientDb').value === id) {
                                 $('selectClientDb').value = '';
                                 setSelectedInvoiceClient(null);
                                 updatePreview();
@@ -2752,169 +2652,6 @@
                             renderClientsList();
                             pushToGithub(true, 'cons');
                             showToast('Konsumen dihapus');
-                        });
-                    });
-                });
-            }
-
-            function loadInvoiceRecord(record, asDuplicate = false) {
-                $('invNumber').value = asDuplicate ? generateAutoInvoiceNumber() : (record.invNumber || '');
-                $('invDate').value = asDuplicate ? getTodayStr() : (record.invDate || getTodayStr());
-                $('invDueDate').value = asDuplicate ? getFutureDateStr(14) : (record.invDueDate || getFutureDateStr(14));
-                setSelectedInvoiceClient({
-                    name: record.clientName || '',
-                    contact: record.clientContact || '',
-                    npwp: record.clientNpwp || '',
-                    address: record.clientAddress || ''
-                });
-                const matchedClient = clientsDb.find(c => (c.name || '').toLowerCase() === (record.clientName || '').toLowerCase());
-                if ($('selectClientDb')) {
-                    $('selectClientDb').value = matchedClient ? matchedClient.id : '';
-                }
-                $('taxPriceMode').value = record.taxPriceMode || 'exclude';
-                $('enablePpn').checked = record.enablePpn !== false;
-                $('ppnRate').value = record.ppnRate != null ? record.ppnRate : 11;
-                $('enablePph').checked = Boolean(record.enablePph);
-                $('pphRate').value = record.pphRate != null ? record.pphRate : 2;
-                $('pphLabel').value = record.pphLabel || 'PPh Pasal 23';
-                $('pphMode').value = record.pphMode || 'deduct';
-                const savedNote = (record.invNotes || '').trim();
-                const defaultBankNote = (settings.defaultNotes || '').trim();
-                $('invNotes').value = (savedNote && savedNote !== defaultBankNote) ? savedNote : '';
-                items = Array.isArray(record.items) && record.items.length > 0
-                    ? JSON.parse(JSON.stringify(record.items))
-                    : [{ id: Date.now(), name: '', qty: 1, unit: 'Pcs', price: 0 }];
-
-                renderItemRows();
-                updatePreview();
-                switchPage('invoice');
-                showToast(asDuplicate ? 'Invoice diduplikasi dengan nomor baru' : 'Invoice dibuka');
-            }
-
-            function renderHistoryList() {
-                const badge = $('badgeHistoryCount');
-                if (badge) badge.textContent = String(invoiceHistory.length);
-
-                const container = $('historyListContainer');
-                if (!container) return;
-                const q = ($('searchHistoryInput') ? $('searchHistoryInput').value : '').toLowerCase().trim();
-                const filtered = invoiceHistory.filter(h =>
-                    (h.invNumber || '').toLowerCase().includes(q) ||
-                    (h.clientName || '').toLowerCase().includes(q)
-                );
-
-                if (filtered.length === 0) {
-                    container.innerHTML = `
-                        <div class="col-span-full mac-card p-10 text-center text-xs text-[#8E8E93]">
-                            ${invoiceHistory.length === 0 ? 'Belum ada riwayat invoice tersimpan. Klik tombol "Simpan" di atas saat membuat invoice.' : 'Tidak ada invoice yang cocok dengan pencarian.'}
-                        </div>
-                    `;
-                    return;
-                }
-
-                container.innerHTML = '';
-                filtered.forEach((rec) => {
-                    const card = document.createElement('div');
-                    card.className = 'mac-card p-5 flex flex-col justify-between gap-4';
-                    const itemCount = Array.isArray(rec.items) ? rec.items.length : 0;
-                    card.innerHTML = `
-                        <div class="space-y-1">
-                            <div class="flex items-center justify-between gap-2">
-                                <span class="px-2.5 py-0.5 rounded-full bg-[#007AFF]/10 text-[#007AFF] text-xs font-bold">${escapeHtml(rec.invNumber)}</span>
-                                <span class="text-[11px] text-[#8E8E93]">${formatDateIndo(rec.invDate)} &bull; ${itemCount} item</span>
-                            </div>
-                            <h4 class="text-sm font-bold text-[#1C1C1E] pt-1 truncate">${escapeHtml(rec.clientName) || 'Tanpa Nama Klien'}</h4>
-                            <p class="text-base font-extrabold text-[#1C1C1E]">${formatRupiah(rec.grandTotal)}</p>
-                        </div>
-                        <div class="space-y-2 pt-2 border-t border-black/[0.06]">
-                            <div class="flex items-center gap-2">
-                                <button type="button" data-open-inv="${rec.id}" class="flex-1 py-2 rounded-xl bg-[#007AFF] hover:bg-[#0062CC] text-white text-xs font-semibold transition">
-                                    Buka
-                                </button>
-                                <button type="button" data-dup-inv="${rec.id}" class="px-3 py-2 rounded-xl bg-[#F2F2F7] hover:bg-[#E5E5EA] text-[#1C1C1E] text-xs font-semibold transition">
-                                    Duplikat
-                                </button>
-                                <button type="button" data-del-inv="${rec.id}" class="px-3 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs font-semibold transition">
-                                    Hapus
-                                </button>
-                            </div>
-                            <div class="grid grid-cols-2 gap-2">
-                                <button type="button" data-exp-items="${rec.id}" class="py-1.5 px-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-[11px] font-semibold transition flex items-center justify-center gap-1">
-                                    <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-                                    <span>Export Item Saja</span>
-                                </button>
-                                <button type="button" data-exp-tx="${rec.id}" class="py-1.5 px-2.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-[11px] font-semibold transition flex items-center justify-center gap-1">
-                                    <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-                                    <span>Export 1 Transaksi</span>
-                                </button>
-                            </div>
-                        </div>
-                    `;
-                    container.appendChild(card);
-                });
-
-                container.querySelectorAll('[data-open-inv]').forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        const found = invoiceHistory.find(x => x.id === btn.getAttribute('data-open-inv'));
-                        if (found) loadInvoiceRecord(found, false);
-                    });
-                });
-
-                container.querySelectorAll('[data-dup-inv]').forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        const found = invoiceHistory.find(x => x.id === btn.getAttribute('data-dup-inv'));
-                        if (found) loadInvoiceRecord(found, true);
-                    });
-                });
-
-                container.querySelectorAll('[data-exp-items]').forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        const found = invoiceHistory.find(x => x.id === btn.getAttribute('data-exp-items'));
-                        if (!found) return;
-                        const cleanItems = (Array.isArray(found.items) ? found.items : []).map((it, idx) => ({
-                            id: idx + 1,
-                            name: it.name || '',
-                            qty: Number(it.qty) || 0,
-                            unit: it.unit || 'Pcs',
-                            price: Number(it.price) || 0
-                        }));
-                        const payload = {
-                            exportType: 'invoice_items_only',
-                            sourceInvoice: found.invNumber || '',
-                            exportedAt: new Date().toISOString(),
-                            items: cleanItems
-                        };
-                        const safeNo = (found.invNumber || 'Invoice').replace(/[^a-zA-Z0-9_-]/g, '_');
-                        downloadJsonFile(payload, `Items_${safeNo}.json`);
-                        showToast(`Daftar item (${cleanItems.length} item) berhasil di-export!`);
-                    });
-                });
-
-                container.querySelectorAll('[data-exp-tx]').forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        const found = invoiceHistory.find(x => x.id === btn.getAttribute('data-exp-tx'));
-                        if (!found) return;
-                        const payload = {
-                            exportType: 'single_invoice_transaction',
-                            sourceCv: settings.compName || activeCvId,
-                            exportedAt: new Date().toISOString(),
-                            transaction: JSON.parse(JSON.stringify(found))
-                        };
-                        const safeNo = (found.invNumber || 'Invoice').replace(/[^a-zA-Z0-9_-]/g, '_');
-                        downloadJsonFile(payload, `Transaksi_${safeNo}.json`);
-                        showToast(`1 Transaksi (${found.invNumber}) berhasil di-export!`);
-                    });
-                });
-
-                container.querySelectorAll('[data-del-inv]').forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        const id = btn.getAttribute('data-del-inv');
-                        const found = invoiceHistory.find(x => x.id === id);
-                        openConfirm('Hapus Riwayat Invoice', `Hapus invoice "${found ? found.invNumber : ''}" dari riwayat?`, () => {
-                            invoiceHistory = invoiceHistory.filter(x => x.id !== id);
-                            renderHistoryList();
-                            pushToGithub(true, 'cv');
-                            showToast('Riwayat invoice dihapus');
                         });
                     });
                 });
@@ -2931,91 +2668,310 @@
                 URL.revokeObjectURL(url);
             }
 
-            function normalizeImportedItems(rawList) {
-                return rawList.map((it, idx) => ({
-                    id: Date.now() + idx + Math.floor(Math.random() * 1000),
-                    name: String(it.name || it.deskripsi || ''),
-                    qty: Number(it.qty) || 1,
-                    unit: String(it.unit || it.satuan || 'Pcs'),
-                    price: Number(it.price || it.harga) || 0
-                }));
-            }
-
             function handleImportItemsOrTransactionFile(file, itemsOnlyMode = false) {
                 if (!file) return;
                 const reader = new FileReader();
                 reader.onload = function (ev) {
                     try {
                         const parsed = JSON.parse(ev.target.result);
+                        const extractedItems = Array.isArray(parsed)
+                            ? parsed
+                            : (Array.isArray(parsed.items) ? parsed.items : null);
 
-                        if (Array.isArray(parsed) || parsed.exportType === 'invoice_items_only' || (Array.isArray(parsed.items) && !parsed.transaction && !parsed.invNumber)) {
-                            const rawItems = Array.isArray(parsed) ? parsed : (parsed.items || []);
-                            if (rawItems.length === 0) {
-                                showToast('File tidak memiliki item barang/jasa');
-                                return;
-                            }
-                            const importedItems = normalizeImportedItems(rawItems);
-                            const isCurrentEmpty = items.length === 1 && !items[0].name.trim() && (Number(items[0].price) || 0) === 0;
+                        if (!extractedItems || extractedItems.length === 0) {
+                            showToast('File JSON tidak berisi daftar item barang/jasa.');
+                            return;
+                        }
 
-                            if (isCurrentEmpty) {
-                                items = importedItems;
-                                renderItemRows();
-                                updatePreview();
-                                switchPage('invoice');
-                                showToast(`${importedItems.length} item berhasil dimuat ke invoice!`);
-                            } else {
+                        const normalizedItems = extractedItems.map((it, idx) => ({
+                            id: Date.now() + idx + Math.random(),
+                            name: String(it.name || ''),
+                            qty: Number(it.qty) || 1,
+                            unit: String(it.unit || 'Pcs'),
+                            price: Number(it.price) || 0
+                        }));
+
+                        const isFullTransaction = !itemsOnlyMode && parsed && typeof parsed === 'object' && !Array.isArray(parsed) && (parsed.invNumber || parsed.clientName || parsed.invDate);
+
+                        if (isFullTransaction) {
+                            const newRecord = {
+                                id: 'inv_' + Date.now(),
+                                invNumber: parsed.invNumber || generateAutoInvoiceNumber(),
+                                invDate: parsed.invDate || getTodayStr(),
+                                invDueDate: parsed.invDueDate || getFutureDateStr(14),
+                                clientName: parsed.clientName || '',
+                                clientContact: parsed.clientContact || '',
+                                clientNpwp: parsed.clientNpwp || '',
+                                clientAddress: parsed.clientAddress || '',
+                                taxPriceMode: parsed.taxPriceMode || 'exclude',
+                                enablePpn: parsed.enablePpn !== undefined ? Boolean(parsed.enablePpn) : true,
+                                ppnRate: Number(parsed.ppnRate) || 11,
+                                enablePph: Boolean(parsed.enablePph),
+                                pphRate: Number(parsed.pphRate) || 2,
+                                pphLabel: parsed.pphLabel || 'PPh Pasal 23',
+                                pphMode: parsed.pphMode || 'deduct',
+                                invNotes: parsed.invNotes || '',
+                                items: normalizedItems,
+                                grandTotal: Number(parsed.grandTotal) || 0,
+                                savedAt: new Date().toISOString()
+                            };
+
+                            invoiceHistory.unshift(newRecord);
+                            renderHistoryList();
+                            pushToGithub(true, 'cv');
+
+                            loadInvoiceRecordIntoForm(newRecord);
+                            switchPage('invoice');
+                            showToast(`Transaksi ${newRecord.invNumber} (${normalizedItems.length} item) berhasil diimpor!`);
+                        } else {
+                            const hasExistingFilledItems = items.some(it => (it.name || '').trim() !== '' || (Number(it.price) || 0) > 0);
+                            if (hasExistingFilledItems) {
                                 openConfirm(
-                                    'Import Daftar Item',
-                                    `Ditemukan ${importedItems.length} item barang/jasa. Klik "Ya, Lanjutkan" untuk mengganti item saat ini, atau klik "Batal" untuk membatalkan.`,
+                                    'Import Daftar Item Barang',
+                                    `Ditemukan ${normalizedItems.length} item barang/jasa. Tambahkan ke daftar item yang sudah ada atau ganti seluruhnya?`,
                                     () => {
-                                        items = importedItems;
+                                        items = [...normalizedItems, ...items];
                                         renderItemRows();
                                         updatePreview();
                                         switchPage('invoice');
-                                        showToast(`${importedItems.length} item berhasil di-import!`);
+                                        showToast(`${normalizedItems.length} item ditambahkan ke invoice!`);
                                     }
                                 );
+                            } else {
+                                items = normalizedItems;
+                                renderItemRows();
+                                updatePreview();
+                                switchPage('invoice');
+                                showToast(`${normalizedItems.length} item dimuat ke invoice!`);
                             }
-                            return;
                         }
-
-                        const tx = parsed.transaction || (parsed.invNumber || parsed.clientName || Array.isArray(parsed.items) ? parsed : null);
-                        if (!tx) {
-                            showToast('Format file JSON tidak dikenali');
-                            return;
-                        }
-
-                        if (itemsOnlyMode && Array.isArray(tx.items) && tx.items.length > 0) {
-                            items = normalizeImportedItems(tx.items);
-                            renderItemRows();
-                            updatePreview();
-                            showToast(`${items.length} item dari transaksi berhasil dimuat!`);
-                            return;
-                        }
-
-                        const newRecord = {
-                            ...tx,
-                            id: 'inv_' + Date.now(),
-                            invNumber: tx.invNumber || generateAutoInvoiceNumber(),
-                            items: Array.isArray(tx.items) ? normalizeImportedItems(tx.items) : [],
-                            savedAt: new Date().toISOString()
-                        };
-
-                        invoiceHistory.unshift(newRecord);
-                        renderHistoryList();
-                        pushToGithub(true, 'cv');
-                        loadInvoiceRecord(newRecord, false);
-                        showToast(`Transaksi ${newRecord.invNumber} berhasil di-import ke Riwayat & Editor!`);
                     } catch (err) {
-                        showToast('Gagal membaca file JSON: format tidak valid');
+                        showToast('Gagal membaca file JSON. Pastikan format valid.');
                     }
                 };
                 reader.readAsText(file);
             }
 
-            function rasterizeImageToPng(src) {
+            function loadInvoiceRecordIntoForm(rec) {
+                if (!rec) return;
+                $('invNumber').value = rec.invNumber || '';
+                $('invDate').value = rec.invDate || getTodayStr();
+                $('invDueDate').value = rec.invDueDate || getFutureDateStr(14);
+
+                const matchedClient = clientsDb.find(c => (c.name || '').toLowerCase() === (rec.clientName || '').toLowerCase());
+                if (matchedClient) {
+                    $('selectClientDb').value = matchedClient.id;
+                    setSelectedInvoiceClient(matchedClient);
+                } else {
+                    $('selectClientDb').value = '';
+                    setSelectedInvoiceClient({
+                        name: rec.clientName || '',
+                        contact: rec.clientContact || '',
+                        npwp: rec.clientNpwp || '',
+                        address: rec.clientAddress || ''
+                    });
+                }
+
+                $('taxPriceMode').value = rec.taxPriceMode || 'exclude';
+                $('enablePpn').checked = Boolean(rec.enablePpn);
+                $('ppnRate').value = rec.ppnRate ?? 11;
+                $('enablePph').checked = Boolean(rec.enablePph);
+                $('pphRate').value = rec.pphRate ?? 2;
+                $('pphLabel').value = rec.pphLabel || 'PPh Pasal 23';
+                $('pphMode').value = rec.pphMode || 'deduct';
+                $('invNotes').value = rec.invNotes || '';
+                items = Array.isArray(rec.items) && rec.items.length > 0
+                    ? JSON.parse(JSON.stringify(rec.items))
+                    : [{ id: Date.now(), name: '', qty: 1, unit: 'Pcs', price: 0 }];
+                renderItemRows();
+                updatePreview();
+            }
+
+            function renderHistoryList() {
+                const container = $('historyListContainer');
+                const badge = $('badgeHistoryCount');
+                if (badge) badge.textContent = String(invoiceHistory.length);
+
+                if (!container) return;
+                const q = ($('searchHistoryInput') ? $('searchHistoryInput').value : '').trim().toLowerCase();
+                const filtered = invoiceHistory.filter(inv =>
+                    (inv.invNumber || '').toLowerCase().includes(q) ||
+                    (inv.clientName || '').toLowerCase().includes(q)
+                );
+
+                if (filtered.length === 0) {
+                    container.innerHTML = `
+                        <div class="col-span-full mac-card p-10 text-center text-xs text-[#8E8E93]">
+                            Belum ada riwayat invoice tersimpan untuk ${escapeHtml(settings.compName)}.
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = filtered.map(inv => `
+                    <div class="mac-card p-5 flex flex-col justify-between gap-3.5">
+                        <div class="space-y-1.5">
+                            <div class="flex items-center justify-between gap-2">
+                                <span class="px-2.5 py-0.5 rounded-full bg-[#007AFF]/10 text-[#007AFF] text-[11px] font-bold">${escapeHtml(inv.invNumber)}</span>
+                                <span class="text-[11px] text-[#8E8E93]">${formatDateIndo(inv.invDate)} &bull; ${(inv.items || []).length} item</span>
+                            </div>
+                            <h3 class="text-sm font-bold text-[#1C1C1E] truncate">${escapeHtml(inv.clientName || 'Tanpa Nama Klien')}</h3>
+                            <p class="text-base font-extrabold text-[#1C1C1E]">${formatRupiah(inv.grandTotal)}</p>
+                        </div>
+
+                        <div class="space-y-2 pt-2 border-t border-black/[0.06]">
+                            <div class="flex items-center gap-2">
+                                <button type="button" data-open-inv="${escapeHtml(inv.id)}" class="flex-1 py-2 rounded-xl bg-[#007AFF] hover:bg-[#0062CC] text-white text-xs font-semibold transition">
+                                    Buka
+                                </button>
+                                <button type="button" data-dup-inv="${escapeHtml(inv.id)}" class="px-3 py-2 rounded-xl bg-[#F2F2F7] hover:bg-[#E5E5EA] text-[#1C1C1E] text-xs font-semibold transition">
+                                    Duplikat
+                                </button>
+                                <button type="button" data-del-inv="${escapeHtml(inv.id)}" class="px-3 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs font-semibold transition">
+                                    Hapus
+                                </button>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button type="button" data-exp-items="${escapeHtml(inv.id)}" class="py-1.5 px-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-[11px] font-semibold transition flex items-center justify-center gap-1">
+                                    <svg class="w-3 h-3 shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                                    <span>Export Item Saja</span>
+                                </button>
+                                <button type="button" data-exp-tx="${escapeHtml(inv.id)}" class="py-1.5 px-2.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-[11px] font-semibold transition flex items-center justify-center gap-1">
+                                    <svg class="w-3 h-3 shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                                    <span>Export 1 Transaksi</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                container.querySelectorAll('[data-open-inv]').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const id = btn.getAttribute('data-open-inv');
+                        const rec = invoiceHistory.find(x => x.id === id);
+                        if (!rec) return;
+                        loadInvoiceRecordIntoForm(rec);
+                        switchPage('invoice');
+                        showToast(`Invoice ${rec.invNumber} dimuat ke editor`);
+                    });
+                });
+
+                container.querySelectorAll('[data-dup-inv]').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const id = btn.getAttribute('data-dup-inv');
+                        const rec = invoiceHistory.find(x => x.id === id);
+                        if (!rec) return;
+                        loadInvoiceRecordIntoForm(rec);
+                        $('invDate').value = getTodayStr();
+                        $('invDueDate').value = getFutureDateStr(14);
+                        $('invNumber').value = generateAutoInvoiceNumber($('invDate').value);
+                        updatePreview();
+                        switchPage('invoice');
+                        showToast('Invoice diduplikat dengan nomor baru');
+                    });
+                });
+
+                container.querySelectorAll('[data-exp-items]').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const id = btn.getAttribute('data-exp-items');
+                        const rec = invoiceHistory.find(x => x.id === id);
+                        if (!rec) return;
+                        const safeNo = (rec.invNumber || 'Invoice').replace(/[^a-zA-Z0-9_-]/g, '_');
+                        downloadJsonFile({
+                            exportType: 'invoice_items_only',
+                            sourceInvoice: rec.invNumber,
+                            exportedAt: new Date().toISOString(),
+                            items: rec.items || []
+                        }, `Items_${safeNo}.json`);
+                        showToast(`Daftar item (${(rec.items || []).length} barang) diekspor!`);
+                    });
+                });
+
+                container.querySelectorAll('[data-exp-tx]').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const id = btn.getAttribute('data-exp-tx');
+                        const rec = invoiceHistory.find(x => x.id === id);
+                        if (!rec) return;
+                        const safeNo = (rec.invNumber || 'Invoice').replace(/[^a-zA-Z0-9_-]/g, '_');
+                        downloadJsonFile({
+                            exportType: 'single_invoice_transaction',
+                            exportedAt: new Date().toISOString(),
+                            ...rec
+                        }, `Transaksi_${safeNo}.json`);
+                        showToast(`Transaksi ${rec.invNumber} diekspor!`);
+                    });
+                });
+
+                container.querySelectorAll('[data-del-inv]').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const id = btn.getAttribute('data-del-inv');
+                        openConfirm('Hapus Riwayat Invoice', 'Hapus catatan invoice ini dari riwayat?', () => {
+                            invoiceHistory = invoiceHistory.filter(x => x.id !== id);
+                            renderHistoryList();
+                            pushToGithub(true, 'cv');
+                            showToast('Riwayat invoice dihapus');
+                        });
+                    });
+                });
+            }
+
+            // =========================================================================
+            // 7. PAGE NAVIGATION & MOBILE PREVIEW TOGGLE
+            // =========================================================================
+            function switchPage(targetPage) {
+                currentPage = targetPage;
+                document.querySelectorAll('.page-section').forEach(sec => {
+                    sec.classList.toggle('hidden', sec.id !== `page-${targetPage}`);
+                });
+
+                document.querySelectorAll('.nav-tab').forEach(tab => {
+                    const isActive = tab.getAttribute('data-nav') === targetPage;
+                    if (isActive) {
+                        tab.className = 'nav-tab px-4 py-1.5 rounded-full text-xs font-semibold transition-all bg-white text-[#1C1C1E] shadow-sm flex items-center gap-1.5';
+                    } else {
+                        tab.className = 'nav-tab px-4 py-1.5 rounded-full text-xs font-semibold transition-all text-[#636366] hover:text-[#1C1C1E] flex items-center gap-1.5';
+                    }
+                });
+
+                document.querySelectorAll('.mob-nav-btn').forEach(btn => {
+                    const isActive = btn.getAttribute('data-nav') === targetPage;
+                    btn.classList.toggle('text-[#007AFF]', isActive);
+                    btn.classList.toggle('text-[#8E8E93]', !isActive);
+                });
+
+                if (targetPage === 'invoice') {
+                    applyA4Zoom();
+                } else if (targetPage === 'settings') {
+                    applySettingsToUI();
+                }
+            }
+
+            function switchMobileInvoiceView(mode) {
+                const editorCol = $('editorColumn');
+                const previewCol = $('previewColumn');
+                const tabForm = $('mobTabForm');
+                const tabPrev = $('mobTabPreview');
+
+                if (mode === 'preview') {
+                    editorCol.classList.add('hidden', 'lg:block');
+                    previewCol.classList.remove('hidden');
+                    tabPrev.className = 'flex-1 py-2 rounded-xl text-xs font-bold bg-white text-[#1C1C1E] shadow-sm transition';
+                    tabForm.className = 'flex-1 py-2 rounded-xl text-xs font-bold text-[#636366] transition';
+                    updatePreview();
+                } else {
+                    previewCol.classList.add('hidden', 'lg:block');
+                    editorCol.classList.remove('hidden');
+                    tabForm.className = 'flex-1 py-2 rounded-xl text-xs font-bold bg-white text-[#1C1C1E] shadow-sm transition';
+                    tabPrev.className = 'flex-1 py-2 rounded-xl text-xs font-bold text-[#636366] transition';
+                }
+            }
+
+            // =========================================================================
+            // 8. PDF EXPORT HELPERS (HIGH-DPI PRINT2PDF + VECTOR FALLBACK)
+            // =========================================================================
+            function rasterizeImageToPng(dataUrl) {
                 return new Promise((resolve) => {
-                    if (!src) {
+                    if (!dataUrl) {
                         resolve(null);
                         return;
                     }
@@ -3023,35 +2979,37 @@
                     img.crossOrigin = 'anonymous';
                     img.onload = function () {
                         try {
-                            const w = img.naturalWidth || img.width || 200;
-                            const h = img.naturalHeight || img.height || 200;
                             const canvas = document.createElement('canvas');
-                            canvas.width = w;
-                            canvas.height = h;
+                            canvas.width = img.naturalWidth || img.width || 240;
+                            canvas.height = img.naturalHeight || img.height || 240;
                             const ctx = canvas.getContext('2d');
-                            ctx.drawImage(img, 0, 0, w, h);
-                            resolve({ dataUrl: canvas.toDataURL('image/png'), width: w, height: h });
+                            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                            resolve({
+                                dataUrl: canvas.toDataURL('image/png'),
+                                width: canvas.width,
+                                height: canvas.height
+                            });
                         } catch (e) {
                             resolve(null);
                         }
                     };
                     img.onerror = () => resolve(null);
-                    img.src = src;
+                    img.src = dataUrl;
                 });
             }
 
             function drawGradientBar(doc, x, y, w, h, rgbStart, rgbEnd, radius = 0) {
                 try {
-                    const scale = 6;
-                    const cw = Math.max(20, Math.round(w * scale));
-                    const ch = Math.max(6, Math.round(h * scale));
+                    const pxScale = 12;
+                    const cw = Math.max(4, Math.round(w * pxScale));
+                    const ch = Math.max(4, Math.round(h * pxScale));
                     const canvas = document.createElement('canvas');
                     canvas.width = cw;
                     canvas.height = ch;
                     const ctx = canvas.getContext('2d');
 
                     if (radius > 0) {
-                        const r = Math.min(radius * scale, cw / 2, ch / 2);
+                        const r = Math.min(cw / 2, ch / 2, Math.round(radius * pxScale));
                         ctx.beginPath();
                         ctx.moveTo(r, 0);
                         ctx.lineTo(cw - r, 0);
@@ -3073,14 +3031,11 @@
                     ctx.fillRect(0, 0, cw, ch);
 
                     const dataUrl = canvas.toDataURL('image/png');
-                    doc.addImage(dataUrl, 'PNG', x, y, w, h, undefined, 'FAST');
+                    doc.addImage(dataUrl, 'PNG', x, y, w, h);
                 } catch (e) {
-                    doc.setFillColor(rgbStart[0], rgbStart[1], rgbStart[2]);
-                    if (radius > 0) {
-                        doc.roundedRect(x, y, w, h, radius, radius, 'F');
-                    } else {
-                        doc.rect(x, y, w, h, 'F');
-                    }
+                    doc.setFillColor(...rgbStart);
+                    if (radius > 0) doc.roundedRect(x, y, w, h, radius, radius, 'F');
+                    else doc.rect(x, y, w, h, 'F');
                 }
             }
 
@@ -3101,6 +3056,73 @@
                 doc.text(str, x, y, cleanOpts);
             }
 
+            async function exportHighResPrint2Pdf(invNo) {
+                const { jsPDF } = window.jspdf;
+                const stack = $('invoicePagesStack');
+                if (!stack) return false;
+
+                updatePreview();
+                const paperNodes = Array.from(stack.querySelectorAll('.a4-paper'));
+                if (paperNodes.length === 0) return false;
+
+                const sandbox = document.createElement('div');
+                sandbox.style.position = 'fixed';
+                sandbox.style.left = '-10000px';
+                sandbox.style.top = '0';
+                sandbox.style.width = '210mm';
+                sandbox.style.background = '#FFFFFF';
+                sandbox.style.zIndex = '-9999';
+                document.body.appendChild(sandbox);
+
+                try {
+                    const doc = new jsPDF({
+                        orientation: 'portrait',
+                        unit: 'mm',
+                        format: 'a4',
+                        compress: true
+                    });
+
+                    for (let i = 0; i < paperNodes.length; i++) {
+                        const clone = paperNodes[i].cloneNode(true);
+                        clone.style.transform = 'none';
+                        clone.style.margin = '0';
+                        clone.style.boxShadow = 'none';
+                        clone.style.width = '210mm';
+                        clone.style.height = '297mm';
+                        sandbox.innerHTML = '';
+                        sandbox.appendChild(clone);
+
+                        await new Promise((r) => requestAnimationFrame(() => setTimeout(r, 40)));
+
+                        const canvas = await window.html2canvas(clone, {
+                            scale: 3,
+                            useCORS: true,
+                            allowTaint: true,
+                            backgroundColor: '#FFFFFF',
+                            logging: false
+                        });
+
+                        const imgData = canvas.toDataURL('image/jpeg', 0.96);
+                        if (i > 0) doc.addPage('a4', 'portrait');
+                        doc.addImage(imgData, 'JPEG', 0, 0, 210, 297, undefined, 'FAST');
+                    }
+
+                    const safeFilename = (invNo || 'Invoice').replace(/[^a-zA-Z0-9_-]/g, '_') + '.pdf';
+                    try {
+                        doc.save(safeFilename);
+                        showToast(`PDF HD (${paperNodes.length} halaman) berhasil diunduh!`);
+                    } catch (e) {
+                        const blobUrl = doc.output('bloburl');
+                        window.open(blobUrl, '_blank');
+                    }
+                    return true;
+                } finally {
+                    if (sandbox.parentNode) {
+                        sandbox.parentNode.removeChild(sandbox);
+                    }
+                }
+            }
+
             async function exportVectorPdf() {
                 if (!window.jspdf || !window.jspdf.jsPDF) {
                     showToast('Library PDF belum termuat, membuka dialog cetak...');
@@ -3108,7 +3130,18 @@
                     return;
                 }
 
-                showToast('Membuat dokumen PDF A4...');
+                const invNo = $('invNumber').value.trim() || '-';
+                showToast('Merender PDF kualitas tinggi (Print2PDF HD)...');
+
+                if (typeof window.html2canvas === 'function') {
+                    try {
+                        const ok = await exportHighResPrint2Pdf(invNo);
+                        if (ok) return;
+                    } catch (err) {
+                        // Fallback ke generator vektor jika terjadi kendala canvas
+                    }
+                }
+
                 const { jsPDF } = window.jspdf;
                 const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
                 const calc = calculateInvoiceTotals();
@@ -3120,7 +3153,6 @@
                 const pageW = 210;
                 const rightX = pageW - marginX;
                 const compNameUpper = (settings.compName || 'CV. SRIKANDI JAYA MANDIRI').toUpperCase();
-                const invNo = $('invNumber').value.trim() || '-';
                 const invDateStr = formatDateIndo($('invDate').value);
                 const invDueStr = formatDateIndo($('invDueDate').value);
                 const cName = $('clientName').value.trim() || '-';
@@ -3473,6 +3505,9 @@
                 }
             }
 
+            // =========================================================================
+            // 9. MONTHLY SEQUENTIAL INVOICE NUMBERING & INITIALIZATION
+            // =========================================================================
             function getTodayStr() {
                 const d = new Date();
                 return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
@@ -3484,22 +3519,46 @@
                 return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
             }
 
-            function generateAutoInvoiceNumber() {
-                const d = new Date();
-                const yyyy = d.getFullYear();
-                const mm = String(d.getMonth() + 1).padStart(2, '0');
-                const seq = String(invoiceHistory.length + 1).padStart(3, '0');
+            function generateAutoInvoiceNumber(targetDateStr) {
+                const refDateStr = targetDateStr || ($('invDate') && $('invDate').value) || getTodayStr();
+                const parts = refDateStr.split('-');
+                const now = new Date();
+                const yyyy = (parts.length === 3 && parts[0]) ? parts[0] : String(now.getFullYear());
+                const mm = (parts.length === 3 && parts[1]) ? parts[1].padStart(2, '0') : String(now.getMonth() + 1).padStart(2, '0');
                 const prefix = activeCvId === 'djm' ? 'INV/DJM' : 'INV';
-                return `${prefix}/${yyyy}/${mm}/${seq}`;
+                const monthTag = `${yyyy}/${mm}`;
+
+                let maxSeq = 0;
+                if (Array.isArray(invoiceHistory)) {
+                    invoiceHistory.forEach((rec) => {
+                        const numStr = String(rec.invNumber || '').trim();
+                        if (!numStr) return;
+
+                        const hasMonthInNumber = numStr.includes(monthTag);
+                        const recDateParts = String(rec.invDate || '').split('-');
+                        const hasSameDateMonth = recDateParts.length === 3 && recDateParts[0] === yyyy && recDateParts[1].padStart(2, '0') === mm;
+
+                        if (hasMonthInNumber || hasSameDateMonth) {
+                            const trailingMatch = numStr.match(/(\d+)\s*$/);
+                            if (trailingMatch) {
+                                const seqVal = parseInt(trailingMatch[1], 10);
+                                if (!isNaN(seqVal) && seqVal > maxSeq) {
+                                    maxSeq = seqVal;
+                                }
+                            }
+                        }
+                    });
+                }
+
+                const nextSeq = String(maxSeq + 1).padStart(3, '0');
+                return `${prefix}/${yyyy}/${mm}/${nextSeq}`;
             }
 
             function init() {
                 loadFromLocalStorage();
                 updatePwaStatusUI();
 
-                const btnTopInstall = $('btnInstallPwa');
                 const btnSettingsInstall = $('btnSettingsInstallPwa');
-                if (btnTopInstall) btnTopInstall.addEventListener('click', triggerPwaInstall);
                 if (btnSettingsInstall) btnSettingsInstall.addEventListener('click', triggerPwaInstall);
 
                 $('invDate').value = getTodayStr();
@@ -3568,7 +3627,20 @@
                 });
 
                 $('btnAutoNumber').addEventListener('click', () => {
-                    $('invNumber').value = generateAutoInvoiceNumber();
+                    $('invNumber').value = generateAutoInvoiceNumber($('invDate').value);
+                    updatePreview();
+                    showToast(`Nomor otomatis diperbarui: ${$('invNumber').value}`);
+                });
+
+                $('invDate').addEventListener('change', () => {
+                    const currentNo = $('invNumber').value.trim();
+                    const dateParts = ($('invDate').value || '').split('-');
+                    if (dateParts.length === 3) {
+                        const newMonthTag = `${dateParts[0]}/${dateParts[1]}`;
+                        if (!currentNo.includes(newMonthTag)) {
+                            $('invNumber').value = generateAutoInvoiceNumber($('invDate').value);
+                        }
+                    }
                     updatePreview();
                 });
 
@@ -3644,9 +3716,10 @@
 
                 $('btnNewInvoice').addEventListener('click', () => {
                     openConfirm('Buat Invoice Baru', 'Kosongkan form saat ini untuk membuat invoice baru?', () => {
-                        $('invNumber').value = generateAutoInvoiceNumber();
-                        $('invDate').value = getTodayStr();
+                        const todayStr = getTodayStr();
+                        $('invDate').value = todayStr;
                         $('invDueDate').value = getFutureDateStr(14);
+                        $('invNumber').value = generateAutoInvoiceNumber(todayStr);
                         $('selectClientDb').value = '';
                         setSelectedInvoiceClient(null);
                         $('taxPriceMode').value = 'exclude';
@@ -3661,7 +3734,7 @@
                         items = [{ id: Date.now(), name: '', qty: 1, unit: 'Pcs', price: 0 }];
                         renderItemRows();
                         updatePreview();
-                        showToast('Form invoice baru siap digunakan');
+                        showToast(`Invoice baru siap (${$('invNumber').value})`);
                     });
                 });
 
@@ -3710,7 +3783,7 @@
                     resetClientForm();
                     renderClientsList();
                     pushToGithub(true, 'cons');
-                    showToast('Data konsumen berhasil disimpan ke data_cons.json!');
+                    showToast('Data konsumen berhasil disimpan!');
                 });
 
                 $('btnCancelClientEdit').addEventListener('click', resetClientForm);
@@ -3748,7 +3821,7 @@
                     }
                     renderHistoryList();
                     pushToGithub(true, 'cv');
-                    showToast(`Invoice tersimpan ke ${ghConfig.path}!`);
+                    showToast('Invoice berhasil disimpan!');
                 });
 
                 $('searchHistoryInput').addEventListener('input', renderHistoryList);
@@ -3829,36 +3902,64 @@
                     applySettingsToUI();
                     updatePreview();
                     pushToGithub(true, 'cv');
-                    showToast(`Pengaturan disimpan ke ${ghConfig.path}!`);
+                    showToast('Pengaturan berhasil disimpan!');
                 });
 
-                function readGithubInputs() {
-                    ghConfig.owner = $('ghOwnerInput').value.trim();
-                    ghConfig.repo = $('ghRepoInput').value.trim();
-                    const chosenPath = $('ghPathInput').value.trim() || (CV_PROFILES[activeCvId] ? CV_PROFILES[activeCvId].defaultJsonFile : 'data_sjm.json');
-                    ghConfig.path = chosenPath;
-                    ghConfig.consPath = ($('ghConsPathInput') ? $('ghConsPathInput').value.trim() : '') || 'data_cons.json';
-                    ghConfig.pathsByCv = {
-                        ...(ghConfig.pathsByCv || { sjm: 'data_sjm.json', djm: 'data_djm.json' }),
-                        [activeCvId]: chosenPath
-                    };
-                    ghConfig.branch = $('ghBranchInput').value.trim() || 'main';
-                    ghConfig.token = $('ghTokenInput').value.trim();
+                // Token PIN Protection Handlers
+                function handleUnlockToken() {
+                    const enteredPin = ($('tokenPinInput') ? $('tokenPinInput').value : '').trim();
+                    if (enteredPin === TOKEN_ACCESS_PIN) {
+                        setTokenLockState(true);
+                        showToast('Akses pengaturan token dibuka');
+                    } else {
+                        showToast('Password / PIN salah!');
+                    }
+                }
+
+                const btnUnlockToken = $('btnUnlockToken');
+                if (btnUnlockToken) {
+                    btnUnlockToken.addEventListener('click', handleUnlockToken);
+                }
+                const tokenPinInput = $('tokenPinInput');
+                if (tokenPinInput) {
+                    tokenPinInput.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter') {
+                            e.preventDefault();
+                            handleUnlockToken();
+                        }
+                    });
+                }
+                const btnLockToken = $('btnLockToken');
+                if (btnLockToken) {
+                    btnLockToken.addEventListener('click', () => {
+                        setTokenLockState(false);
+                        showToast('Pengaturan token dikunci');
+                    });
+                }
+
+                function saveTokenFromInput() {
+                    ghToken = ($('ghTokenInput') ? $('ghTokenInput').value : '').trim();
                     try {
-                        localStorage.setItem(GH_CONFIG_KEY, JSON.stringify(ghConfig));
+                        localStorage.setItem(GH_TOKEN_STORAGE_KEY, ghToken);
                     } catch (e) { /* ignore */ }
                 }
 
                 $('btnConnectGithub').addEventListener('click', async () => {
-                    readGithubInputs();
+                    saveTokenFromInput();
                     lastKnownFileSha = '';
                     lastKnownConsFileSha = '';
-                    await pullFromGithub(false);
+                    const ok = await pullFromGithub(false);
+                    if (ok) {
+                        setTokenLockState(false);
+                    }
                 });
 
                 $('btnPushGithubNow').addEventListener('click', async () => {
-                    readGithubInputs();
-                    await pushToGithub(false, 'all');
+                    saveTokenFromInput();
+                    const ok = await pushToGithub(false, 'all');
+                    if (ok) {
+                        setTokenLockState(false);
+                    }
                 });
 
                 $('btnExportBackupJson').addEventListener('click', () => {
@@ -3867,7 +3968,7 @@
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement('a');
                     a.href = url;
-                    a.download = ghConfig.path || (CV_PROFILES[activeCvId] ? CV_PROFILES[activeCvId].defaultJsonFile : 'data_sjm.json');
+                    a.download = getActiveCvJsonPath();
                     a.click();
                     URL.revokeObjectURL(url);
                     showToast(`File ${a.download} berhasil diunduh`);
@@ -3908,9 +4009,12 @@
                     loadRepoLogoFile(true);
                 }
 
-                if (ghConfig.owner && ghConfig.repo) {
-                    pullFromGithub(true);
-                }
+                pullFromGithub(true).then((pulled) => {
+                    if (pulled && items.length === 1 && !items[0].name.trim() && (Number(items[0].price) || 0) === 0) {
+                        $('invNumber').value = generateAutoInvoiceNumber($('invDate').value);
+                        updatePreview();
+                    }
+                });
             }
 
             if (document.readyState === 'loading') {
