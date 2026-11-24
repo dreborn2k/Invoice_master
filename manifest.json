@@ -1,0 +1,25 @@
+{
+"name": "Invoice Master — Multi-CV Billing",
+"short_name": "Invoice App",
+"description": "Aplikasi Invoice A4 Multi-CV (CV. Srikandi Jaya Mandiri & Digital Jaya Mandiri)",
+"start_url": "./index.html",
+"scope": "./",
+"display": "standalone",
+"orientation": "any",
+"background_color": "#F2F2F7",
+"theme_color": "#FFFFFF",
+"icons": [
+{
+"src": "./sjm1.1.jpg",
+"sizes": "192x192",
+"type": "image/jpeg",
+"purpose": "any"
+},
+{
+"src": "./sjm1.1.jpg",
+"sizes": "512x512",
+"type": "image/jpeg",
+"purpose": "any"
+}
+]
+}
