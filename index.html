@@ -13,9 +13,9 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="theme-color" content="#FFFFFF">
     <meta name="format-detection" content="telephone=no">
-    <link id="pwaManifestLink" rel="manifest" href="./manifest.json">
-    <link id="pwaAppleIconLink" rel="apple-touch-icon" href="./sjm1.1.jpg">
-    <link id="pwaFaviconLink" rel="icon" type="image/jpeg" href="./sjm1.1.jpg">
+    <link id="pwaManifestLink" rel="manifest" href="./manifest.webmanifest">
+    <link id="pwaAppleIconLink" rel="apple-touch-icon" sizes="192x192" href="./icon-192.png">
+    <link id="pwaFaviconLink" rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -397,13 +397,11 @@
                             </select>
                         </div>
 
-                        <!-- Hidden fields synced with selected customer -->
                         <input type="hidden" id="clientName" value="">
                         <input type="hidden" id="clientContact" value="">
                         <input type="hidden" id="clientNpwp" value="">
                         <input type="hidden" id="clientAddress" value="">
 
-                        <!-- Read-only Selected Customer Summary -->
                         <div id="selectedClientSummaryBox" class="p-3.5 rounded-2xl bg-[#F2F2F7] border border-black/[0.04] space-y-1">
                             <p id="summaryClientName" class="text-xs sm:text-sm font-bold text-[#8E8E93]">Belum ada konsumen dipilih</p>
                             <p id="summaryClientContact" class="hidden text-xs text-[#636366]"></p>
@@ -642,15 +640,15 @@
                 <div class="mac-card p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div class="space-y-1">
                         <div class="flex items-center gap-2">
-                            <h3 class="text-sm font-bold text-[#1C1C1E]">Mode Aplikasi Layar Penuh (PWA)</h3>
-                            <span id="pwaModeBadge" class="px-2 py-0.5 rounded-full bg-blue-50 text-[#007AFF] text-[10px] font-bold">Browser Mode</span>
+                            <h3 class="text-sm font-bold text-[#1C1C1E]">Install Aplikasi (PWA Full Screen)</h3>
+                            <span id="pwaModeBadge" class="px-2 py-0.5 rounded-full bg-blue-50 text-[#007AFF] text-[10px] font-bold">Siap Diinstall</span>
                         </div>
                         <p id="pwaInstallHintText" class="text-xs text-[#636366] leading-relaxed">
-                            Pasang ke layar utama HP (Add to Home Screen) untuk membuka aplikasi secara full-screen tanpa address bar browser.
+                            Install sebagai aplikasi mandiri (WebAPK) di layar utama HP atau desktop agar terbuka penuh tanpa address bar browser.
                         </p>
                     </div>
                     <button type="button" id="btnSettingsInstallPwa" class="px-4 py-2.5 rounded-xl bg-[#007AFF] hover:bg-[#0062CC] text-white text-xs font-semibold transition shrink-0 shadow-sm">
-                        Pasang ke Layar Utama
+                        Install Aplikasi
                     </button>
                 </div>
 
@@ -903,7 +901,7 @@
             'use strict';
 
             // =========================================================================
-            // 0. PWA FULL-SCREEN MANIFEST, ICON GENERATOR & SERVICE WORKER
+            // 0. PWA FULL-SCREEN MANIFEST, PNG ICON GENERATOR & SERVICE WORKER
             // =========================================================================
             let deferredInstallPrompt = null;
 
@@ -966,8 +964,6 @@
             function initPwaSupport() {
                 try {
                     const icon192 = generatePwaIconDataUrl(192);
-                    const icon512 = generatePwaIconDataUrl(512);
-
                     const appleIconEl = document.getElementById('pwaAppleIconLink');
                     const faviconEl = document.getElementById('pwaFaviconLink');
                     if (appleIconEl && icon192) appleIconEl.href = icon192;
@@ -997,6 +993,14 @@
                         btnSet.textContent = 'Terpasang (Full Screen)';
                         btnSet.className = 'px-4 py-2.5 rounded-xl bg-emerald-50 text-emerald-700 text-xs font-bold shrink-0 cursor-default';
                     }
+                } else if (deferredInstallPrompt) {
+                    if (badge) {
+                        badge.textContent = 'WebAPK Tersedia';
+                        badge.className = 'px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-bold';
+                    }
+                    if (btnSet) {
+                        btnSet.textContent = 'Install App Sekarang';
+                    }
                 }
             }
 
@@ -1012,21 +1016,21 @@
                     if (choice && choice.outcome === 'accepted') {
                         deferredInstallPrompt = null;
                         updatePwaStatusUI();
-                        showToast('Aplikasi berhasil dipasang ke layar utama!');
+                        showToast('Aplikasi WebAPK berhasil diinstall ke Home Screen!');
                     }
                     return;
                 }
                 const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
                 if (isIos) {
                     openConfirm(
-                        'Pasang Full Screen di iPhone / iPad',
-                        'Ketuk ikon Bagikan (Share / kotak panah atas) di Safari, lalu pilih "Add to Home Screen" (Tambah ke Layar Utama) untuk membuka full-screen tanpa address bar.',
+                        'Install Full Screen di iPhone / iPad',
+                        'Ketuk ikon Bagikan (Share / kotak panah atas) di Safari, lalu pilih "Add to Home Screen" untuk membuka full-screen tanpa address bar.',
                         () => {}
                     );
                 } else {
                     openConfirm(
-                        'Pasang Full Screen (PWA)',
-                        'Ketuk menu titik tiga (⋮) atau garis tiga di browser HP Anda, lalu pilih "Tambahkan ke layar utama" (Add to Home screen / Install app) agar terbuka full-screen seperti aplikasi native.',
+                        'Install WebAPK (Full Screen)',
+                        'Pastikan file manifest.webmanifest, sw.js, icon-192.png, dan icon-512.png sudah terpasang di repository GitHub, lalu buka melalui Google Chrome / Samsung Internet dan pilih menu "Install app" (Instal aplikasi).',
                         () => {}
                     );
                 }
@@ -1041,7 +1045,7 @@
             window.addEventListener('appinstalled', () => {
                 deferredInstallPrompt = null;
                 updatePwaStatusUI();
-                showToast('Aplikasi Full Screen berhasil dipasang!');
+                showToast('Aplikasi WebAPK berhasil dipasang ke Home Screen!');
             });
 
             initPwaSupport();
@@ -2132,7 +2136,6 @@
                     pages.push(currentBucket);
                 }
 
-                // Pastikan halaman terakhir masih cukup ruang untuk kotak Terbilang + Total + Tanda Tangan
                 const lastPageUnits = pages[pages.length - 1].reduce((acc, it) => acc + estimateItemUnits(it), 0);
                 if (lastPageUnits > lastPageMaxUnits) {
                     pages.push([]);
@@ -2677,7 +2680,7 @@
                             if (hasExistingFilledItems) {
                                 openConfirm(
                                     'Import Daftar Item Barang',
-                                    `Ditemukan ${normalizedItems.length} item barang/jasa. Tambahkan ke daftar item yang sudah ada atau ganti seluruhnya?`,
+                                    `Ditemukan ${normalizedItems.length} item barang/jasa. Tambahkan ke daftar item yang sudah ada?`,
                                     () => {
                                         items = [...normalizedItems, ...items];
                                         renderItemRows();
