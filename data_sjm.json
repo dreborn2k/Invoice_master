@@ -19,6 +19,63 @@
   },
   "invoiceHistory": [
     {
+      "id": "inv_1795492064812",
+      "invNumber": "INV/SJM/2026/11/401",
+      "invDate": "2026-11-23",
+      "invDueDate": "2026-12-07",
+      "clientName": "SD MOJO SURAKARTA",
+      "clientContact": "BUDI RINANTO, S.Pd., M.Pd. (0271)2932784",
+      "clientNpwp": "",
+      "clientAddress": "Jl. Sungai Serang  RT 03/ 03 Mojo Pasarkliwon Surakarta 57117",
+      "taxPriceMode": "include",
+      "enablePpn": true,
+      "ppnRate": 11,
+      "enablePph": true,
+      "pphRate": 2,
+      "pphLabel": "PPh Pasal 23",
+      "pphMode": "deduct",
+      "invNotes": "",
+      "items": [
+        {
+          "id": 1795448167533,
+          "name": "Kertas HVS F4 70gsm",
+          "qty": 15,
+          "unit": "Rim",
+          "price": 52000
+        },
+        {
+          "id": 1795448168044,
+          "name": "Kertas HVS A4 70gsm",
+          "qty": 15,
+          "unit": "Rim",
+          "price": 45000
+        },
+        {
+          "id": 1795448168252,
+          "name": "Cover Mika",
+          "qty": 4,
+          "unit": "Pack",
+          "price": 30000
+        },
+        {
+          "id": 1795448167523,
+          "name": "Map Plastik Kancing",
+          "qty": 10,
+          "unit": "Pack",
+          "price": 40000
+        },
+        {
+          "id": 1795448168409,
+          "name": "Buku Agenda",
+          "qty": 5,
+          "unit": "Pcs",
+          "price": 50000
+        }
+      ],
+      "grandTotal": 2225000,
+      "savedAt": "2026-11-24T03:47:44.812Z"
+    },
+    {
       "id": "inv_1795449564615",
       "invNumber": "INV/2026/11/402",
       "invDate": "2026-11-23",
@@ -133,5 +190,5 @@
       "savedAt": "2026-11-24T00:27:39.835Z"
     }
   ],
-  "updatedAt": "2026-11-24T03:10:40.545Z"
+  "updatedAt": "2026-11-24T03:47:44.819Z"
 }
