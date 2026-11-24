@@ -7,7 +7,7 @@
     "compContact": "Telp: 081393897867 | Email: srikandijayamandiricv@gmail.com",
     "compNpwp": "NPWP: 96.733.327.9-532.000",
     "showNpwpDefault": false,
-    "uiSkin": "iphone",
+    "uiSkin": "macos",
     "invoiceTheme": "charcoal",
     "customPrimaryHex": "#be123c",
     "customAccentHex": "#f472b6",
@@ -133,5 +133,5 @@
       "savedAt": "2026-11-24T00:27:39.835Z"
     }
   ],
-  "updatedAt": "2026-11-24T03:08:52.292Z"
+  "updatedAt": "2026-11-24T03:10:40.545Z"
 }
