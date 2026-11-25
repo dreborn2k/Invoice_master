@@ -27,13 +27,13 @@
       "clientContact": "BUDI RINANTO, S.Pd., M.Pd. (0271)2932784",
       "clientNpwp": "",
       "clientAddress": "Jl. Sungai Serang  RT 03/ 03 Mojo Pasarkliwon Surakarta 57117",
-      "taxPriceMode": "exclude",
+      "taxPriceMode": "include",
       "enablePpn": false,
       "ppnRate": 11,
       "enablePph": true,
       "pphRate": 2,
       "pphLabel": "PPh Pasal 23",
-      "pphMode": "deduct",
+      "pphMode": "add",
       "invNotes": "",
       "items": [
         {
@@ -72,8 +72,8 @@
           "price": 70000
         }
       ],
-      "grandTotal": 1862000,
-      "savedAt": "2026-11-25T06:31:23.230Z"
+      "grandTotal": 1900000,
+      "savedAt": "2026-11-25T06:32:36.475Z"
     },
     {
       "id": "inv_1795492064812",
@@ -133,5 +133,5 @@
       "savedAt": "2026-11-24T03:47:44.812Z"
     }
   ],
-  "updatedAt": "2026-11-25T06:31:23.239Z"
+  "updatedAt": "2026-11-25T06:32:36.481Z"
 }
