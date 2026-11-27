@@ -701,6 +701,13 @@
                                 <span id="formPphLabel">PPh Pasal 22 (0.5%)</span>
                                 <span id="formPphDisplay" class="font-semibold text-amber-700">Rp 0</span>
                             </div>
+                            <div class="flex justify-between items-center pt-2 mt-1 border-t border-dashed border-emerald-500/30 bg-emerald-50/70 px-3 py-2 rounded-xl">
+                                <div>
+                                    <span class="block text-xs font-bold text-emerald-900">Diterima Penjual (Bersih)</span>
+                                    <span class="block text-[10px] text-emerald-700">Setelah dikurangi PPN &amp; PPh</span>
+                                </div>
+                                <span id="formSellerNetDisplay" class="text-sm font-extrabold text-emerald-700">Rp 0</span>
+                            </div>
                         </div>
                     </div>
 
@@ -1066,7 +1073,7 @@
         </button>
         <button type="button" data-nav="settings" class="mob-nav-btn relative flex flex-col items-center gap-0.5 py-1 px-3 text-[#8E8E93]">
             <span id="mobUnsavedSettingsDot" class="hidden absolute top-1 right-3 w-2 h-2 rounded-full bg-rose-500"></span>
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
             <span class="text-[10px] font-semibold">Pengaturan</span>
         </button>
     </nav>
@@ -2208,6 +2215,9 @@
                     else if (rates.pphMode === 'add') grandTotal += pphAmount;
                 }
 
+                // Nominal bersih yang diterima penjual setelah dikurangi PPN dan PPh
+                const sellerNetReceived = subtotalNet - pphAmount;
+
                 return {
                     ...rates,
                     computedItems,
@@ -2216,7 +2226,8 @@
                     totalDppNilaiLain,
                     ppnAmount,
                     pphAmount,
-                    grandTotal
+                    grandTotal,
+                    sellerNetReceived
                 };
             }
 
@@ -2394,10 +2405,10 @@
                     return 1 + taxSubLines + extraLines * 0.48;
                 }
 
-                const singlePageMaxUnits = 11.5;
+                const singlePageMaxUnits = 11.0;
                 const firstPageMaxUnits = 14.5;
                 const midPageMaxUnits = 21.5;
-                const lastPageMaxUnits = 13.0;
+                const lastPageMaxUnits = 12.5;
 
                 const totalUnits = list.reduce((acc, it) => acc + estimateItemUnits(it), 0);
                 if (totalUnits <= singlePageMaxUnits) {
@@ -2534,6 +2545,9 @@
                     ? 'font-semibold text-rose-600'
                     : (calc.pphMode === 'add' ? 'font-semibold text-emerald-600' : 'font-semibold text-amber-700');
                 $('formGrandTotalDisplay').textContent = formatRupiah(calc.grandTotal);
+                if ($('formSellerNetDisplay')) {
+                    $('formSellerNetDisplay').textContent = formatRupiah(calc.sellerNetReceived);
+                }
 
                 const invNo = $('invNumber').value.trim() || '-';
                 const invDateStr = formatDateIndo($('invDate').value);
@@ -2625,22 +2639,33 @@
                 `;
 
                 const pmkFootnoteHtml = (calc.isPmk131 && calc.enablePpn) ? `
-                    <div style="margin-top: 8px; font-size: 8.8px; color: #334155;">
+                    <div style="margin-top: 6px; font-size: 8.6px; color: #334155;">
                         *PPN yang dikenakan telah menggunakan perhitungan terbaru sesuai dengan <span style="color: ${theme.primaryHex}; font-weight: 700;">PMK No. 131 Tahun 2024</span>.
                     </div>
                 ` : '';
+
+                const sellerNetBoxHtml = `
+                    <div style="margin-top: 7px; background: #ECFDF5; border: 1px solid #A7F3D0; border-radius: 6px; padding: 6px 10px; display: flex; justify-content: space-between; align-items: center; gap: 8px;">
+                        <div>
+                            <div style="font-size: 8.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #065F46;">Nominal Diterima Penjual (Bersih)</div>
+                            <div style="font-size: 8px; color: #047857;">Total setelah dikurangi PPN${calc.enablePph ? ` &amp; ${escapeHtml(calc.pphLabel)}` : ''}</div>
+                        </div>
+                        <div style="font-size: 11px; font-weight: 800; color: #065F46; white-space: nowrap;">${formatRupiah(calc.sellerNetReceived)}</div>
+                    </div>
+                `;
 
                 const summaryAndSignatureHtml = `
                     <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 18px; margin-top: 10px;">
                         <div style="flex: 1;">
                             <div style="background: ${theme.softGradientCss}; border: 1px solid ${theme.borderHex}; border-radius: 7px; padding: 7px 11px;">
                                 <div style="font-size: 8.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: #64748B;">Terbilang:</div>
-                                <div style="font-size: 10.2px; font-weight: 700; font-style: italic; color: #1E293B; margin-top: 2px;">${escapeHtml(terbilang(calc.grandTotal))}</div>
+                                <div style="font-size: 10px; font-weight: 700; font-style: italic; color: #1E293B; margin-top: 2px;">${escapeHtml(terbilang(calc.grandTotal))}</div>
                             </div>
                             ${pmkFootnoteHtml}
-                            <div style="margin-top: 8px;">
+                            ${sellerNetBoxHtml}
+                            <div style="margin-top: 7px;">
                                 <div style="font-size: 9.5px; font-weight: 700; color: #1E293B; margin-bottom: 2px;">Keterangan &amp; Pembayaran:</div>
-                                <div style="font-size: 9.2px; color: #475569; white-space: pre-line; line-height: 1.4;">${escapeHtml(getCombinedFooterNotes())}</div>
+                                <div style="font-size: 9.1px; color: #475569; white-space: pre-line; line-height: 1.38;">${escapeHtml(getCombinedFooterNotes())}</div>
                             </div>
                         </div>
 
@@ -2684,11 +2709,11 @@
                         </div>
                     </div>
 
-                    <div style="display: flex; justify-content: flex-end; margin-top: 12px; padding-right: 10px;">
+                    <div style="display: flex; justify-content: flex-end; margin-top: 10px; padding-right: 10px;">
                         <div style="text-align: center; min-width: 185px;">
                             <div style="font-size: 10px; color: #334155;">${escapeHtml(settings.issueCity || 'Sukoharjo')}, ${escapeHtml(invDateStr)}</div>
                             <div style="font-size: 10px; font-weight: 700; color: #0F172A; margin-top: 2px;">${escapeHtml(settings.compName || 'CV. SRIKANDI JAYA MANDIRI')}</div>
-                            <div style="height: 44px;"></div>
+                            <div style="height: 42px;"></div>
                             <div style="font-size: 10.5px; font-weight: 700; color: #0F172A; text-decoration: underline;">${escapeHtml(settings.signerName || 'Asih Ermataria')}</div>
                             <div style="font-size: 9.5px; color: #64748B; margin-top: 1px;">${escapeHtml(settings.signerRole || 'Direktur')}</div>
                         </div>
@@ -3599,7 +3624,7 @@
                 });
 
                 let afterTableY = (doc.lastAutoTable ? doc.lastAutoTable.finalY : (boxY + boxH + 30)) + 5;
-                if (afterTableY > 212) {
+                if (afterTableY > 205) {
                     doc.addPage();
                     drawContinuationHeader();
                     afterTableY = 33;
@@ -3621,14 +3646,32 @@
                 doc.setTextColor(30, 41, 59);
                 doc.text(terbLines, marginX + 3, afterTableY + 8.2);
 
-                let notesY = afterTableY + terbBoxH + 4.5;
+                let notesY = afterTableY + terbBoxH + 4;
                 if (calc.isPmk131 && calc.enablePpn) {
                     doc.setFont('helvetica', 'normal');
-                    doc.setFontSize(7.4);
+                    doc.setFontSize(7.2);
                     doc.setTextColor(51, 65, 85);
                     doc.text('*PPN yang dikenakan telah menggunakan perhitungan terbaru sesuai dengan PMK No. 131 Tahun 2024.', marginX, notesY);
-                    notesY += 4.5;
+                    notesY += 4.2;
                 }
+
+                // Kotak Nominal Diterima Penjual (Bersih) tepat di atas Keterangan & Pembayaran
+                doc.setFillColor(236, 253, 245);
+                doc.setDrawColor(167, 243, 208);
+                doc.roundedRect(marginX, notesY - 1, 100, 10.5, 1.6, 1.6, 'FD');
+                doc.setFont('helvetica', 'bold');
+                doc.setFontSize(7.2);
+                doc.setTextColor(6, 95, 70);
+                doc.text('NOMINAL DITERIMA PENJUAL (BERSIH)', marginX + 3, notesY + 3.2);
+                doc.setFont('helvetica', 'normal');
+                doc.setFontSize(6.8);
+                doc.setTextColor(4, 120, 87);
+                doc.text(`Total setelah dikurangi PPN${calc.enablePph ? ` & ${calc.pphLabel}` : ''}`, marginX + 3, notesY + 7.2);
+                doc.setFont('helvetica', 'bold');
+                doc.setFontSize(8.8);
+                doc.setTextColor(6, 95, 70);
+                doc.text(formatRupiah(calc.sellerNetReceived), marginX + 97, notesY + 5.5, { align: 'right' });
+                notesY += 13.5;
 
                 doc.setFont('helvetica', 'bold');
                 doc.setFontSize(8);
