@@ -19,6 +19,36 @@
   },
   "invoiceHistory": [
     {
+      "id": "inv_1795745423415",
+      "invNumber": "INV/SJM/2026/11/403",
+      "invDate": "2026-11-27",
+      "invDueDate": "2026-12-11",
+      "clientName": "SD Negeri Bakipandeyan 02",
+      "clientContact": "Ibu Salamah +62 856-4759-1846",
+      "clientNpwp": "0028523415320000002",
+      "clientAddress": "JL. ANGGUR RT.01 RW.02, Bakipandeyan, Kec. Baki, Kab. Sukoharjo-Prov. Jawa Tengah",
+      "taxPriceMode": "include",
+      "ppnRegulationMode": "pmk131_non_luxury",
+      "enablePpn": true,
+      "ppnRate": 12,
+      "enablePph": true,
+      "pphRate": 0.5,
+      "pphLabel": "PPh Pasal 22",
+      "pphMode": "info",
+      "invNotes": "",
+      "items": [
+        {
+          "id": 1795745210328,
+          "name": "Sampul Raport",
+          "qty": 24,
+          "unit": "Pcs",
+          "price": 50000
+        }
+      ],
+      "grandTotal": 1200000,
+      "savedAt": "2026-11-27T02:10:23.415Z"
+    },
+    {
       "id": "inv_1795492108700",
       "invNumber": "INV/SJM/2026/11/402",
       "invDate": "2026-11-23",
@@ -133,5 +163,5 @@
       "savedAt": "2026-11-24T03:47:44.812Z"
     }
   ],
-  "updatedAt": "2026-11-25T06:32:40.874Z"
+  "updatedAt": "2026-11-27T02:10:23.422Z"
 }
