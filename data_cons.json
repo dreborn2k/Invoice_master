@@ -1,7 +1,12 @@
 {
-  "app": "Shared Customer Database (Multi-CV)",
-  "updatedAt": "2026-11-24T00:26:35.306Z",
   "clientsDb": [
+    {
+      "id": "cli_1795745313735",
+      "name": "SD Negeri Bakipandeyan 02",
+      "contact": "Ibu Salamah +62 856-4759-1846",
+      "npwp": "0028523415320000002",
+      "address": "JL. ANGGUR RT.01 RW.02, Bakipandeyan, Kec. Baki, Kab. Sukoharjo-Prov. Jawa Tengah"
+    },
     {
       "id": "cli_1795447165513",
       "name": "SD MOJO SURAKARTA",
@@ -9,5 +14,6 @@
       "npwp": "",
       "address": "Jl. Sungai Serang  RT 03/ 03 Mojo Pasarkliwon Surakarta 57117"
     }
-  ]
+  ],
+  "updatedAt": "2026-11-27T02:08:33.744Z"
 }
